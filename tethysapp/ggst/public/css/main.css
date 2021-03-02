@@ -1,0 +1,19 @@
+table, th, td{border:1px solid black;border-collapse:collapse;}
+th, td{padding:5px;text-align:left;}
+.welcome-step{font-size:12px;}
+.welcome-substep1{font-size:10px;}
+.welcome-substep2{font-size:8px;}
+#help-modal .modal-dialog{width:75%;height:75%;padding:0;}
+#help-modal .modal-body{height:50%;border-radius:0; max-height: calc(100vh - 210px); overflow-y: auto;}
+#api-modal .modal-dialog{width:75%;height:75%;padding:0;}
+#api-modal .modal-body{height:50%;border-radius:0;}
+#logos{padding:5px 0;white-space:nowrap;width:100%;display:table;}
+.logo-image{vertical-align:middle;display:table-cell;padding:0 2px;}
+.logo-image img{max-width:100%;}
+
+.fullscreen-icon { background-image: url("fullscreen-icon.png"); }
+.leaflet-retina .fullscreen-icon { background-image: url("fullscreen-icon.png"); background-size: 26px 26px; }
+
+
+
+/* one selector per rule as explained here : http://www.sitepoint.com/html5-full-screen-api/ */

@@ -1,0 +1,54 @@
+{% extends "ggst/base.html" %}
+{% load tethys_gizmos %}
+
+{% block header_buttons %}
+  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
+    <a data-toggle="modal" data-target="#help-modal"><span class="glyphicon glyphicon-question-sign"></span></a>
+  </div>
+{% endblock %}
+
+{% block app_content %}
+<h1>Welcome</h1>
+<p>This app produces basic maps and timeseries using data from the <a href="https://www.jpl.nasa.gov/missions/gravity-recovery-and-climate-experiment-grace/" target="_blank">GRACE mission</a></p>
+<form action="{% url 'ggst:region-map' %}" method="get">
+    <p>Select a region from the dropdown below to view timeseries and an interactive map.</p>
+    <div style="width:45%">{% gizmo region_select %}</div>
+    <span class="btn-group ">
+        <a name="submit-go-to-map" class="btn btn-success" role="button" onclick="document.forms[0].submit();" id="submit-go-to-map">
+            <span class="glyphicon glyphicon-play"></span>View Region
+        </a>
+    </span>
+</form>
+{% if user.is_superuser or user.is_staff %}
+<p class="help-block">Don't see the region you want? Add one
+    <a href="{% url 'ggst:add-region' %}">here</a>.</p>
+{% endif %}
+{% endblock %}
+
+{# Use the after_app_content block for modals #}
+{% block after_app_content %}
+  <!-- Example Modal -->
+  <div class="modal fade" id="help-modal" tabindex="-1" role="dialog" aria-labelledby="help-modal-label">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h5 class="modal-title" id="help-modal-label">Example Modal</h5>
+        </div>
+        <div class="modal-body">
+          <p>You can add custom buttons to the app header using the <code>header_buttons</code> block. Use anchor/link tags for the button and wrap it in a div with the class <code>header-button</code>. For buttons with the gliphyicons, add the <code>glyphicon-button</code> class as well.</p>
+          <p>Ever have trouble using a modal in a Tethys app? Use the <code>after_app_content</code> block for modal content to allow them to function properly. See: <a href="https://getbootstrap.com/javascript/#modals">Bootstrap Modals</a></p>
+          <p>Add tooltips to any element by adding the <code>data-toggle</code>, <code>data-placement</code>, and <code>title</code> attributes to the button. See: <a href="https://getbootstrap.com/javascript/#tooltips">Bootstrap Tooltips</a></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block app_actions %}
+
+{% endblock %}

@@ -1,0 +1,302 @@
+{% extends "ggst/base.html" %}
+{% load tethys_gizmos %}
+{% load staticfiles %}
+
+
+{% block header_buttons %}
+  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
+    <a data-toggle="modal" data-target="#help-modal"><span class="glyphicon glyphicon-question-sign"></span></a>
+  </div>
+  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="API">
+    <a data-toggle="modal" data-target="#api-modal"><span class="glyphicon glyphicon-info-sign"></span></a>
+  </div>
+  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="App Home">
+    <a href="{% url 'ggst:home' %}"><span class="glyphicon glyphicon-home"></span></a>
+  </div>
+
+{% endblock %}
+
+{% block styles %}
+{{ block.super }}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+      integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+      crossorigin=""/>
+<link rel="stylesheet" href="https://cdn.rawgit.com/socib/Leaflet.TimeDimension/master/dist/leaflet.timedimension.control.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.5.0/nouislider.min.css" />
+<link rel="stylesheet" href="{% static 'ggst/vendor/leaflet/L.Control.Opacity.css' %}" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+{% endblock %}
+
+{% block global_scripts %}
+{{block.super}}
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+        integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+        crossorigin=""></script>
+<script type="text/javascript" src="https://cdn.rawgit.com/nezasa/iso8601-js-period/master/iso8601.min.js"></script>
+<script type="text/javascript" src="https://cdn.rawgit.com/socib/Leaflet.TimeDimension/master/dist/leaflet.timedimension.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js"></script>
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+<script src="https://highcharts.github.io/export-csv/export-csv.js"></script>
+<script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.5.0/nouislider.min.js"></script>
+<script src="{% static 'ggst/vendor/leaflet/L.Control.Opacity.js' %}" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+{% endblock %}
+
+{% block app_navigation_items %}
+
+{% url 'ggst:home' as home_url %}
+{% url 'ggst:add-region' as add_region_url %}
+{% url 'ggst:global-map' as global_map_url %}
+
+<li class="{% if request.path == home_url %}active{% endif %}"><a href="{{home_url}}">Return to Home</a></li>
+<li class="{% if request.path == global_map_url %}active{% endif %}"><a href="{{global_map_url}}">Global Map</a></li>
+<br>
+<a data-toggle="modal" data-target="#signal-modal"><span style="white-space:nowrap; float:left; margin-left:2%; color:blue; cursor:pointer;" id= info-signal-button class="glyphicon glyphicon-info-sign">_</span></a>
+{% gizmo signal_process_select %}
+<a data-toggle="modal" data-target="#storage-modal"><span style="white-space:nowrap; float:left; margin-left:2%; color:blue; cursor:pointer;" id= info-storage-button class="glyphicon glyphicon-info-sign">_</span></a>
+{% gizmo storage_type_select %}
+{% gizmo layer_select %}
+{% endblock %}
+
+{% block app_content %}
+<div id="map" class="full-map"></div>
+<div id="chart" class="full-chart"></div>
+{% endblock %}
+
+{% block after_app_content %}
+<!-- Help Modal -->
+<div class="modal fade" id="help-modal" tabindex="-1" role="dialog" aria-labelledby="help-modal-label">
+    <div class="modal-dialog" role="document">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Guide</h4>
+            </div>
+            <div class="modal-body">
+                <p><b>Subsetting of the regions is made possible through <a href="https://github.com/c-h-david/shbaam" target="_blank">SHBAAM</a> (Satellite Hydrology Bits Analysis And Mapping)</b></p>
+                <!--<p><b>For any questions, comments or subsetting requests contact Dr. Norm Jones at <a href="mailto:njones@byu.edu">njones@byu.edu</a></b></p>-->
+                <h5>The following steps highlight the several functions of the GRACE web app</h5>
+                <ol>
+                    <li class="welcome-step">Select a Region
+                        <p><b>Click the "Select a Region" dropdown and select an option</b></p>
+                        <p><b>Or simply select the Global Map tab from the navigation pane</b></p>
+                    </li>
+                    <li class="welcome-step">View different storage types
+                        <p><b>You have four options to choose from:</b></p>
+                        <ul>
+                            <li class="welcome-substep1">Total Water Storage Anomaly(GRACE Data), Surface Water Storage Anomaly(derived from GLDAS Model), Soil Moisture Storage Anomaly(derived from GLDAS Model), Groundwater Storage Anomaly(Calculated/inferred using previously mentioned storage types).
+                        </ul>
+                    </li>
+                    <li class="welcome-step">View different signal solutions
+                        <p><b>You have four options to choose from:</b></p>
+                        <ul>
+                            <li class="welcome-substep1">JPL, CSR, GFZ, or an ensemble average of the three previously mentioned solutions.
+                            <li class="welcome-substep1">Studies have shown that each of these solutions may prove to be more accurate in different locations in the world.  A citation of articles may be provided in the future for reference.
+                        </ul>
+                    </li>
+                    <li class="welcome-step">View different timesteps
+                        <p><b>You have two options to choose from:</b></p>
+                        <ul>
+                            <li class="welcome-substep1">Move the slider in the lower left-hand corner of the map
+                            <li class="welcome-substep1">Select a date from the dropdown on the left
+                        </ul>
+                    </li>
+                    <li class="welcome-step">View Animation
+                        <ul>
+                            <li class="welcome-substep1">Use the animation controls in the lower left-hand corner of the map to start or stop animation
+                            <li class="welcome-substep1">Use the fps slider on the right side of the control bar to increase and decrease animation speed
+                        </ul>
+                    </li>
+                    <li class="welcome-step">Contour/Map Settings
+                        <ul>
+                            <li class="welcome-substep1">Use the Select symbology dropdown to view different color schemes for the map contours.
+                            <li class="welcome-substep1">Use the Max and Min toggles in the top left corner of the page to adjust the contour values.  The opacity toggle allows you to adjust the transparency of the map data layer
+                        </ul>
+                    </li>
+                    <li class="welcome-step">View Time Series
+                        <p><b>The Grace application allows the user to generate a time series plot for a specific location.  To generate a time series:</b></p>
+                        <ul>
+                            <li class="welcome-substep1">Click on the <b>Marker Icon</b> <span id= marker-icon class="glyphicon glyphicon-map-marker"></span> on the left side of the map, then place the marker within the data region.
+                            <li class="welcome-substep1">The Time Series for that point will be generated below the map.
+                        </ul>
+                        <p>Note: You can also click anywhere on the time series graph to change the layer shown on the map to a specific time.  The time series can be exported in a number of formats by clicking the menu button on the chart(top-right).</p>
+                    </li>
+                    <li class="welcome-step">Click 'Exit' in the top-right of the app to return to the Main Apps Library</li>
+                    <p>External Resources and Links:</p>
+                    <p><a href="https://github.com/SarvaPulla/grace" target="_blank">View Code</a></p>
+                    <p><a href="https://servirglobal.net/about-servir" target="_blank">About SERVIR</a></p>
+                    <p><a href="https://servirglobal.net/Privacy-Terms-of-Use" target="_blank">Privacy and Terms of Conditions</a></p>
+                </ol>
+            </div>
+            <div class="modal-footer">
+                <div align="center" id="logos">
+                    <div class="logo-image"><a href="http://www.usaid.gov/" target="_blank"><img src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/usaid.png"></a></div>
+                    <div class="logo-image"><a href="http://appliedsciences.nasa.gov/" target="_blank"><img src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/nasa.png"></a></div>
+                    <div class="logo-image"><a href="http://www.cilss.bf/" target="_blank"><img src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/cilss.png"></a></div>
+                    <div class="logo-image"><a href="http://www.rcmrd.org/" target="_blank"><img src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/rcmrd.png"></a></div>
+                    <div class="logo-image"><a href="http://www.icimod.org/" target="_blank"><img src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/icimod.png"></a></div>
+                    <div class="logo-image"><a href="http://www.adpc.net/" target="_blank"><img src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/adpc.png"></a></div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <!--End modal content-->
+</div>
+
+
+<!-- API Modal -->
+<div class="modal fade" id="api-modal" tabindex="-1" role="dialog" aria-labelledby="api-modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title" id="api-modal-label">Developers API</h2>
+            </div>
+            <div class="modal-body">
+                <p>
+                    A Developers API is provided for those who wish to incorporate the GRACE Tethys APP data into their own
+                    separate application or script.
+                </p>
+                <br>
+                <h3>API Methods</h3>
+                <p>All API methods must be called using the following pattern:</p>
+                <p><b>{{ host }}/apps/[parent-app]/api/[MethodName]/?param1=value1&#38;param2=value2&#38;...paramN=valueN</b></p>
+                <p>See documentation and specific examples for all available methods below.</p>
+                <br>
+                <br>
+                <h4>GetPointValues</h4>
+                <table>
+                    <tr>
+                        <td><b>Parent App</b></td>
+                        <td colspan="5">grace</td>
+                    </tr>
+                    <tr>
+                        <th>Supported Methods</th>
+                        <td colspan="5">GET</td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td colspan="5">A JSON object with a timeseries for a given point.</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="7"><b>Params</b></td>
+                        <td><b>Name</b></td>
+                        <td><b>Description</b></td>
+                        <td><b>Valid Values</b></td>
+                        <td><b>Required</b></td>
+                    </tr>
+                    <tr>
+                        <td>latitude</td>
+                        <td>Latitude in WGS 84 projection</td>
+                        <td>Any value on land within the GRACE Explorer Domain (-60,90)</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>longitude</td>
+                        <td>Longitude in the WGS 84 projection</td>
+                        <td>Any value within the GRACE Explorer Domain (-180,180)</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>signal_solution</td>
+                        <td>GRACE signal processing method</td>
+                        <td>Use one of the following: (jpl, csr, gfz, avg)</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>storage_type</td>
+                        <td>Storage type you wish to access</td>
+                        <td>Use one of the following: (tot, sw, soil, gw)</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>start_date</td>
+                        <td>Start Date for the forecast</td>
+                        <td>Any date after 2002 April 4</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td>end_date</td>
+                        <td>End Date of the Forecast</td>
+                        <td>Any date after the start date</td>
+                        <td>No</td>
+                    </tr>
+
+                </table>
+                <h5>Example:</h5>
+                <a href="{{ host }}/apps/ggst/api/GetPointValues/?latitude=20.7&longitude=80.2&signal_solution=csr&storage_type=gw" target="_blank">
+                    <code>{{ host }}/apps/ggst/api/GetPointValues/?latitude=20.7&longitude=80.2&signal_solution=csr&storage_type=gw</code>
+                </a>
+            </div>
+            <div class="modal-footer">
+                <span><i>Developed at the BYU Hydroinformatics Lab</i></span>&nbsp;
+                <a href="https://github.com/BYU-Hydroinformatics/ggst" target="_blank" class="btn btn-default">View Code</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Signal Selection Guide Modal -->
+<div class="modal fade" id="signal-modal" tabindex="-1" role="dialog" aria-labelledby="signal-modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title" id="signal-modal-label">Which Solution Should I Choose?</h2>
+            </div>
+            <div class="modal-body">
+                <p>Since the satellite mission began, the JPL, CSR, and GFZ solutions have been provided by the official GRACE Science Data System.  The differences between these solutions are often small and fall within the error bounds of the raw GRACE data.  Several papers have been written regarding the benefits of using different solutions in different parts of the world.  For your reference, these papers are cited below:</p>
+                <br>
+                <p>One paper in particular suggested that the ensemble average of the three signal solutions proved to be most acurate.  This solution is the reccomendation given to users on the grace.jpl.nasa.gov website where the grace data is distributed. </p>
+                <p>See below:</p>
+                <a href="https://grace.jpl.nasa.gov/data/choosing-a-solution/" target="_blank">NASA Reccomendation</a>
+                <br><br>
+                <span>Sakumura, C., S. Bettadpur, and S. Bruinsma (2014), Ensemble prediction and intercomparison analysis of GRACE time-variable gravity field models, Geophys. Res. Lett., 41, 1389–1397,</span>
+                <span><a href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2013GL058632" target="_blank"> doi:10.1002/2013GL058632.</a></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Storage Type Info Modal -->
+<div class="modal fade" id="storage-modal" tabindex="-1" role="dialog" aria-labelledby="storage-modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title" id="storage-modal-label">Deriving Groundwater</h2>
+            </div>
+            <div class="modal-body">
+                <p>Explain Grid Resolution and Total Water Storage</p>
+                <p>Explain Leakage Errors, Measurement Errors, and Scale Factors Layers</p>
+                <p>Explain GLDAS data and calculating proper mean</p>
+                <p>Explain how Groundwater was derived</p>
+                <p>Link to shell script for reference</p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content_dependent_styles %}
+{{ block.super }}
+<link href="{% static 'ggst/css/global_map.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script src="{% static 'ggst/js/global_map.js' %}" type="text/javascript"></script>
+{% endblock %}
