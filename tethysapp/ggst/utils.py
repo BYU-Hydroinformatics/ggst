@@ -1,5 +1,7 @@
 import glob
+import json
 import logging
+import math
 import os
 import shutil
 import warnings
@@ -9,6 +11,7 @@ from typing import Any
 from zipfile import ZipFile
 
 import geopandas as gpd
+import numpy as np
 import pandas as pd
 import shapefile
 import xarray
@@ -32,6 +35,26 @@ def get_regions():
     grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
     regions_list = [(f.name.replace('_', ' ').title(), f.name) for f in os.scandir(grace_dir) if f.is_dir()]
     return regions_list
+
+
+def get_catalog_url():
+    catalog_url = app.get_custom_setting("grace_thredds_catalog")
+    return catalog_url
+
+
+def get_symbology_select():
+    select_signal_process = SelectInput(display_text='Select Style',
+                                        name='select-symbology',
+                                        multiple=False,
+                                        options=[('GRACE', 'grace'),
+                                                 ('Red-Blue', 'bluered'),
+                                                 ('Grey Scale', 'greyscale'),
+                                                 ('ALG2', 'alg2'),
+                                                 ('SST 36', 'sst_36'),
+                                                 ('Rainbow', 'rainbow')],
+                                        initial=['GRACE']
+                                        )
+    return select_signal_process
 
 
 def get_signal_process_select():
@@ -68,7 +91,7 @@ def get_grace_timestep_options():
 
 def get_layer_select():
     select_layer = SelectInput(display_text='Select a day',
-                               name='select_layer',
+                               name='select-layer',
                                multiple=False,
                                options=get_grace_timestep_options()
                                )
@@ -162,3 +185,40 @@ def gen_zip_api(gdf: gpd.GeoDataFrame,
     zf.close()
     shutil.rmtree(output_dir)
     return in_memory_zip
+
+
+def generate_global_timeseries(storage_type, signal_process, lat, lon):
+    graph_json = {}
+    ts_plot = []
+    ts_plot_int = []
+    grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
+    nc_file = f'{grace_dir}GRC_{signal_process}_{storage_type}.nc'
+    stn_lat = float(lat)
+    stn_lon = float(lon)
+    if stn_lon < 0.0:
+        stnd_lon = float(stn_lon + 360.0)
+    else:
+        stnd_lon = stn_lon
+    ds = xarray.open_dataset(nc_file)
+    time_array = ds.time.values
+    lat_array = ds['lat'][:]
+    lon_array = ds['lon'][:]
+    lon_idx = (np.abs(lon_array - stnd_lon)).argmin().values
+    lat_idx = (np.abs(lat_array - stn_lat)).argmin().values
+    init_value = float(ds['lwe_thickness'][0, lat_idx, lon_idx].values)
+
+    for time_index, time_stamp in enumerate(time_array):
+        data = ds['lwe_thickness'][time_index, :, :]
+        value = data[lat_idx, lon_idx].values
+        utc_time = int(time_stamp.astype(int) / 1000000)
+        difference_data_value = (value - init_value) * 0.01 * 6371000 * math.radians(0.25) * \
+                                6371000 * math.radians(0.25) * abs(math.cos(math.radians(lat_idx))) * 0.000810714
+        ts_plot.append([utc_time, round(float(value), 3)])
+        ts_plot_int.append([utc_time, round(float(difference_data_value), 3)])
+
+    graph_json["values"] = sorted(ts_plot)
+    graph_json["integr_values"] = sorted(ts_plot_int)
+    graph_json["point"] = [round(stn_lat, 2), round(stn_lon, 2)]
+    graph_json = json.dumps(graph_json)
+
+    return graph_json

@@ -3,9 +3,11 @@ from django.shortcuts import render
 from tethys_sdk.gizmos import (TextInput,
                                Button)
 
-from .utils import (get_layer_select,
+from .utils import (get_catalog_url,
+                    get_layer_select,
                     get_region_select,
                     get_signal_process_select,
+                    get_symbology_select,
                     get_storage_type_select,
                     user_permission_test)
 
@@ -29,10 +31,15 @@ def global_map(request):
     layer_select = get_layer_select()
     signal_process_select = get_signal_process_select()
     storage_type_select = get_storage_type_select()
+    symbology_select = get_symbology_select()
+    catalog_url = get_catalog_url()
+    wms_url = catalog_url.replace('catalog.xml', '').replace('catalog', 'wms')
     context = {
         'layer_select': layer_select,
         'signal_process_select': signal_process_select,
-        'storage_type_select': storage_type_select
+        'storage_type_select': storage_type_select,
+        'style_select': symbology_select,
+        'wms_url': wms_url
     }
 
     return render(request, 'ggst/global_map.html', context)

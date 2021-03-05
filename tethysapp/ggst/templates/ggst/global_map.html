@@ -4,15 +4,15 @@
 
 
 {% block header_buttons %}
-  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
+<div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
     <a data-toggle="modal" data-target="#help-modal"><span class="glyphicon glyphicon-question-sign"></span></a>
-  </div>
-  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="API">
+</div>
+<div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="API">
     <a data-toggle="modal" data-target="#api-modal"><span class="glyphicon glyphicon-info-sign"></span></a>
-  </div>
-  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="App Home">
+</div>
+<div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="App Home">
     <a href="{% url 'ggst:home' %}"><span class="glyphicon glyphicon-home"></span></a>
-  </div>
+</div>
 
 {% endblock %}
 
@@ -23,6 +23,7 @@
       crossorigin=""/>
 <link rel="stylesheet" href="https://cdn.rawgit.com/socib/Leaflet.TimeDimension/master/dist/leaflet.timedimension.control.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.5.0/nouislider.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw-src.css" />
 <link rel="stylesheet" href="{% static 'ggst/vendor/leaflet/L.Control.Opacity.css' %}" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
 {% endblock %}
@@ -34,6 +35,7 @@
         crossorigin=""></script>
 <script type="text/javascript" src="https://cdn.rawgit.com/nezasa/iso8601-js-period/master/iso8601.min.js"></script>
 <script type="text/javascript" src="https://cdn.rawgit.com/socib/Leaflet.TimeDimension/master/dist/leaflet.timedimension.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw-src.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js"></script>
 <script src="https://code.highcharts.com/stock/highstock.js"></script>
 <script src="https://code.highcharts.com/highcharts-more.js"></script>
@@ -59,6 +61,20 @@
 <a data-toggle="modal" data-target="#storage-modal"><span style="white-space:nowrap; float:left; margin-left:2%; color:blue; cursor:pointer;" id= info-storage-button class="glyphicon glyphicon-info-sign">_</span></a>
 {% gizmo storage_type_select %}
 {% gizmo layer_select %}
+{% gizmo style_select %}
+<div id="point-lat-lon"></div>
+<span style="white-space:nowrap; float:left;"><p style="font-size:14; color:black;"><b>Time Series Generator</b></p></span>
+<!--<span style="white-space:nowrap; float:left; margin-left:2%; color:blue; cursor:pointer;" id= info-button onclick=getInstructions() class="glyphicon glyphicon-info-sign"></span>-->
+<br>
+
+<div id= "ts-instructions" class="time-series-instructions">
+    <br><p>To generate a time series for a specific location, click on the <b>Marker Icon</b>
+    <span id="marker-icon-style" class="glyphicon glyphicon-map-marker"></span>
+    on left side of the map.  Then place the marker at the location for which you wish to extract a time series from the current map layer.</p>
+</div>
+<div class="hidden">
+    <div id="map-info" user-status="{% if user.is_superuser or user.is_staff %}admin{% else %} regular{% endif%}" wms-url="{{wms_url}}"></div>
+</div>
 {% endblock %}
 
 {% block app_content %}

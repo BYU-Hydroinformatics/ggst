@@ -36,6 +36,11 @@ class Ggst(TethysAppBase):
                 controller='ggst.controllers.global_map'
             ),
             UrlMap(
+                name='global-map-ts',
+                url='ggst/global-map/get-plot-global',
+                controller='ggst.controllers_ajax.get_global_plot'
+            ),
+            UrlMap(
                 name='region-map',
                 url='ggst/region-map',
                 controller='ggst.controllers.region_map'
