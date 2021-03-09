@@ -6,6 +6,7 @@ from tethys_sdk.gizmos import (TextInput,
 from .utils import (get_catalog_url,
                     get_layer_select,
                     get_region_select,
+                    get_region_bounds,
                     get_signal_process_select,
                     get_symbology_select,
                     get_storage_type_select,
@@ -52,7 +53,26 @@ def region_map(request):
     info = request.GET
 
     region_name = info.get('region-select')
-    context = {'region_name': region_name}
+    region_select = get_region_select()
+    layer_select = get_layer_select()
+    signal_process_select = get_signal_process_select()
+    storage_type_select = get_storage_type_select()
+    symbology_select = get_symbology_select()
+    catalog_url = get_catalog_url()
+    wms_url = catalog_url.replace('catalog.xml', '').replace('catalog', 'wms')
+    bbox = get_region_bounds(region_name)
+    lat, lon = (int(bbox[1]) + int(bbox[3])) / 2, (int(bbox[0]) + int(bbox[2])) / 2
+
+    context = {'region_name': region_name,
+               'region_select': region_select,
+               'map_lat': lat,
+               'map_lon': lon,
+               'layer_select': layer_select,
+               'signal_process_select': signal_process_select,
+               'storage_type_select': storage_type_select,
+               'style_select': symbology_select,
+               'wms_url': wms_url
+               }
 
     return render(request, 'ggst/region_map.html', context)
 

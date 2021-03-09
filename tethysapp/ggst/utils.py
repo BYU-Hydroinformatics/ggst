@@ -222,3 +222,17 @@ def generate_global_timeseries(storage_type, signal_process, lat, lon):
     graph_json = json.dumps(graph_json)
 
     return graph_json
+
+
+def get_region_bounds(region_name):
+    grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
+    nc_file = os.path.join(grace_dir, region_name, f'{region_name}_avg_sw.nc')
+    ds = xarray.open_dataset(nc_file)
+    lat = ds['lat'][:]
+    lon = ds['lon'][:]
+    minx = float(lon.min())
+    miny = float(lat.min())
+    maxx = float(lon.max())
+    maxy = float(lat.max())
+    bbox = [minx, miny, maxx, maxy]
+    return bbox

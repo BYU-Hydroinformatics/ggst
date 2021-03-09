@@ -1,0 +1,152 @@
+.min_input{
+    background: #888888;
+    border-radius: 4px;
+}
+.max_input{
+    background: #888888;
+    border-radius: 4px;
+}
+.opacity_input{
+    background: #888888;
+    border-radius: 4px;
+}
+.symbology_input select{
+    border-radius: 3px;
+}
+.full-map{
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+.partial-map{
+    height: 55%;
+    width: 100%;
+    position: relative;
+}
+.full-chart{
+    height: 0;
+    width: 100%;
+    position: relative;
+}
+.partial-chart{
+    height: 45%;
+    width: 100%;
+    position: relative;
+}
+.cluster {
+    background: #2d84c8;
+    border-radius: 50%;
+    text-align: center;
+    color: white;
+    font-weight: 700;
+    border: 1px solid #2d84c8;
+    font-family: monospace;
+}
+
+.cluster:before {
+    content: ' ';
+    position: absolute;
+    border-radius: 50%;
+    z-index: -1;
+    top: 1px;
+    left: 1px;
+    right: 1px;
+    bottom: 1px;
+    border: 1px solid white;
+}
+
+.digits-1 {
+    font-size: 14px;
+    height: 28px;
+    width: 28px;
+    line-height: 28px;
+    margin-top: -14px;
+    margin-left: -14px;
+}
+
+.digits-2 {
+    font-size: 16px;
+    height: 34px;
+    width: 34px;
+    line-height: 35px;
+    margin-top: -17px;
+    margin-left: -17px;
+}
+
+.digits-2:before {
+    border-width: 2px;
+}
+
+.digits-3 {
+    font-size: 18px;
+    height: 48px;
+    width: 47px;
+    line-height: 47px;
+    border-width: 3px;
+    margin-top: -24px;
+    margin-left: -24px;
+}
+
+.digits-3:before {
+    border-width: 3px;
+}
+
+.digits-4 {
+    font-size: 18px;
+    height: 58px;
+    width: 58px;
+    line-height: 57px;
+    border-width: 4px;
+    margin-top: -29px;
+    margin-left: -29px;
+}
+
+.digits-4:before {
+    border-width: 4px;
+}
+#app-content-wrapper #app-content {
+    padding-bottom:0;
+    margin:0;
+    height: 100%;
+}
+#app-content-wrapper #app-content #app-actions{
+    display:none;
+}
+
+#inner-app-content {
+    padding:0;
+    margin:0;
+    height: 100%;
+}
+#app-content-wrapper #app-content{
+
+}
+
+.info.legend {
+    background-color: #888888;
+}
+
+.bluewell{
+    height: 10px;
+    width: 10px;
+    background-color: #0000ff;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    text-align:center;
+}
+.redwell{
+    height: 10px;
+    width: 10px;
+    background-color: #ff0000;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    text-align:center;
+}
+.info_legend{
+    background-color: #FFFFFF;
+    padding: 3px;
+    box-shadow: 0 1px 7px rgba(0, 0, 0, 0.65);
+    border-radius: 4px;
+}

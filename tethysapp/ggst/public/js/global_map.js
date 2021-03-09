@@ -65,7 +65,6 @@ var LIBRARY_OBJECT = (function() {
         $selectLayer = $("#select-layer");
         $selectStorageType = $("#select-storage-type");
         wms_url = $("#map-info").attr("wms-url");
-        console.log(wms_url);
     };
 
     resize_map_chart = function(){
