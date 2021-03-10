@@ -3,7 +3,9 @@ import json
 from django.contrib.auth.decorators import (user_passes_test)
 from django.http import JsonResponse
 
-from .utils import (generate_global_timeseries,
+from .utils import (file_range,
+                    generate_global_timeseries,
+                    get_region_bounds,
                     user_permission_test,
                     process_shapefile)
 
@@ -50,3 +52,36 @@ def get_global_plot(request):
         return JsonResponse(return_obj)
         # except Exception as e:
         #     return JsonResponse({'error': str(e)})
+
+
+def get_region_center(request):
+    if request.is_ajax() and request.method == 'POST':
+        try:
+            return_obj = {}
+            info = request.POST
+            region_name = info.get('region')
+            bbox = get_region_bounds(region_name)
+            lat, lon = (int(bbox[1]) + int(bbox[3])) / 2, (int(bbox[0]) + int(bbox[2])) / 2
+            return_obj['lat'] = lat
+            return_obj['lon'] = lon
+            return_obj['success'] = 'success'
+            return JsonResponse(return_obj)
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+
+
+def get_legend_range(request):
+    if request.is_ajax() and request.method == 'POST':
+        try:
+            return_obj = {}
+            info = request.POST
+            storage_type = info.get('storage_type')
+            signal_process = info.get('signal_process')
+            region_name = info.get('region_name')
+            range_min, range_max = file_range(region_name, signal_process, storage_type)
+            return_obj['success'] = 'success'
+            return_obj['range_min'] = range_min
+            return_obj['range_max'] = range_max
+            return JsonResponse(return_obj)
+        except Exception as e:
+            return JsonResponse({'error': str(e)})

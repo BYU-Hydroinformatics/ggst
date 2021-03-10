@@ -236,3 +236,13 @@ def get_region_bounds(region_name):
     maxy = float(lat.max())
     bbox = [minx, miny, maxx, maxy]
     return bbox
+
+
+def file_range(region_name, signal_process, storage_type):
+    grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
+    nc_file = os.path.join(grace_dir, region_name, f'{region_name}_{signal_process}_{storage_type}.nc')
+    ds = xarray.open_dataset(nc_file)
+    lwe_thickness = ds['lwe_thickness'][:]
+    min_val = round(float(lwe_thickness.min()), 2)
+    max_val = round(float(lwe_thickness.max()), 2)
+    return min_val, max_val

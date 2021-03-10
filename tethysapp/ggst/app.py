@@ -46,6 +46,16 @@ class Ggst(TethysAppBase):
                 controller='ggst.controllers.region_map'
             ),
             UrlMap(
+                name='region-map-center',
+                url='ggst/region-map/map-center',
+                controller='ggst.controllers_ajax.get_region_center'
+            ),
+            UrlMap(
+                name='region-map-range',
+                url='ggst/region-map/range',
+                controller='ggst.controllers_ajax.get_legend_range'
+            ),
+            UrlMap(
                 name='add-region',
                 url='ggst/add-region',
                 controller='ggst.controllers.add_region'

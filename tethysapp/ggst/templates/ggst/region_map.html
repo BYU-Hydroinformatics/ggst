@@ -57,6 +57,7 @@
 <li class="{% if request.path == region_map_url %}active{% endif %}"><a href="{{region_map_url}}">Region Map</a></li>
 <br>
 {% gizmo region_select %}
+
 <a data-toggle="modal" data-target="#signal-modal"><span style="+white-space:nowrap; float:left; margin-left:2%; color:blue; cursor:pointer;" id= info-signal-button class="glyphicon glyphicon-info-sign">_</span></a>
 {% gizmo signal_process_select %}
 <a data-toggle="modal" data-target="#storage-modal"><span style="white-space:nowrap; float:left; margin-left:2%; color:blue; cursor:pointer;" id= info-storage-button class="glyphicon glyphicon-info-sign">_</span></a>
