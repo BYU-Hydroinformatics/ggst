@@ -69,7 +69,6 @@ var LIBRARY_OBJECT = (function() {
         map_lat = $("#map-info").attr("map-lat");
         map_lon = $("#map-info").attr("map-lon");
         region_name = $("#map-info").attr("region-name");
-        console.log(region_name, map_lat, map_lon, wms_url);
     };
 
     //Reset the alerts if everything is going well
@@ -121,17 +120,16 @@ var LIBRARY_OBJECT = (function() {
         };
         wms_legend.addTo(map);
 
-        var timeDimension = new L.TimeDimension();
-        map.timeDimension = timeDimension;
+        map.timeDimension = new L.TimeDimension();
 
         var player  = new L.TimeDimension.Player({
             loop: true,
             startOver:true
-        }, timeDimension);
+        }, map.timeDimension);
 
         var timeDimensionControlOptions = {
             player:        player,
-            timeDimension: timeDimension,
+            timeDimension: map.timeDimension,
             position:      'bottomleft',
             autoPlay:      false,
             minSpeed:      1,
@@ -265,24 +263,27 @@ var LIBRARY_OBJECT = (function() {
         xhr.done(function(result){
             if('success' in result){
                 let wmsUrl = wms_url + region_name + '/'+ region_name +'_' + signal_process + '_' + storage_type + '.nc';
-
+                let opacity = $("#opacity_val").val();
                 range_min = result['range_min'];
                 range_max = result['range_max'];
+                let layer_arr = layer_val.toString().split("|");
+                let time_string = layer_arr[0]
                 contourLayer = L.tileLayer.wms(wmsUrl, {
                     layers: 'lwe_thickness',
                     format: 'image/png',
                     transparent: true,
                     styles: 'contour/'+style,
                     crs: L.CRS.EPSG4326,
-                    opacity: '1.0',
+                    opacity: opacity,
                     colorscalerange: [range_min, range_max],
                     version:'1.3.0',
-                    zIndex: 10
+                    zIndex: 10,
+                    time: time_string
                 });
 
                 contourTimeLayer = L.timeDimension.layer.wms(contourLayer,{
-                    updateTimeDimension:true,
-                    setDefaultTime:true,
+                    // updateTimeDimension:true,
+                    // setDefaultTime:true,
                     cache:48
                 });
 
@@ -291,15 +292,16 @@ var LIBRARY_OBJECT = (function() {
                     format: 'image/png',
                     transparent: true,
                     styles: 'boxfill/'+style,
-                    opacity: '1.0',
+                    opacity: 'opacity',
                     colorscalerange: [range_min, range_max],
                     version:'1.3.0',
-                    zIndex:5
+                    zIndex:5,
+                    time: time_string
                 });
 
                 tdWmsLayer = L.timeDimension.layer.wms(wmsLayer,{
-                    updateTimeDimension:true,
-                    setDefaultTime:true,
+                    // updateTimeDimension:true,
+                    // setDefaultTime:true,
                     cache:48
                 });
                 // tdWmsLayer.addTo(map);
@@ -310,8 +312,8 @@ var LIBRARY_OBJECT = (function() {
 
                 var src = wmsUrl + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=lwe_thickness"+
                     "&colorscalerange="+range_min+","+range_max+"&PALETTE=boxfill/"+style+"&transparent=TRUE";
-                // var src = wmsUrl + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=lwe_thickness&PALETTE=boxfill/"+style+"&transparent=TRUE";
                 $("#legend-image").attr("src", src);
+                map.timeDimension.setCurrentTime(layer_arr[1]);
             }
         });
     };
@@ -353,11 +355,47 @@ var LIBRARY_OBJECT = (function() {
     // the DOM tree finishes loading
     $(function() {
         init_all();
+        $("#region-select").val(region_name).trigger('change');
+
         $("#region-select").change(function(){
             let {signal_process, layer_val, storage_type, region} = get_dropdown_vals();
             let symbology = $("#select-symbology option:selected").val();
             get_region_center(region);
             add_wms(region, signal_process, layer_val, storage_type, symbology);
+        });
+        $selectLayer.change(function(){
+            let {signal_process, layer_val, storage_type, region} = get_dropdown_vals();
+            let symbology = $("#select-symbology option:selected").val();
+            add_wms(region, signal_process, layer_val, storage_type, symbology);
+        });
+
+        $selectSignalProcess.change(function(){
+            let {signal_process, layer_val, storage_type, region} = get_dropdown_vals();
+            let symbology = $("#select-symbology option:selected").val();
+            add_wms(region, signal_process, layer_val, storage_type, symbology);
+            if(globalCoords){
+                get_ts(globalCoords);
+            }
+        });
+
+        $selectStorageType.change(function(){
+            let {signal_process, layer_val, storage_type, region} = get_dropdown_vals();
+            let symbology = $("#select-symbology option:selected").val();
+            add_wms(region, signal_process, layer_val, storage_type, symbology);
+            if(globalCoords){
+                get_ts(globalCoords);
+            }
+        });
+
+        $("#select-symbology").change(function(){
+            let {signal_process, layer_val, storage_type, region} = get_dropdown_vals();
+            let symbology = $("#select-symbology option:selected").val();
+            add_wms(region, signal_process, layer_val, storage_type, symbology);
+        }).change();
+
+        $("#opacity_val").change(function(){
+            let opacity = $("#opacity_val").val();
+            tdWmsLayer.setOpacity(opacity);
         });
     });
 

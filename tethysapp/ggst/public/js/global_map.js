@@ -263,6 +263,8 @@ var LIBRARY_OBJECT = (function() {
         let wmsUrl = wms_url + 'GRC_' + signal_process + '_' + storage_type + '.nc';
         let range_min = -50;
         let range_max = 50;
+        let layer_arr = layer_val.toString().split("|");
+        let time_string = layer_arr[0]
         contourLayer = L.tileLayer.wms(wmsUrl, {
             layers: 'lwe_thickness',
             format: 'image/png',
@@ -272,12 +274,13 @@ var LIBRARY_OBJECT = (function() {
             opacity: '1.0',
             colorscalerange: [range_min, range_max],
             version:'1.3.0',
-            zIndex: 10
+            zIndex: 10,
+            time: time_string
         });
 
         contourTimeLayer = L.timeDimension.layer.wms(contourLayer,{
             updateTimeDimension:true,
-            setDefaultTime:true,
+            // setDefaultTime:true,
             cache:48
         });
 
@@ -287,14 +290,15 @@ var LIBRARY_OBJECT = (function() {
             transparent: true,
             styles: 'boxfill/'+style,
             opacity: '1.0',
-            // colorscalerange: [range_min, range_max],
+            colorscalerange: [range_min, range_max],
             version:'1.3.0',
-            zIndex:5
+            zIndex:5,
+            time: time_string
         });
 
         tdWmsLayer = L.timeDimension.layer.wms(wmsLayer,{
             updateTimeDimension:true,
-            setDefaultTime:true,
+            // setDefaultTime:true,
             cache:48
         });
         // tdWmsLayer.addTo(map);
@@ -307,6 +311,7 @@ var LIBRARY_OBJECT = (function() {
             "&colorscalerange="+range_min+","+range_max+"&PALETTE=boxfill/"+style+"&transparent=TRUE";
         // var src = wmsUrl + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=lwe_thickness&PALETTE=boxfill/"+style+"&transparent=TRUE";
         $("#legend-image").attr("src", src);
+        map.timeDimension.setCurrentTime(layer_arr[1]);
     };
 
     get_ts = function(coords){

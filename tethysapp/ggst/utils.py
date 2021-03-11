@@ -85,7 +85,9 @@ def get_grace_timestep_options():
     grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
     nc_file = f'{grace_dir}GRC_avg_sw.nc'
     ds = xarray.open_dataset(nc_file)
-    grace_layer_options = [(pd.to_datetime(time_step).strftime('%Y %B %d'), str(time_step)) for time_step in ds.time.values]
+    grace_layer_options = [(pd.to_datetime(time_step).strftime('%Y %B %d'),
+                            f'{str(time_step)}|{int(time_step.astype(int) / 1000000)}')
+                           for time_step in ds.time.values]
     return grace_layer_options
 
 
