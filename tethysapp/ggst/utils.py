@@ -189,12 +189,16 @@ def gen_zip_api(gdf: gpd.GeoDataFrame,
     return in_memory_zip
 
 
-def generate_global_timeseries(storage_type, signal_process, lat, lon):
+def generate_timeseries(storage_type, signal_process, lat, lon, region):
     graph_json = {}
     ts_plot = []
     ts_plot_int = []
     grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
-    nc_file = f'{grace_dir}GRC_{signal_process}_{storage_type}.nc'
+    if region == 'global':
+        nc_file = f'{grace_dir}GRC_{signal_process}_{storage_type}.nc'
+    else:
+        nc_file = os.path.join(grace_dir, region, f'{region}_{signal_process}_{storage_type}.nc')
+        print(nc_file)
     stn_lat = float(lat)
     stn_lon = float(lon)
     if stn_lon < 0.0:

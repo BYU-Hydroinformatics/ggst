@@ -28,6 +28,7 @@ var LIBRARY_OBJECT = (function() {
         map,
         map_lat,
         map_lon,
+        mychart,
         overlay_maps,
         public_interface,
         range_min,
@@ -51,10 +52,15 @@ var LIBRARY_OBJECT = (function() {
         get_dropdown_vals,
         get_legend_range,
         get_region_center,
+        get_ts,
         init_all,
         init_jquery,
         init_map,
-        reset_alert;
+        original_map_chart,
+        reset_alert,
+        resize_map_chart,
+        updateChart,
+        update_wms;
 
 
     /************************************************************************
@@ -80,6 +86,20 @@ var LIBRARY_OBJECT = (function() {
             .removeClass('alert-info')
             .removeClass('alert-warning')
             .removeClass('alert-danger');
+    };
+
+    resize_map_chart = function(){
+        $('#chart').addClass('partial-chart');
+        $('#chart').removeClass('full-chart');
+        $('#map').removeClass('full-map');
+        $('#map').addClass('partial-map');
+    };
+
+    original_map_chart = function(){
+        $('#chart').removeClass('partial-chart');
+        $('#chart').addClass('full-chart');
+        $('#map').addClass('full-map');
+        $('#map').removeClass('partial-map');
     };
 
     init_map = function(){
@@ -148,17 +168,17 @@ var LIBRARY_OBJECT = (function() {
 
         var min_input = L.control({position: 'topleft'});
         min_input.onAdd = function(map){
-            var div = L.DomUtil.create('div', 'min_input lcontrol hidden');
-            div.innerHTML = '<b>Min:</b><input type="number" class="form-control input-sm" name="leg_min" id="leg_min" min="-5000" max="5000" step="10" value="-500" disabled>';
+            var div = L.DomUtil.create('div', 'min_input lcontrol');
+            div.innerHTML = '<b>Min:</b><input type="number" class="form-control input-sm" name="leg_min" id="leg_min" min="-5000" max="5000" step="1" value="-500" >';
             return div;
         };
         min_input.addTo(map);
 
         var max_input = L.control({position: 'topleft'});
         max_input.onAdd = function(map){
-            var div = L.DomUtil.create('div', 'max_input lcontrol hidden');
+            var div = L.DomUtil.create('div', 'max_input lcontrol');
             div.innerHTML = '<b>Max:</b><input type="number" class="form-control input-sm" name="leg_max" id="leg_max" ' +
-                'min="-5000" max="5000" step="10" value="0" disabled>';
+                'min="-5000" max="5000" step="1" value="0" >';
             return div;
         };
         max_input.addTo(map);
@@ -255,6 +275,60 @@ var LIBRARY_OBJECT = (function() {
         });
     };
 
+    update_wms = function(region_name, signal_process, layer_val, storage_type, style, range_min, range_max){
+        let wmsUrl = wms_url + region_name + '/'+ region_name +'_' + signal_process + '_' + storage_type + '.nc';
+        let opacity = $("#opacity_val").val();
+        let layer_arr = layer_val.toString().split("|");
+        let time_string = layer_arr[0]
+        contourLayer = L.tileLayer.wms(wmsUrl, {
+            layers: 'lwe_thickness',
+            format: 'image/png',
+            transparent: true,
+            styles: 'contour/'+style,
+            crs: L.CRS.EPSG4326,
+            opacity: opacity,
+            colorscalerange: [range_min, range_max],
+            version:'1.3.0',
+            zIndex: 10,
+            time: time_string
+        });
+
+        contourTimeLayer = L.timeDimension.layer.wms(contourLayer,{
+            // updateTimeDimension:true,
+            // setDefaultTime:true,
+            cache:48
+        });
+
+        wmsLayer = L.tileLayer.wms(wmsUrl, {
+            layers: 'lwe_thickness',
+            format: 'image/png',
+            transparent: true,
+            styles: 'boxfill/'+style,
+            opacity: 'opacity',
+            colorscalerange: [range_min, range_max],
+            version:'1.3.0',
+            zIndex:5,
+            time: time_string
+        });
+
+        tdWmsLayer = L.timeDimension.layer.wms(wmsLayer,{
+            // updateTimeDimension:true,
+            // setDefaultTime:true,
+            cache:48
+        });
+        // tdWmsLayer.addTo(map);
+        // contourTimeLayer.addTo(map);
+        graceGroup.addLayer(tdWmsLayer);
+        contourGroup.addLayer(contourTimeLayer);
+        contourTimeLayer.bringToFront();
+
+        var src = wmsUrl + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=lwe_thickness"+
+            "&colorscalerange="+range_min+","+range_max+"&PALETTE=boxfill/"+style+"&transparent=TRUE";
+        $("#legend-image").attr("src", src);
+        map.timeDimension.setCurrentTime(layer_arr[1]);
+    };
+
+
     get_legend_range = function(region_name, signal_process, layer_val, storage_type, style){
         const xhr = ajax_update_database('range',
             {'region_name': region_name,
@@ -262,58 +336,12 @@ var LIBRARY_OBJECT = (function() {
                 'storage_type': storage_type});
         xhr.done(function(result){
             if('success' in result){
-                let wmsUrl = wms_url + region_name + '/'+ region_name +'_' + signal_process + '_' + storage_type + '.nc';
-                let opacity = $("#opacity_val").val();
+
                 range_min = result['range_min'];
                 range_max = result['range_max'];
-                let layer_arr = layer_val.toString().split("|");
-                let time_string = layer_arr[0]
-                contourLayer = L.tileLayer.wms(wmsUrl, {
-                    layers: 'lwe_thickness',
-                    format: 'image/png',
-                    transparent: true,
-                    styles: 'contour/'+style,
-                    crs: L.CRS.EPSG4326,
-                    opacity: opacity,
-                    colorscalerange: [range_min, range_max],
-                    version:'1.3.0',
-                    zIndex: 10,
-                    time: time_string
-                });
-
-                contourTimeLayer = L.timeDimension.layer.wms(contourLayer,{
-                    // updateTimeDimension:true,
-                    // setDefaultTime:true,
-                    cache:48
-                });
-
-                wmsLayer = L.tileLayer.wms(wmsUrl, {
-                    layers: 'lwe_thickness',
-                    format: 'image/png',
-                    transparent: true,
-                    styles: 'boxfill/'+style,
-                    opacity: 'opacity',
-                    colorscalerange: [range_min, range_max],
-                    version:'1.3.0',
-                    zIndex:5,
-                    time: time_string
-                });
-
-                tdWmsLayer = L.timeDimension.layer.wms(wmsLayer,{
-                    // updateTimeDimension:true,
-                    // setDefaultTime:true,
-                    cache:48
-                });
-                // tdWmsLayer.addTo(map);
-                // contourTimeLayer.addTo(map);
-                graceGroup.addLayer(tdWmsLayer);
-                contourGroup.addLayer(contourTimeLayer);
-                contourTimeLayer.bringToFront();
-
-                var src = wmsUrl + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=lwe_thickness"+
-                    "&colorscalerange="+range_min+","+range_max+"&PALETTE=boxfill/"+style+"&transparent=TRUE";
-                $("#legend-image").attr("src", src);
-                map.timeDimension.setCurrentTime(layer_arr[1]);
+                $("#leg_min").val(range_min);
+                $("#leg_max").val(range_max);
+                update_wms(region_name, signal_process, layer_val, storage_type, style, range_min, range_max);
             }
         });
     };
@@ -326,6 +354,167 @@ var LIBRARY_OBJECT = (function() {
         graceGroup.clearLayers();
         contourGroup.clearLayers();
         get_legend_range(region_name, signal_process, layer_val, storage_type, style);
+    };
+
+    get_ts = function(coords){
+        let {signal_process, layer_val, storage_type, region} = get_dropdown_vals();
+        let signal_name = $("#select-signal-process option:selected").text();
+        let storage_name = $("#select-storage-type option:selected").text();
+        // let symbology = $("#select-symbology option:selected").val();
+        var xhr = ajax_update_database("get-plot-region", {
+            region: region,
+            storage_type: storage_type,
+            signal_process: signal_process,
+            lon: coords[0],
+            lat: coords[1]
+        });
+        xhr.done(function(result) {
+            if ("success" in result) {
+                resize_map_chart();
+                $('.error').html('');
+                mychart=Highcharts.stockChart('chart', {
+                    legend: {
+                        enabled:true
+                    },
+                    chart: {
+                        zoomType: 'x'
+                    },
+                    rangeSelector: {
+                        selected: tdWmsLayer._defaultRangeSelector,
+                        buttons: [{
+                            type: 'all',
+                            text: 'All'
+                        }]
+                    },
+                    title: {
+                        text: " Water Storage Anomaly values at " + result.location,
+                        style: {
+                            fontSize: '14px'
+                        }
+                    },
+                    xAxis: {
+//                        type: 'datetime',
+//                        labels: {
+//                            format: '{value: %d %b %Y}',
+//                             rotation: 45,
+//                             align: 'left'
+//                        },
+                        plotLines: [{
+                            color: 'red',
+                            dashStyle: 'solid',
+                            value: new Date(map.timeDimension.getCurrentTime()),
+                            width: 2,
+                            id: 'pbCurrentTime'
+                        }],
+                        title: {
+                            text: 'Date'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: "Storage Volume",
+                        }
+
+                    },
+                    exporting: {
+                        enabled: true
+                    },
+                    series: [{
+                        data:result.values,
+                        name: signal_name+' '+storage_name,
+                        type: 'area',
+                        visible: true,
+                        tooltip: {
+                            valueDecimals: 2,
+                            valueSuffix: ' Liquid Water Eqv. Thickness (cm)',
+                            xDateFormat: '%A, %b %e, %Y',
+                            headerFormat: '<span style="font-size: 12px; font-weight:bold;">{point.key} (Click to visualize the map on this time)</span><br/>'
+                        }
+                    },
+                        {
+                            data:result.integr_values,
+                            name: signal_name + storage_name + ' Depletion Curve',
+                            type: 'area',
+                            visible: false,
+                            tooltip: {
+                                valueDecimals: 2,
+                                valueSuffix: ' Change in Volume since April 16, 2002 (Acre-ft)',
+                                xDateFormat: '%A, %b %e, %Y',
+                                headerFormat: '<span style="font-size: 12px; font-weight:bold;">{point.key} (Click to visualize the map on this time)</span><br/>'
+                            }
+                        },
+                    ],
+                    lang: {
+                        noData:'There is no data to display.  Please select a point where data exists.'
+                    },
+                    noData: {
+                        style: {
+                            fontWeight: 'bold',
+                            fontSize: '15px',
+                            color: '#303030'
+                        }
+                    },
+
+                    plotOptions: {
+                        series: {
+                            cursor: 'pointer',
+                            point: {
+                                events: {
+                                    click: (function(event) {
+                                        var day = new Date(event.point.x);
+                                        map.timeDimension.setCurrentTime(day.getTime());
+                                    }).bind(this)
+                                }
+                            }
+                        }
+                    }
+                });
+                updateChart = function () {
+
+                    if (!mychart){
+                        return;
+                    }
+                    var tot_series = mychart.series[0];
+                    var sw_series = mychart.series[1];
+                    var soil_series = mychart.series[2];
+                    var gw_series = mychart.series[3];
+
+                    var storage_type = $("#select_storage_type option:selected").val();
+
+
+                    if (storage_type === "tot"){
+                        tot_series.show() }
+                    else if (storage_type === "sw"){
+                        sw_series.show() }
+                    else if (storage_type === "soil"){
+                        soil_series.show() }
+                    else if (storage_type === "gw"){
+                        gw_series.show() }
+                };
+                //    updateChart();
+
+                map.timeDimension.on('timeload', (function() {
+                    if (!mychart){
+                        return;
+                    }
+                    mychart.xAxis[0].removePlotBand("pbCurrentTime");
+                    mychart.xAxis[0].addPlotLine({
+                        color: 'red',
+                        dashStyle: 'solid',
+                        value: new Date(map.timeDimension.getCurrentTime()),
+                        width: 2,
+                        id: 'pbCurrentTime'
+                    });
+                }));
+//                updateChart();
+//                 $loading.addClass('hidden');
+                $("#chart").removeClass('hidden');
+            }else{
+                // console.log(result);
+                console.log('error');
+            }
+        });
+
     };
 
 
@@ -362,6 +551,7 @@ var LIBRARY_OBJECT = (function() {
             let symbology = $("#select-symbology option:selected").val();
             get_region_center(region);
             add_wms(region, signal_process, layer_val, storage_type, symbology);
+            original_map_chart();
         });
         $selectLayer.change(function(){
             let {signal_process, layer_val, storage_type, region} = get_dropdown_vals();
@@ -397,6 +587,23 @@ var LIBRARY_OBJECT = (function() {
             let opacity = $("#opacity_val").val();
             tdWmsLayer.setOpacity(opacity);
         });
+
+        $("#leg_min").change(function(){
+            let {signal_process, layer_val, storage_type, region} = get_dropdown_vals();
+            let symbology = $("#select-symbology option:selected").val();
+            let range_min = $("#leg_min").val();
+            let range_max = $("#leg_max").val();
+            update_wms(region, signal_process, layer_val, storage_type, symbology, range_min, range_max);
+        });
+
+        $("#leg_max").change(function(){
+            let {signal_process, layer_val, storage_type, region} = get_dropdown_vals();
+            let symbology = $("#select-symbology option:selected").val();
+            let range_min = $("#leg_min").val();
+            let range_max = $("#leg_max").val();
+            update_wms(region, signal_process, layer_val, storage_type, symbology, range_min, range_max);
+        });
+
     });
 
     return public_interface;

@@ -46,6 +46,11 @@ class Ggst(TethysAppBase):
                 controller='ggst.controllers.region_map'
             ),
             UrlMap(
+                name='region-map-plot',
+                url='ggst/region-map/get-plot-region',
+                controller='ggst.controllers_ajax.get_region_plot'
+            ),
+            UrlMap(
                 name='region-map-center',
                 url='ggst/region-map/map-center',
                 controller='ggst.controllers_ajax.get_region_center'

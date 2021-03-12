@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import (user_passes_test)
 from django.http import JsonResponse
 
 from .utils import (file_range,
-                    generate_global_timeseries,
+                    generate_timeseries,
                     get_region_bounds,
                     user_permission_test,
                     process_shapefile)
@@ -39,10 +39,11 @@ def get_global_plot(request):
         storage_type = info.get('storage_type')
         signal_process = info.get('signal_process')
         print(storage_type, signal_process, lat, lon)
-        graph = generate_global_timeseries(storage_type,
-                                           signal_process,
-                                           lat,
-                                           lon)
+        graph = generate_timeseries(storage_type,
+                                    signal_process,
+                                    lat,
+                                    lon,
+                                    'global')
         graph = json.loads(graph)
         return_obj["values"] = graph["values"]
         return_obj["integr_values"] = graph["integr_values"]
@@ -52,6 +53,31 @@ def get_global_plot(request):
         return JsonResponse(return_obj)
         # except Exception as e:
         #     return JsonResponse({'error': str(e)})
+
+
+def get_region_plot(request):
+
+    if request.is_ajax() and request.method == 'POST':
+        # try:
+        return_obj = {}
+        info = request.POST
+        lon = info.get('lon')
+        lat = info.get('lat')
+        region = info.get('region')
+        storage_type = info.get('storage_type')
+        signal_process = info.get('signal_process')
+        graph = generate_timeseries(storage_type,
+                                    signal_process,
+                                    lat,
+                                    lon,
+                                    region)
+        graph = json.loads(graph)
+        return_obj["values"] = graph["values"]
+        return_obj["integr_values"] = graph["integr_values"]
+        return_obj["location"] = graph["point"]
+        return_obj['success'] = "success"
+
+        return JsonResponse(return_obj)
 
 
 def get_region_center(request):

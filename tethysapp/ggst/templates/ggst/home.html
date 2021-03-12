@@ -9,6 +9,7 @@
 
 {% block app_content %}
 <h1>Welcome</h1>
+<script>window.onbeforeunload = null;</script>
 <p>This app produces basic maps and timeseries using data from the <a href="https://www.jpl.nasa.gov/missions/gravity-recovery-and-climate-experiment-grace/" target="_blank">GRACE mission</a></p>
 <form action="{% url 'ggst:region-map' %}" method="get">
     <p>Select a region from the dropdown below to view timeseries and an interactive map.</p>

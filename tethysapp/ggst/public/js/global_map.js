@@ -326,7 +326,6 @@ var LIBRARY_OBJECT = (function() {
             lat: coords[1]
         });
         xhr.done(function(result) {
-            console.log(result);
             if ("success" in result) {
                 resize_map_chart();
                 $('.error').html('');
