@@ -104,7 +104,7 @@ var LIBRARY_OBJECT = (function() {
 
     init_map = function(){
         map = L.map('map', {
-            zoom: 6,
+            zoom: 5,
             center: [map_lat, map_lon],
             // crs: L.CRS.EPSG3857
         });
@@ -360,14 +360,17 @@ var LIBRARY_OBJECT = (function() {
         let {signal_process, layer_val, storage_type, region} = get_dropdown_vals();
         let signal_name = $("#select-signal-process option:selected").text();
         let storage_name = $("#select-storage-type option:selected").text();
+        let ts_method = $("#ts-select option:selected").val();
         // let symbology = $("#select-symbology option:selected").val();
         var xhr = ajax_update_database("get-plot-region", {
             region: region,
             storage_type: storage_type,
             signal_process: signal_process,
             lon: coords[0],
-            lat: coords[1]
+            lat: coords[1],
+            ts_method: ts_method
         });
+
         xhr.done(function(result) {
             if ("success" in result) {
                 resize_map_chart();

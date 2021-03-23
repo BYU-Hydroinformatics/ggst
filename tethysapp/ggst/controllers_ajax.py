@@ -1,3 +1,4 @@
+import os
 import json
 
 from django.contrib.auth.decorators import (user_passes_test)
@@ -7,7 +8,10 @@ from .utils import (file_range,
                     generate_timeseries,
                     get_region_bounds,
                     user_permission_test,
-                    process_shapefile)
+                    process_shapefile,
+                    TimeSeries)
+
+from .app import Ggst as app
 
 
 @user_passes_test(user_permission_test)
@@ -39,6 +43,8 @@ def get_global_plot(request):
         storage_type = info.get('storage_type')
         signal_process = info.get('signal_process')
         print(storage_type, signal_process, lat, lon)
+        grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
+        ds = TimeSeries(storage_type, signal_process, float(lat), float(lon), 'global', grace_dir)
         graph = generate_timeseries(storage_type,
                                     signal_process,
                                     lat,
@@ -66,6 +72,8 @@ def get_region_plot(request):
         region = info.get('region')
         storage_type = info.get('storage_type')
         signal_process = info.get('signal_process')
+        method = info.get('ts_method')
+        print(method)
         graph = generate_timeseries(storage_type,
                                     signal_process,
                                     lat,

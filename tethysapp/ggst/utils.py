@@ -115,12 +115,19 @@ def get_region_select():
     return region_select
 
 
+def get_timeseries_select():
+    ts_select = SelectInput(display_text='Select a Time Series Algorithm',
+                            name='ts-select',
+                            options=[('Time Step Mean', 'time_step_mean'),
+                                     ('Weighted Mean', 'weighted_mean')])
+    return ts_select
+
+
 def clip_nc(nc_file: str,
             gdf: gpd.GeoDataFrame,
             region_name: str,
             grace_dir: str) -> str:
     # logger.info(f'Subset {nc_file} for {region_name}')
-    print(nc_file)
     ds = xarray.open_dataset(nc_file)
     ds = ds.assign({"lon": (((ds.lon + 180) % 360) - 180)}).sortby('lon')
     ds['lwe_thickness'] = ds['lwe_thickness'].rio.write_crs("epsg:4326")
@@ -194,23 +201,30 @@ def generate_timeseries(storage_type, signal_process, lat, lon, region):
     ts_plot = []
     ts_plot_int = []
     grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
-    if region == 'global':
-        nc_file = f'{grace_dir}GRC_{signal_process}_{storage_type}.nc'
-    else:
-        nc_file = os.path.join(grace_dir, region, f'{region}_{signal_process}_{storage_type}.nc')
-        print(nc_file)
+
     stn_lat = float(lat)
     stn_lon = float(lon)
-    if stn_lon < 0.0:
-        stnd_lon = float(stn_lon + 360.0)
+
+    if region == 'global':
+        nc_file = f'{grace_dir}GRC_{signal_process}_{storage_type}.nc'
+        if stn_lon < 0.0:
+            stnd_lon = float(stn_lon + 360.0)
+        else:
+            stnd_lon = stn_lon
     else:
+        nc_file = os.path.join(grace_dir, region, f'{region}_{signal_process}_{storage_type}.nc')
         stnd_lon = stn_lon
+
+    print(nc_file)
+    print(stn_lat, stn_lon, stnd_lon)
+
     ds = xarray.open_dataset(nc_file)
     time_array = ds.time.values
     lat_array = ds['lat'][:]
     lon_array = ds['lon'][:]
     lon_idx = (np.abs(lon_array - stnd_lon)).argmin().values
     lat_idx = (np.abs(lat_array - stn_lat)).argmin().values
+
     init_value = float(ds['lwe_thickness'][0, lat_idx, lon_idx].values)
 
     for time_index, time_stamp in enumerate(time_array):
@@ -252,3 +266,89 @@ def file_range(region_name, signal_process, storage_type):
     min_val = round(float(lwe_thickness.min()), 2)
     max_val = round(float(lwe_thickness.max()), 2)
     return min_val, max_val
+
+
+class GraceArray(object):
+
+    def __init__(self, storage_type, signal_process, region, grace_dir):
+        self.storage_type = storage_type
+        self.signal_process = signal_process
+        self.region = region
+        self.grace_dir = grace_dir
+        self.nc_file = self._get_nc_file()
+        self.dataset = self._get_data_array()
+
+    def _get_nc_file(self):
+        region = self.region
+        grace_dir = self.grace_dir
+        signal_process = self.signal_process
+        storage_type = self.storage_type
+        if region == 'global':
+            nc_file = f'{grace_dir}GRC_{signal_process}_{storage_type}.nc'
+        else:
+            nc_file = os.path.join(grace_dir, region, f'{region}_{signal_process}_{storage_type}.nc')
+
+        return nc_file
+
+    def _get_data_array(self):
+        ds = xarray.open_dataset(self.nc_file)
+        return ds
+
+
+class PointArray(GraceArray):
+    def __init__(self, lat, lon, storage_type, signal_process, region, grace_dir):
+        self.lat = lat
+        self.lon = lon
+        super().__init__(storage_type, signal_process, region, grace_dir)
+        self.time_array = self.dataset.time.values
+        self.lat_array = self.dataset['lat'][:]
+        self.lon_array = self.dataset['lon'][:]
+        self.lat_idx = self._get_lat_idx()
+        self.lon_idx = self._get_lon_idx()
+
+    def _get_lat_idx(self):
+        lat_array = self.lat_array
+        lat = self.lat
+        return (np.abs(lat_array - lat)).argmin().values
+
+    def _get_lon_idx(self):
+        lon = self.lon
+        region = self.region
+        lon_array = self.lon_array
+        if region == 'global':
+            if lon < 0.0:
+                stnd_lon = float(lon + 360.0)
+            else:
+                stnd_lon = lon
+        else:
+            stnd_lon = lon
+        return (np.abs(lon_array - stnd_lon)).argmin().values
+
+
+class TimeSeries(PointArray):
+
+    def _calc_mean_ts(self):
+        lat_idx = self.lat_idx
+        dataset = self.dataset
+        lat = self.lat
+        lon = self.lon
+
+        graph_json = {}
+        time_series = []
+        time_series_int = []
+
+        init_value = float(dataset['lwe_thickness'].mean(('lat', 'lon'))[0].values)
+
+        for time_index, time_stamp in enumerate(dataset.lwe_thickness.mean(('lat', 'lon'))):
+            value = float(time_stamp.values)
+            difference_data_value = (value - init_value) * 0.01 * 6371000 * math.radians(0.25) * \
+                                    6371000 * math.radians(0.25) * abs(math.cos(math.radians(lat_idx))) * 0.000810714
+            utc_time = int(time_stamp['time'].astype(int) / 1000000)
+            time_series.append([utc_time, round(float(value), 3)])
+            time_series_int.append([utc_time, round(float(difference_data_value), 3)])
+        graph_json["values"] = sorted(time_series)
+        graph_json["integr_values"] = sorted(time_series_int)
+        graph_json["point"] = [round(lat, 2), round(lon, 2)]
+        graph_json = json.dumps(graph_json)
+        return graph_json
+

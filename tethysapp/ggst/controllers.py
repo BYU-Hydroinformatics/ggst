@@ -10,6 +10,7 @@ from .utils import (get_catalog_url,
                     get_signal_process_select,
                     get_symbology_select,
                     get_storage_type_select,
+                    get_timeseries_select,
                     user_permission_test)
 
 
@@ -55,6 +56,7 @@ def region_map(request):
     region_name = info.get('region-select')
     region_select = get_region_select()
     layer_select = get_layer_select()
+    ts_select = get_timeseries_select()
     signal_process_select = get_signal_process_select()
     storage_type_select = get_storage_type_select()
     symbology_select = get_symbology_select()
@@ -65,6 +67,7 @@ def region_map(request):
 
     context = {'region_name': region_name,
                'region_select': region_select,
+               'ts_select': ts_select,
                'map_lat': lat,
                'map_lon': lon,
                'layer_select': layer_select,
