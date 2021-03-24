@@ -606,6 +606,11 @@ var LIBRARY_OBJECT = (function() {
             let range_max = $("#leg_max").val();
             update_wms(region, signal_process, layer_val, storage_type, symbology, range_min, range_max);
         });
+        $("#ts-select").change(function(){
+            if(globalCoords){
+                get_ts(globalCoords);
+            }
+        });
 
     });
 

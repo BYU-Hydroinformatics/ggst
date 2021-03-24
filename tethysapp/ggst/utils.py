@@ -119,7 +119,7 @@ def get_timeseries_select():
     ts_select = SelectInput(display_text='Select a Time Series Algorithm',
                             name='ts-select',
                             options=[('Time Step Mean', 'time_step_mean'),
-                                     ('Weighted Mean', 'weighted_mean')])
+                                     ('Raw Values', 'raw_values')])
     return ts_select
 
 
@@ -327,20 +327,36 @@ class PointArray(GraceArray):
 
 class TimeSeries(PointArray):
 
-    def _calc_mean_ts(self):
+    def _get_global_vars(self):
         lat_idx = self.lat_idx
+        lon_idx = self.lon_idx
         dataset = self.dataset
         lat = self.lat
         lon = self.lon
+        return lat, lon, lat_idx, lon_idx, dataset
 
+    def calc_mean_ts(self):
+        lat, lon, lat_idx, lon_idx, dataset = self._get_global_vars()
+        init_value = float(dataset['lwe_thickness'].mean(('lat', 'lon'))[0].values)
+        graph_json = self.get_ts(lat, lon, lat_idx, None, init_value, dataset.lwe_thickness.mean(('lat', 'lon')))
+        return graph_json
+
+    def calc_raw_ts(self):
+        lat, lon, lat_idx, lon_idx, dataset = self._get_global_vars()
+        init_value = float(dataset['lwe_thickness'][0, lat_idx, lon_idx].values)
+        graph_json = self.get_ts(lat, lon, lat_idx, lon_idx, init_value, dataset.lwe_thickness)
+        return graph_json
+
+    @staticmethod
+    def get_ts(lat, lon, lat_idx, lon_idx, init_value, ts_array):
         graph_json = {}
         time_series = []
         time_series_int = []
-
-        init_value = float(dataset['lwe_thickness'].mean(('lat', 'lon'))[0].values)
-
-        for time_index, time_stamp in enumerate(dataset.lwe_thickness.mean(('lat', 'lon'))):
-            value = float(time_stamp.values)
+        for time_index, time_stamp in enumerate(ts_array):
+            if lon_idx is None:
+                value = float(time_stamp.values)
+            else:
+                value = ts_array[time_index, :, :][lat_idx, lon_idx].values
             difference_data_value = (value - init_value) * 0.01 * 6371000 * math.radians(0.25) * \
                                     6371000 * math.radians(0.25) * abs(math.cos(math.radians(lat_idx))) * 0.000810714
             utc_time = int(time_stamp['time'].astype(int) / 1000000)

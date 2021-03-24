@@ -73,12 +73,18 @@ def get_region_plot(request):
         storage_type = info.get('storage_type')
         signal_process = info.get('signal_process')
         method = info.get('ts_method')
-        print(method)
-        graph = generate_timeseries(storage_type,
-                                    signal_process,
-                                    lat,
-                                    lon,
-                                    region)
+        grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
+        time_series = TimeSeries(float(lat),
+                                 float(lon),
+                                 storage_type,
+                                 signal_process,
+                                 region,
+                                 grace_dir)
+        graph = None
+        if method == 'time_step_mean':
+            graph = time_series.calc_mean_ts()
+        elif method == 'raw_values':
+            graph = time_series.calc_raw_ts()
         graph = json.loads(graph)
         return_obj["values"] = graph["values"]
         return_obj["integr_values"] = graph["integr_values"]
