@@ -45,6 +45,7 @@ var LIBRARY_OBJECT = (function() {
      *************************************************************************/
 
     var add_wms,
+        get_timestep,
         get_dropdown_vals,
         get_ts,
         init_all,
@@ -52,8 +53,7 @@ var LIBRARY_OBJECT = (function() {
         init_map,
         original_map_chart,
         reset_alert,
-        resize_map_chart,
-        updateChart;
+        resize_map_chart;
 
 
     /************************************************************************
@@ -64,6 +64,7 @@ var LIBRARY_OBJECT = (function() {
         $selectSignalProcess = $("#select-signal-process");
         $selectLayer = $("#select-layer");
         $selectStorageType = $("#select-storage-type");
+        $selectStyle = $("#select-symbology");
         wms_url = $("#map-info").attr("wms-url");
     };
 
@@ -89,6 +90,32 @@ var LIBRARY_OBJECT = (function() {
             .removeClass('alert-info')
             .removeClass('alert-warning')
             .removeClass('alert-danger');
+    };
+
+    get_timestep = function(storage_type){
+        var xhr = ajax_update_database("timestep", {
+            storage_type: storage_type
+        });
+        xhr.done(function(result) {
+            if ("success" in result) {
+                $("#select-layer").html('');
+                // var empty_opt = '<option value="" selected disabled>Select item...</option>';
+                // $("#select-interpolation").append(empty_opt);
+                // $("#select-interpolation").val('').trigger('change');
+                var layer_options = result['layer_options'];
+                layer_options.forEach(function(attr,i){
+                    var layer_option = new Option(attr[0], attr[1]);
+                    $("#select-layer").append(layer_option);
+                });
+                let layer_val = $selectLayer.val();
+                $selectLayer.val(layer_val);
+                $("#select-layer option:selected").text(result['layer_options'][0][0]);
+                let symbology = $("#select-symbology option:selected").val();
+                let range_min = $("#leg_min").val();
+                let range_max = $("#leg_max").val();
+                add_wms(layer_val, storage_type, symbology, 'add', range_min, range_max);
+            }
+        });
     };
 
     init_map = function() {
@@ -134,6 +161,16 @@ var LIBRARY_OBJECT = (function() {
             return legend_div;
         };
         wms_legend.addTo(map);
+        L.TimeDimension.Layer.WMS.TimeSeries = L.TimeDimension.Layer.WMS.extend({
+
+            initialize: function(layer, options) {
+                L.TimeDimension.Layer.WMS.prototype.initialize.call(this, layer, options);
+            },
+        });
+
+        L.timeDimension.layer.wms.timeseries = function(layer, options) {
+            return new L.TimeDimension.Layer.WMS.TimeSeries(layer, options);
+        };
 
         var timeDimension = new L.TimeDimension();
         map.timeDimension = timeDimension;
@@ -162,22 +199,22 @@ var LIBRARY_OBJECT = (function() {
         graceGroup = L.layerGroup().addTo(map);
         contourGroup = L.layerGroup().addTo(map);
 
-        var min_input = L.control({position: 'topleft'});
-        min_input.onAdd = function(map){
-            var div = L.DomUtil.create('div', 'min_input lcontrol hidden');
-            div.innerHTML = '<b>Min:</b><input type="number" class="form-control input-sm" name="leg_min" id="leg_min" min="-5000" max="5000" step="10" value="-500" disabled>';
-            return div;
-        };
-        min_input.addTo(map);
-
-        var max_input = L.control({position: 'topleft'});
-        max_input.onAdd = function(map){
-            var div = L.DomUtil.create('div', 'max_input lcontrol hidden');
-            div.innerHTML = '<b>Max:</b><input type="number" class="form-control input-sm" name="leg_max" id="leg_max" ' +
-                'min="-5000" max="5000" step="10" value="0" disabled>';
-            return div;
-        };
-        max_input.addTo(map);
+        // var min_input = L.control({position: 'topleft'});
+        // min_input.onAdd = function(map){
+        //     var div = L.DomUtil.create('div', 'min_input lcontrol hidden');
+        //     div.innerHTML = '<b>Min:</b><input type="number" class="form-control input-sm" name="leg_min" id="leg_min" min="-5000" max="5000" step="1" value="-50">';
+        //     return div;
+        // };
+        // min_input.addTo(map);
+        //
+        // var max_input = L.control({position: 'topleft'});
+        // max_input.onAdd = function(map){
+        //     var div = L.DomUtil.create('div', 'max_input lcontrol hidden');
+        //     div.innerHTML = '<b>Max:</b><input type="number" class="form-control input-sm" name="leg_max" id="leg_max" ' +
+        //         'min="-5000" max="5000" step="1" value="50">';
+        //     return div;
+        // };
+        // max_input.addTo(map);
 
         var opacity_input = L.control({position: 'topright'});
         opacity_input.onAdd = function(map){
@@ -196,7 +233,7 @@ var LIBRARY_OBJECT = (function() {
         layer_control = L.control.layers(baseLayers, overlay_maps).addTo(map);
         baseLayers.ESRI_World_Imagery.addTo(map);
 
-        drawnItems = new L.FeatureGroup()
+        drawnItems = new L.FeatureGroup();
         map.addLayer(drawnItems)
 
         var drawControlFull = new L.Control.Draw({
@@ -253,16 +290,16 @@ var LIBRARY_OBJECT = (function() {
 
     };
 
-    add_wms = function(signal_process, layer_val, storage_type, style){
+    add_wms = function(layer_val, storage_type, style, mode_type, range_min, range_max){
         // map.removeLayer(tdWmsLayer);
         // map.removeLayer(contourTimeLayer);
         $('.lcontrol').removeClass('hidden');
         $('.leaflet-bar-timecontrol').removeClass('hidden');
         graceGroup.clearLayers();
         contourGroup.clearLayers();
-        let wmsUrl = wms_url + 'GRC_' + signal_process + '_' + storage_type + '.nc';
-        let range_min = -50;
-        let range_max = 50;
+        let wmsUrl = wms_url + 'GRC_' + storage_type + '.nc';
+        // let range_min = -50;
+        // let range_max = 50;
         let layer_arr = layer_val.toString().split("|");
         let time_string = layer_arr[0]
         contourLayer = L.tileLayer.wms(wmsUrl, {
@@ -278,29 +315,52 @@ var LIBRARY_OBJECT = (function() {
             time: time_string
         });
 
-        contourTimeLayer = L.timeDimension.layer.wms(contourLayer,{
-            updateTimeDimension:true,
-            // setDefaultTime:true,
-            cache:48
-        });
+        if(mode_type==='add') {
+            contourTimeLayer = L.timeDimension.layer.wms(contourLayer, {
+                updateTimeDimension: true,
+                setDefaultTime: true,
+                cache: 48,
+                requestTimeFromCapabilities: true,
+                updateTimeDimensionMode: 'replace'
+            });
+        }else if (mode_type==='update'){
+            contourTimeLayer = L.timeDimension.layer.wms(contourLayer, {
+                // updateTimeDimension: true,
+                // setDefaultTime: true,
+                cache: 48,
+                // requestTimeFromCapabilities: true,
+            });
+        }
+
 
         wmsLayer = L.tileLayer.wms(wmsUrl, {
             layers: 'lwe_thickness',
             format: 'image/png',
             transparent: true,
             styles: 'boxfill/'+style,
+            crs: L.CRS.EPSG4326,
             opacity: '1.0',
             colorscalerange: [range_min, range_max],
             version:'1.3.0',
             zIndex:5,
             time: time_string
         });
-
-        tdWmsLayer = L.timeDimension.layer.wms(wmsLayer,{
-            updateTimeDimension:true,
-            // setDefaultTime:true,
-            cache:48
-        });
+        if(mode_type==='add') {
+            tdWmsLayer = L.timeDimension.layer.wms(wmsLayer, {
+                updateTimeDimension: true,
+                setDefaultTime: true,
+                cache: 48,
+                requestTimeFromCapabilities: true,
+                updateTimeDimensionMode: 'replace'
+            });
+        }else if(mode_type==='update'){
+            tdWmsLayer = L.timeDimension.layer.wms(wmsLayer, {
+                // updateTimeDimension: true,
+                // setDefaultTime: true,
+                cache: 48,
+                // requestTimeFromCapabilities: true,
+            });
+        }
         // tdWmsLayer.addTo(map);
         // contourTimeLayer.addTo(map);
         graceGroup.addLayer(tdWmsLayer);
@@ -308,20 +368,19 @@ var LIBRARY_OBJECT = (function() {
         contourTimeLayer.bringToFront();
 
         var src = wmsUrl + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=lwe_thickness"+
-            "&colorscalerange="+range_min+","+range_max+"&PALETTE=boxfill/"+style+"&transparent=TRUE";
+            "&colorscalerange="+range_min+","+range_max+"&PALETTE="+style+"&transparent=TRUE";
         // var src = wmsUrl + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=lwe_thickness&PALETTE=boxfill/"+style+"&transparent=TRUE";
         $("#legend-image").attr("src", src);
         map.timeDimension.setCurrentTime(layer_arr[1]);
     };
 
     get_ts = function(coords){
-        let {signal_process, layer_val, storage_type} = get_dropdown_vals();
+        let {layer_val, storage_type, symbology, range_min, range_max} = get_dropdown_vals();
         let signal_name = $("#select-signal-process option:selected").text();
         let storage_name = $("#select-storage-type option:selected").text();
         // let symbology = $("#select-symbology option:selected").val();
         var xhr = ajax_update_database("get-plot-global", {
             storage_type: storage_type,
-            signal_process: signal_process,
             lon: coords[0],
             lat: coords[1]
         });
@@ -379,8 +438,10 @@ var LIBRARY_OBJECT = (function() {
                     series: [{
                         data:result.values,
                         name: signal_name+' '+storage_name,
-                        type: 'area',
+                        type: 'line',
                         visible: true,
+                        lineWidth: 3,
+                        color: Highcharts.getOptions().colors[0],
                         tooltip: {
                             valueDecimals: 2,
                             valueSuffix: ' Liquid Water Eqv. Thickness (cm)',
@@ -388,6 +449,16 @@ var LIBRARY_OBJECT = (function() {
                             headerFormat: '<span style="font-size: 12px; font-weight:bold;">{point.key} (Click to visualize the map on this time)</span><br/>'
                         }
                     },
+                        {
+                            data:result.error_range,
+                            name: signal_name+' '+storage_name + ' Error Range',
+                            type: 'arearange',
+                            // visible: true,
+                            fillOpacity: 0.3,
+                            lineWidth: 0,
+                            // linkedTo: ':previous',
+                            color: Highcharts.getOptions().colors[0]
+                        },
                         {
                             data:result.integr_values,
                             name: signal_name + storage_name + ' Depletion Curve',
@@ -426,29 +497,6 @@ var LIBRARY_OBJECT = (function() {
                         }
                     }
                 });
-                updateChart = function () {
-
-                    if (!mychart){
-                        return;
-                    }
-                    var tot_series = mychart.series[0];
-                    var sw_series = mychart.series[1];
-                    var soil_series = mychart.series[2];
-                    var gw_series = mychart.series[3];
-
-                    var storage_type = $("#select_storage_type option:selected").val();
-
-
-                    if (storage_type === "tot"){
-                        tot_series.show() }
-                    else if (storage_type === "sw"){
-                        sw_series.show() }
-                    else if (storage_type === "soil"){
-                        soil_series.show() }
-                    else if (storage_type === "gw"){
-                        gw_series.show() }
-                };
-                //    updateChart();
 
                 map.timeDimension.on('timeload', (function() {
                     if (!mychart){
@@ -475,12 +523,18 @@ var LIBRARY_OBJECT = (function() {
     };
 
     get_dropdown_vals = function(){
-        let signal_process = $selectSignalProcess.val();
         let layer_val = $selectLayer.val();
         let storage_type = $selectStorageType.val();
-        return {signal_process,
+        let symbology = $selectStyle.val();
+        let range_min = $("#leg_min").val();
+        let range_max = $("#leg_max").val();
+        return {
             layer_val,
-            storage_type};
+            storage_type,
+            symbology,
+            range_min,
+            range_max
+        };
     };
 
 
@@ -514,40 +568,38 @@ var LIBRARY_OBJECT = (function() {
         init_all();
 
         $selectLayer.change(function(){
-            let {signal_process, layer_val, storage_type} = get_dropdown_vals();
-            let symbology = $("#select-symbology option:selected").val();
-            add_wms(signal_process, layer_val, storage_type, symbology);
-
-        });
-
-        $selectSignalProcess.change(function(){
-            let {signal_process, layer_val, storage_type} = get_dropdown_vals();
-            let symbology = $("#select-symbology option:selected").val();
-            add_wms(signal_process, layer_val, storage_type, symbology);
-            if(globalCoords){
-                get_ts(globalCoords);
-            }
+            let {layer_val, storage_type, symbology, range_min, range_max} = get_dropdown_vals();
+            add_wms(layer_val, storage_type, symbology, 'update', range_min, range_max);
         });
 
         $selectStorageType.change(function(){
-            let {signal_process, layer_val, storage_type} = get_dropdown_vals();
-            let symbology = $("#select-symbology option:selected").val();
-            add_wms(signal_process, layer_val, storage_type, symbology);
+            let storage_type = $selectStorageType.val();
+            get_timestep(storage_type);
             if(globalCoords){
                 get_ts(globalCoords);
             }
         });
 
         $("#select-symbology").change(function(){
-            let {signal_process, layer_val, storage_type} = get_dropdown_vals();
-            let symbology = $("#select-symbology option:selected").val();
-            add_wms(signal_process, layer_val, storage_type, symbology);
+            let {layer_val, storage_type, symbology, range_min, range_max} = get_dropdown_vals();
+            add_wms(layer_val, storage_type, symbology, 'add', range_min, range_max);
         }).change();
 
         $("#opacity_val").change(function(){
             var opacity = $("#opacity_val").val();
             tdWmsLayer.setOpacity(opacity);
         });
+
+        $("#leg_min").change(function(){
+            let {layer_val, storage_type, symbology, range_min, range_max} = get_dropdown_vals();
+            add_wms(layer_val, storage_type, symbology, 'update', range_min, range_max);
+        });
+
+        $("#leg_max").change(function(){
+            let {layer_val, storage_type, symbology, range_min, range_max} = get_dropdown_vals();
+            add_wms(layer_val, storage_type, symbology, 'update', range_min, range_max);
+        });
+
     });
 
     return public_interface;

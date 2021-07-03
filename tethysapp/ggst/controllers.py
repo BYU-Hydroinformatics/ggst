@@ -10,7 +10,6 @@ from .utils import (get_catalog_url,
                     get_signal_process_select,
                     get_symbology_select,
                     get_storage_type_select,
-                    get_timeseries_select,
                     user_permission_test)
 
 
@@ -19,8 +18,11 @@ def home(request):
     Controller for the app home page.
     """
     region_select = get_region_select()
+    num_regions = len(region_select.options)
     context = {
-        'region_select': region_select
+        'region_select': region_select,
+        'num_regions': num_regions
+
     }
 
     return render(request, 'ggst/home.html', context)
@@ -30,15 +32,13 @@ def global_map(request):
     """
     Controller for the Global Map page.
     """
-    layer_select = get_layer_select()
-    signal_process_select = get_signal_process_select()
+    layer_select = get_layer_select('tws')
     storage_type_select = get_storage_type_select()
     symbology_select = get_symbology_select()
     catalog_url = get_catalog_url()
     wms_url = catalog_url.replace('catalog.xml', '').replace('catalog', 'wms')
     context = {
         'layer_select': layer_select,
-        'signal_process_select': signal_process_select,
         'storage_type_select': storage_type_select,
         'style_select': symbology_select,
         'wms_url': wms_url
@@ -55,8 +55,7 @@ def region_map(request):
 
     region_name = info.get('region-select')
     region_select = get_region_select()
-    layer_select = get_layer_select()
-    ts_select = get_timeseries_select()
+    layer_select = get_layer_select('tws')
     signal_process_select = get_signal_process_select()
     storage_type_select = get_storage_type_select()
     symbology_select = get_symbology_select()
@@ -67,7 +66,6 @@ def region_map(request):
 
     context = {'region_name': region_name,
                'region_select': region_select,
-               'ts_select': ts_select,
                'map_lat': lat,
                'map_lon': lon,
                'layer_select': layer_select,

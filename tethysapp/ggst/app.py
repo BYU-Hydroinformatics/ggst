@@ -9,10 +9,10 @@ class Ggst(TethysAppBase):
 
     name = 'Grace Groundwater Subsetting Tool'
     index = 'ggst:home'
-    icon = 'ggst/images/icon.gif'
+    icon = 'ggst/images/logo.jpg'
     package = 'ggst'
     root_url = 'ggst'
-    color = '#2980b9'
+    color = '#222222'
     description = 'Visualize and subset Grace data'
     tags = 'Remote Sensing'
     enable_feedback = False
@@ -75,6 +75,16 @@ class Ggst(TethysAppBase):
                 url='ggst/api/subset_region',
                 controller='ggst.api.subset_region_api'
             ),
+            UrlMap(
+                name='global_time_step',
+                url='ggst/global-map/timestep',
+                controller='ggst.controllers_ajax.get_time_step_options'
+            ),
+            UrlMap(
+                name='region_time_step',
+                url='ggst/region-map/timestep',
+                controller='ggst.controllers_ajax.get_time_step_options'
+            )
         )
 
         return url_maps

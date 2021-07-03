@@ -11,6 +11,7 @@
 <h1>Welcome</h1>
 <script>window.onbeforeunload = null;</script>
 <p>This app produces basic maps and timeseries using data from the <a href="https://www.jpl.nasa.gov/missions/gravity-recovery-and-climate-experiment-grace/" target="_blank">GRACE mission</a></p>
+{% if num_regions > 0 %}
 <form action="{% url 'ggst:region-map' %}" method="get">
     <p>Select a region from the dropdown below to view timeseries and an interactive map.</p>
     <div style="width:45%">{% gizmo region_select %}</div>
@@ -20,6 +21,9 @@
         </a>
     </span>
 </form>
+{% else %}
+<p><b>No regions have been added. Please contact the admin to add new regions.</b></p>
+{% endif %}
 {% if user.is_superuser or user.is_staff %}
 <p class="help-block">Don't see the region you want? Add one
     <a href="{% url 'ggst:add-region' %}">here</a>.</p>

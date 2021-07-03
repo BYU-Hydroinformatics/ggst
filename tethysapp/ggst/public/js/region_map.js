@@ -31,11 +31,13 @@ var LIBRARY_OBJECT = (function() {
         mychart,
         overlay_maps,
         public_interface,
+        regional_chart,
         range_min,
         range_max,
         region_name,
-        $selectSignalProcess,
+        $selectStyle,
         $selectLayer,
+        $selectRegion,
         $selectStorageType,
         tdWmsLayer,
         wms_legend,
@@ -49,10 +51,12 @@ var LIBRARY_OBJECT = (function() {
      *************************************************************************/
 
     var add_wms,
+        add_regional_graph,
         get_dropdown_vals,
         get_legend_range,
         get_region_center,
         get_ts,
+        get_timestep,
         init_all,
         init_jquery,
         init_map,
@@ -68,9 +72,10 @@ var LIBRARY_OBJECT = (function() {
      *************************************************************************/
 
     init_jquery = function(){
-        $selectSignalProcess = $("#select-signal-process");
         $selectLayer = $("#select-layer");
         $selectStorageType = $("#select-storage-type");
+        $selectRegion =$("#region-select");
+        $selectStyle = $("#select-symbology");
         wms_url = $("#map-info").attr("wms-url");
         map_lat = $("#map-info").attr("map-lat");
         map_lon = $("#map-info").attr("map-lon");
@@ -166,23 +171,6 @@ var LIBRARY_OBJECT = (function() {
         graceGroup = L.layerGroup().addTo(map);
         contourGroup = L.layerGroup().addTo(map);
 
-        var min_input = L.control({position: 'topleft'});
-        min_input.onAdd = function(map){
-            var div = L.DomUtil.create('div', 'min_input lcontrol');
-            div.innerHTML = '<b>Min:</b><input type="number" class="form-control input-sm" name="leg_min" id="leg_min" min="-5000" max="5000" step="1" value="-500" >';
-            return div;
-        };
-        min_input.addTo(map);
-
-        var max_input = L.control({position: 'topleft'});
-        max_input.onAdd = function(map){
-            var div = L.DomUtil.create('div', 'max_input lcontrol');
-            div.innerHTML = '<b>Max:</b><input type="number" class="form-control input-sm" name="leg_max" id="leg_max" ' +
-                'min="-5000" max="5000" step="1" value="0" >';
-            return div;
-        };
-        max_input.addTo(map);
-
         var opacity_input = L.control({position: 'topright'});
         opacity_input.onAdd = function(map){
             var div = L.DomUtil.create('div', 'opacity_input lcontrol');
@@ -256,14 +244,16 @@ var LIBRARY_OBJECT = (function() {
     }
 
     get_dropdown_vals = function(){
-        let signal_process = $selectSignalProcess.val();
         let layer_val = $selectLayer.val();
         let storage_type = $selectStorageType.val();
-        let region = $("#region-select option:selected").val();
-        return {signal_process,
+        let region = $selectRegion.val();
+        let symbology = $selectStyle.val();
+        return {
             layer_val,
             storage_type,
-            region};
+            region,
+            symbology
+        };
     };
 
     get_region_center = function(region){
@@ -275,8 +265,8 @@ var LIBRARY_OBJECT = (function() {
         });
     };
 
-    update_wms = function(region_name, signal_process, layer_val, storage_type, style, range_min, range_max){
-        let wmsUrl = wms_url + region_name + '/'+ region_name +'_' + signal_process + '_' + storage_type + '.nc';
+    update_wms = function(region_name, layer_val, storage_type, style, range_min, range_max, mode_type){
+        let wmsUrl = wms_url + region_name + '/' + region_name + '_' + storage_type + '.nc';
         let opacity = $("#opacity_val").val();
         let layer_arr = layer_val.toString().split("|");
         let time_string = layer_arr[0]
@@ -293,17 +283,29 @@ var LIBRARY_OBJECT = (function() {
             time: time_string
         });
 
-        contourTimeLayer = L.timeDimension.layer.wms(contourLayer,{
-            // updateTimeDimension:true,
-            // setDefaultTime:true,
-            cache:48
-        });
+        if(mode_type==='add') {
+            contourTimeLayer = L.timeDimension.layer.wms(contourLayer, {
+                updateTimeDimension: true,
+                setDefaultTime: true,
+                cache: 48,
+                requestTimeFromCapabilities: true,
+                updateTimeDimensionMode: 'replace'
+            });
+        }else if (mode_type==='update'){
+            contourTimeLayer = L.timeDimension.layer.wms(contourLayer, {
+                // updateTimeDimension: true,
+                // setDefaultTime: true,
+                cache: 48,
+                // requestTimeFromCapabilities: true,
+            });
+        }
 
         wmsLayer = L.tileLayer.wms(wmsUrl, {
             layers: 'lwe_thickness',
             format: 'image/png',
             transparent: true,
             styles: 'boxfill/'+style,
+            crs: L.CRS.EPSG4326,
             opacity: 'opacity',
             colorscalerange: [range_min, range_max],
             version:'1.3.0',
@@ -311,11 +313,22 @@ var LIBRARY_OBJECT = (function() {
             time: time_string
         });
 
-        tdWmsLayer = L.timeDimension.layer.wms(wmsLayer,{
-            // updateTimeDimension:true,
-            // setDefaultTime:true,
-            cache:48
-        });
+        if(mode_type==='add') {
+            tdWmsLayer = L.timeDimension.layer.wms(wmsLayer, {
+                updateTimeDimension: true,
+                setDefaultTime: true,
+                cache: 48,
+                requestTimeFromCapabilities: true,
+                updateTimeDimensionMode: 'replace'
+            });
+        }else if(mode_type==='update'){
+            tdWmsLayer = L.timeDimension.layer.wms(wmsLayer, {
+                // updateTimeDimension: true,
+                // setDefaultTime: true,
+                cache: 48,
+                // requestTimeFromCapabilities: true,
+            });
+        }
         // tdWmsLayer.addTo(map);
         // contourTimeLayer.addTo(map);
         graceGroup.addLayer(tdWmsLayer);
@@ -323,52 +336,69 @@ var LIBRARY_OBJECT = (function() {
         contourTimeLayer.bringToFront();
 
         var src = wmsUrl + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=lwe_thickness"+
-            "&colorscalerange="+range_min+","+range_max+"&PALETTE=boxfill/"+style+"&transparent=TRUE";
+            "&colorscalerange="+range_min+","+range_max+"&PALETTE="+style+"&transparent=FALSE";
         $("#legend-image").attr("src", src);
         map.timeDimension.setCurrentTime(layer_arr[1]);
     };
 
 
-    get_legend_range = function(region_name, signal_process, layer_val, storage_type, style){
+    get_legend_range = function(region_name, layer_val, storage_type, style){
         const xhr = ajax_update_database('range',
             {'region_name': region_name,
-                'signal_process': signal_process,
                 'storage_type': storage_type});
         xhr.done(function(result){
             if('success' in result){
-
                 range_min = result['range_min'];
                 range_max = result['range_max'];
                 $("#leg_min").val(range_min);
                 $("#leg_max").val(range_max);
-                update_wms(region_name, signal_process, layer_val, storage_type, style, range_min, range_max);
+                update_wms(region_name, layer_val, storage_type, style, range_min, range_max, 'add');
             }
         });
     };
 
-    add_wms = function(region_name, signal_process, layer_val, storage_type, style){
+    add_wms = function(region_name, layer_val, storage_type, style){
         // map.removeLayer(tdWmsLayer);
         // map.removeLayer(contourTimeLayer);
         $('.lcontrol').removeClass('hidden');
         $('.leaflet-bar-timecontrol').removeClass('hidden');
         graceGroup.clearLayers();
         contourGroup.clearLayers();
-        get_legend_range(region_name, signal_process, layer_val, storage_type, style);
+        get_legend_range(region_name, layer_val, storage_type, style);
+    };
+
+    get_timestep = function(storage_type){
+        var xhr = ajax_update_database("timestep", {
+            storage_type: storage_type
+        });
+        xhr.done(function(result) {
+            if ("success" in result) {
+                $("#select-layer").html('');
+                var layer_options = result['layer_options'];
+                layer_options.forEach(function(attr,i){
+                    var layer_option = new Option(attr[0], attr[1]);
+                    $("#select-layer").append(layer_option);
+                });
+                let layer_val = $selectLayer.val();
+                $selectLayer.val(layer_val);
+                $("#select-layer option:selected").text(result['layer_options'][0][0]);
+                let symbology = $selectStyle.val();
+                let region = $selectRegion.val();
+                add_wms(region, layer_val, storage_type, symbology);
+            }
+        });
     };
 
     get_ts = function(coords){
-        let {signal_process, layer_val, storage_type, region} = get_dropdown_vals();
+        let {layer_val, storage_type, region} = get_dropdown_vals();
         let signal_name = $("#select-signal-process option:selected").text();
         let storage_name = $("#select-storage-type option:selected").text();
-        let ts_method = $("#ts-select option:selected").val();
         // let symbology = $("#select-symbology option:selected").val();
         var xhr = ajax_update_database("get-plot-region", {
             region: region,
             storage_type: storage_type,
-            signal_process: signal_process,
             lon: coords[0],
-            lat: coords[1],
-            ts_method: ts_method
+            lat: coords[1]
         });
 
         xhr.done(function(result) {
@@ -384,10 +414,10 @@ var LIBRARY_OBJECT = (function() {
                     },
                     rangeSelector: {
                         selected: tdWmsLayer._defaultRangeSelector,
-                        buttons: [{
-                            type: 'all',
-                            text: 'All'
-                        }]
+                        // buttons: [{
+                        //     type: 'all',
+                        //     text: 'All'
+                        // }]
                     },
                     title: {
                         text: " Water Storage Anomaly values at " + result.location,
@@ -472,29 +502,6 @@ var LIBRARY_OBJECT = (function() {
                         }
                     }
                 });
-                updateChart = function () {
-
-                    if (!mychart){
-                        return;
-                    }
-                    var tot_series = mychart.series[0];
-                    var sw_series = mychart.series[1];
-                    var soil_series = mychart.series[2];
-                    var gw_series = mychart.series[3];
-
-                    var storage_type = $("#select_storage_type option:selected").val();
-
-
-                    if (storage_type === "tot"){
-                        tot_series.show() }
-                    else if (storage_type === "sw"){
-                        sw_series.show() }
-                    else if (storage_type === "soil"){
-                        soil_series.show() }
-                    else if (storage_type === "gw"){
-                        gw_series.show() }
-                };
-                //    updateChart();
 
                 map.timeDimension.on('timeload', (function() {
                     if (!mychart){
@@ -514,12 +521,94 @@ var LIBRARY_OBJECT = (function() {
                 $("#chart").removeClass('hidden');
             }else{
                 // console.log(result);
-                console.log('error');
+                console.log(result);
             }
         });
 
     };
 
+    add_regional_graph = function(){
+        let {layer_val, storage_type, region, symbology} = get_dropdown_vals();
+
+        regional_chart=Highcharts.stockChart('reg-chart', {
+            legend: {
+                enabled: true
+            },
+
+            chart: {
+                zoomType: 'x'
+            },
+            rangeSelector: {
+                selected: tdWmsLayer._defaultRangeSelector,
+                buttons: [{
+                    type: 'all',
+                    text: 'All'
+                }]
+            },
+
+            xAxis: {
+                plotLines: [{
+                    color: 'red',
+                    dashStyle: 'solid',
+                    value: new Date(map.timeDimension.getCurrentTime()),
+                    width: 2,
+                    id: 'pbCurrentTime'
+                }],
+                title: {
+                    text: 'Date'
+                },
+            },
+            yAxis: {
+                title: {
+                    text: "Storage Volume",
+                }
+
+            },
+
+            title: {
+                text: $selectRegion.text() + ' Regional Average Water Storage Anomaly'
+            },
+
+            series: [],
+
+            plotOptions: {
+                series: {
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            click: (function(event) {
+                                var day = new Date(event.point.x);
+                                map.timeDimension.setCurrentTime(day.getTime());
+                            }).bind(this)
+                        }
+                    }
+                }
+            }
+        });//end of High Charts stuff
+        tdWmsLayer._timeDimension.on('timeload', (function() {
+            if (!regional_chart){
+                return;
+            }
+            regional_chart.xAxis[0].removePlotBand("pbCurrentTime");
+            regional_chart.xAxis[0].addPlotLine({
+                color: 'red',
+                dashStyle: 'solid',
+                value: new Date(map.timeDimension.getCurrentTime()),
+                width: 2,
+                id: 'pbCurrentTime'
+            });
+        }).bind(this));
+
+        var color;
+        var depletion_color
+        var charttype;
+        var seriesname;
+        charttype="Total";
+        color="#053372";
+        depletion_color="#222222";
+
+        seriesname= $selectStorageType.text();
+    };
 
     init_all = function(){
         init_jquery();
@@ -547,44 +636,35 @@ var LIBRARY_OBJECT = (function() {
     // the DOM tree finishes loading
     $(function() {
         init_all();
-        $("#region-select").val(region_name).trigger('change');
+        $selectRegion.val(region_name).trigger('change');
 
-        $("#region-select").change(function(){
-            let {signal_process, layer_val, storage_type, region} = get_dropdown_vals();
-            let symbology = $("#select-symbology option:selected").val();
+        $selectRegion.change(function(){
+            let {layer_val, storage_type, region, symbology} = get_dropdown_vals();
             get_region_center(region);
-            add_wms(region, signal_process, layer_val, storage_type, symbology);
-            original_map_chart();
-        });
-        $selectLayer.change(function(){
-            let {signal_process, layer_val, storage_type, region} = get_dropdown_vals();
-            let symbology = $("#select-symbology option:selected").val();
-            add_wms(region, signal_process, layer_val, storage_type, symbology);
-        });
+            add_wms(region, layer_val, storage_type, symbology);
+            add_regional_graph();
+            //             update_wms(region, layer_val, storage_type, symbology, range_min, range_max, 'update');
 
-        $selectSignalProcess.change(function(){
-            let {signal_process, layer_val, storage_type, region} = get_dropdown_vals();
-            let symbology = $("#select-symbology option:selected").val();
-            add_wms(region, signal_process, layer_val, storage_type, symbology);
-            if(globalCoords){
-                get_ts(globalCoords);
-            }
+            // original_map_chart();
+        }).change();
+        $selectLayer.change(function(){
+            let {layer_val, storage_type, region, symbology} = get_dropdown_vals();
+            update_wms(region, layer_val, storage_type, symbology, range_min, range_max, 'update');
         });
 
         $selectStorageType.change(function(){
-            let {signal_process, layer_val, storage_type, region} = get_dropdown_vals();
-            let symbology = $("#select-symbology option:selected").val();
-            add_wms(region, signal_process, layer_val, storage_type, symbology);
+            let storage_type = $selectStorageType.val();
+            get_timestep(storage_type);
+
             if(globalCoords){
                 get_ts(globalCoords);
             }
         });
 
-        $("#select-symbology").change(function(){
-            let {signal_process, layer_val, storage_type, region} = get_dropdown_vals();
-            let symbology = $("#select-symbology option:selected").val();
-            add_wms(region, signal_process, layer_val, storage_type, symbology);
-        }).change();
+        $selectStyle.change(function(){
+            let {layer_val, storage_type, region, symbology} = get_dropdown_vals();
+            update_wms(region, layer_val, storage_type, symbology, range_min, range_max, 'update');
+        });
 
         $("#opacity_val").change(function(){
             let opacity = $("#opacity_val").val();
@@ -592,24 +672,17 @@ var LIBRARY_OBJECT = (function() {
         });
 
         $("#leg_min").change(function(){
-            let {signal_process, layer_val, storage_type, region} = get_dropdown_vals();
-            let symbology = $("#select-symbology option:selected").val();
+            let {layer_val, storage_type, region, symbology} = get_dropdown_vals();
             let range_min = $("#leg_min").val();
             let range_max = $("#leg_max").val();
-            update_wms(region, signal_process, layer_val, storage_type, symbology, range_min, range_max);
+            update_wms(region_name, layer_val, storage_type, symbology, range_min, range_max, 'update');
         });
 
         $("#leg_max").change(function(){
-            let {signal_process, layer_val, storage_type, region} = get_dropdown_vals();
-            let symbology = $("#select-symbology option:selected").val();
+            let {layer_val, storage_type, region, symbology} = get_dropdown_vals();
             let range_min = $("#leg_min").val();
             let range_max = $("#leg_max").val();
-            update_wms(region, signal_process, layer_val, storage_type, symbology, range_min, range_max);
-        });
-        $("#ts-select").change(function(){
-            if(globalCoords){
-                get_ts(globalCoords);
-            }
+            update_wms(region_name, layer_val, storage_type, symbology, range_min, range_max, 'update');
         });
 
     });

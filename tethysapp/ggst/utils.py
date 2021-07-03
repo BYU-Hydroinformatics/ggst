@@ -72,18 +72,18 @@ def get_storage_type_select():
     select_storage_type = SelectInput(display_text='Select Storage Component',
                                       name='select-storage-type',
                                       multiple=False,
-                                      options=[('Total Water Storage (GRACE)', "tot"),
+                                      options=[('Total Water Storage (GRACE)', "tws"),
                                                ('Surface Water Storage (GLDAS)', "sw"),
-                                               ('Soil Moisture Storage (GLDAS)', "soil"),
+                                               ('Soil Moisture Storage (GLDAS)', "sm"),
                                                ('Groundwater Storage (Calculated)', "gw")],
                                       initial=['Total Water Storage (GRACE)']
                                       )
     return select_storage_type
 
 
-def get_grace_timestep_options():
+def get_grace_timestep_options(storage_type):
     grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
-    nc_file = f'{grace_dir}GRC_avg_sw.nc'
+    nc_file = f'{grace_dir}GRC_{storage_type}.nc'
     ds = xarray.open_dataset(nc_file)
     grace_layer_options = [(pd.to_datetime(time_step).strftime('%Y %B %d'),
                             f'{str(time_step)}|{int(time_step.astype(int) / 1000000)}')
@@ -91,11 +91,11 @@ def get_grace_timestep_options():
     return grace_layer_options
 
 
-def get_layer_select():
+def get_layer_select(storage_type):
     select_layer = SelectInput(display_text='Select a day',
                                name='select-layer',
                                multiple=False,
-                               options=get_grace_timestep_options()
+                               options=get_grace_timestep_options(storage_type)
                                )
     return select_layer
 
@@ -115,35 +115,41 @@ def get_region_select():
     return region_select
 
 
-def get_timeseries_select():
-    ts_select = SelectInput(display_text='Select a Time Series Algorithm',
-                            name='ts-select',
-                            options=[('Time Step Mean', 'time_step_mean'),
-                                     ('Raw Values', 'raw_values')])
-    return ts_select
-
-
 def clip_nc(nc_file: str,
             gdf: gpd.GeoDataFrame,
             region_name: str,
             grace_dir: str) -> str:
     # logger.info(f'Subset {nc_file} for {region_name}')
     ds = xarray.open_dataset(nc_file)
-    ds = ds.assign({"lon": (((ds.lon + 180) % 360) - 180)}).sortby('lon')
-    ds['lwe_thickness'] = ds['lwe_thickness'].rio.write_crs("epsg:4326")
+    print(nc_file)
+    # ds = ds.assign({"lon": (((ds.lon + 180) % 360) - 180)}).sortby('lon')
+    if 'spatial_ref' in ds.variables:
+        ds = ds.drop_sel('spatial_ref')
 
-    if 'tot' in nc_file:
-        ds = ds.drop_vars(['gw', 'lat_bnds', 'lon_bnds'])
+    ds['lwe_thickness'] = ds['lwe_thickness'].rio.write_crs("epsg:4326")
+    ds['uncertainty'] = ds['uncertainty'].rio.write_crs("epsg:4326")
+
+    if 'grid_mapping' in ds.uncertainty.attrs:
+        del ds.uncertainty.attrs['grid_mapping']
+    # if 'tot' in nc_file:
+    #     ds = ds.drop_vars(['gw', 'lat_bnds', 'lon_bnds'])
     ds.rio.set_spatial_dims(x_dim="lon", y_dim="lat", inplace=True)
     clipped = ds.rio.clip(gdf.geometry.apply(mapping), gdf.crs, drop=True)
+    if 'spatial_ref' in ds.variables:
+        clipped = clipped.drop('spatial_ref')
+    if 'WGS84' in ds.variables:
+        clipped = clipped.drop('WGS84')
+
     output_path = os.path.join(grace_dir, region_name, f"{region_name}{nc_file.split('/')[-1][3:]}")
-    ts_path = os.path.join(grace_dir, region_name, f"{region_name}{nc_file.split('/')[-1][3:-3]}_ts.nc")
-    lwe_thickness = clipped.lwe_thickness.mean(['lat', 'lon'])
+    # ts_path = os.path.join(grace_dir, region_name, f"{region_name}{nc_file.split('/')[-1][3:-3]}_ts.nc")
+    # error_path = os.path.join(grace_dir, region_name, f"{region_name}{nc_file.split('/')[-1][3:-3]}_error.nc")
+    # clipped = clipped.drop_vars(['WGS84', 'spatial_ref'])
+    # lwe_thickness = clipped.lwe_thickness.mean(['lat', 'lon'])
+    # uncertainty = clipped.uncertainty.mean(['lat', 'lon'])
     clipped.to_netcdf(output_path,
-                      encoding={"lwe_thickness":
-                                    {'_FillValue': -99999.0,
-                                     'missing_value': -99999.0}})
-    lwe_thickness.to_netcdf(ts_path)
+                      encoding={"lwe_thickness": {'_FillValue': -99999.0, 'missing_value': -99999.0}})
+    # lwe_thickness.to_netcdf(ts_path)
+    # uncertainty.to_netcdf(error_path)
     return output_path
 
 
@@ -196,23 +202,24 @@ def gen_zip_api(gdf: gpd.GeoDataFrame,
     return in_memory_zip
 
 
-def generate_timeseries(storage_type, signal_process, lat, lon, region):
+def generate_timeseries(storage_type, lat, lon, region):
     graph_json = {}
     ts_plot = []
     ts_plot_int = []
+    error_range = []
     grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
 
     stn_lat = float(lat)
     stn_lon = float(lon)
 
     if region == 'global':
-        nc_file = f'{grace_dir}GRC_{signal_process}_{storage_type}.nc'
-        if stn_lon < 0.0:
-            stnd_lon = float(stn_lon + 360.0)
-        else:
-            stnd_lon = stn_lon
+        nc_file = f'{grace_dir}GRC_{storage_type}.nc'
+        # if stn_lon < 0.0:
+        #     stnd_lon = float(stn_lon + 360.0)
+        # else:
+        stnd_lon = stn_lon
     else:
-        nc_file = os.path.join(grace_dir, region, f'{region}_{signal_process}_{storage_type}.nc')
+        nc_file = os.path.join(grace_dir, region, f'{region}_{storage_type}.nc')
         stnd_lon = stn_lon
 
     print(nc_file)
@@ -229,24 +236,36 @@ def generate_timeseries(storage_type, signal_process, lat, lon, region):
 
     for time_index, time_stamp in enumerate(time_array):
         data = ds['lwe_thickness'][time_index, :, :]
+        uncertainty = ds['uncertainty'][time_index, :, :]
         value = data[lat_idx, lon_idx].values
+        error_bar = uncertainty[lat_idx, lon_idx].values
         utc_time = int(time_stamp.astype(int) / 1000000)
         difference_data_value = (value - init_value) * 0.01 * 6371000 * math.radians(0.25) * \
                                 6371000 * math.radians(0.25) * abs(math.cos(math.radians(lat_idx))) * 0.000810714
         ts_plot.append([utc_time, round(float(value), 3)])
         ts_plot_int.append([utc_time, round(float(difference_data_value), 3)])
+        error_range.append([utc_time, round(float(value - error_bar), 3), round(float(value + error_bar), 3)])
 
     graph_json["values"] = sorted(ts_plot)
     graph_json["integr_values"] = sorted(ts_plot_int)
+    graph_json["error_range"] = error_range
     graph_json["point"] = [round(stn_lat, 2), round(stn_lon, 2)]
     graph_json = json.dumps(graph_json)
-
     return graph_json
+
+
+def get_regional_ts(region, storage_type):
+    graph_json = {}
+    ts_plot = []
+    grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
+    nc_file = os.path.join(grace_dir, region, f'{region}_{storage_type}.nc')
+    ds = xarray.open_dataset(nc_file)
+    return None
 
 
 def get_region_bounds(region_name):
     grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
-    nc_file = os.path.join(grace_dir, region_name, f'{region_name}_avg_sw.nc')
+    nc_file = os.path.join(grace_dir, region_name, f'{region_name}_sw.nc')
     ds = xarray.open_dataset(nc_file)
     lat = ds['lat'][:]
     lon = ds['lon'][:]
@@ -258,9 +277,9 @@ def get_region_bounds(region_name):
     return bbox
 
 
-def file_range(region_name, signal_process, storage_type):
+def file_range(region_name, storage_type):
     grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
-    nc_file = os.path.join(grace_dir, region_name, f'{region_name}_{signal_process}_{storage_type}.nc')
+    nc_file = os.path.join(grace_dir, region_name, f'{region_name}_{storage_type}.nc')
     ds = xarray.open_dataset(nc_file)
     lwe_thickness = ds['lwe_thickness'][:]
     min_val = round(float(lwe_thickness.min()), 2)
@@ -275,8 +294,6 @@ class GraceArray(object):
         self.signal_process = signal_process
         self.region = region
         self.grace_dir = grace_dir
-        self.nc_file = self._get_nc_file()
-        self.dataset = self._get_data_array()
 
     def _get_nc_file(self):
         region = self.region
@@ -288,11 +305,13 @@ class GraceArray(object):
         else:
             nc_file = os.path.join(grace_dir, region, f'{region}_{signal_process}_{storage_type}.nc')
 
-        return nc_file
+        print(f'{nc_file} inside get nc file')
+        self.nc_file = nc_file
 
     def _get_data_array(self):
+        print(f'{self.nc_file} inside data array')
         ds = xarray.open_dataset(self.nc_file)
-        return ds
+        self.dataset = ds
 
 
 class PointArray(GraceArray):
@@ -300,6 +319,8 @@ class PointArray(GraceArray):
         self.lat = lat
         self.lon = lon
         super().__init__(storage_type, signal_process, region, grace_dir)
+        self._get_nc_file()
+        self._get_data_array()
         self.time_array = self.dataset.time.values
         self.lat_array = self.dataset['lat'][:]
         self.lon_array = self.dataset['lon'][:]
