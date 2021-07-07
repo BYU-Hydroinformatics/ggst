@@ -96,6 +96,8 @@ var LIBRARY_OBJECT = (function() {
     resize_map_chart = function(){
         $('#chart').addClass('partial-chart');
         $('#chart').removeClass('full-chart');
+        $('#reg-chart').addClass('partial-chart');
+        $('#reg-chart').removeClass('full-chart');
         $('#map').removeClass('full-map');
         $('#map').addClass('partial-map');
     };
@@ -103,6 +105,8 @@ var LIBRARY_OBJECT = (function() {
     original_map_chart = function(){
         $('#chart').removeClass('partial-chart');
         $('#chart').addClass('full-chart');
+        $('#reg-chart').removeClass('partial-chart');
+        $('#reg-chart').addClass('full-chart');
         $('#map').addClass('full-map');
         $('#map').removeClass('partial-map');
     };
@@ -341,6 +345,7 @@ var LIBRARY_OBJECT = (function() {
         map.timeDimension.setCurrentTime(layer_arr[1]);
         if(mode_type==='add'){
             add_regional_graph();
+            resize_map_chart();
         }
     };
 
@@ -417,10 +422,10 @@ var LIBRARY_OBJECT = (function() {
                     },
                     rangeSelector: {
                         selected: tdWmsLayer._defaultRangeSelector,
-                        // buttons: [{
-                        //     type: 'all',
-                        //     text: 'All'
-                        // }]
+                        buttons: [{
+                            type: 'all',
+                            text: 'All'
+                        }]
                     },
                     title: {
                         text: " Water Storage Anomaly values at " + result.location,
@@ -458,7 +463,7 @@ var LIBRARY_OBJECT = (function() {
                     series: [{
                         data:result.values,
                         name: signal_name+' '+storage_name,
-                        type: 'area',
+                        type: 'line',
                         visible: true,
                         tooltip: {
                             valueDecimals: 2,
@@ -468,13 +473,23 @@ var LIBRARY_OBJECT = (function() {
                         }
                     },
                         {
+                            data:result.error_range,
+                            name: signal_name+' '+storage_name + ' Error Range',
+                            type: 'arearange',
+                            // visible: true,
+                            fillOpacity: 0.3,
+                            lineWidth: 0,
+                            // linkedTo: ':previous',
+                            color: Highcharts.getOptions().colors[0]
+                        },
+                        {
                             data:result.integr_values,
                             name: signal_name + storage_name + ' Depletion Curve',
                             type: 'area',
                             visible: false,
                             tooltip: {
                                 valueDecimals: 2,
-                                valueSuffix: ' Change in Volume since April 16, 2002 (Acre-ft)',
+                                valueSuffix: ' Change in Volume (Acre-ft)',
                                 xDateFormat: '%A, %b %e, %Y',
                                 headerFormat: '<span style="font-size: 12px; font-weight:bold;">{point.key} (Click to visualize the map on this time)</span><br/>'
                             }
@@ -606,7 +621,7 @@ var LIBRARY_OBJECT = (function() {
         var depletion_color
         var charttype;
         var seriesname;
-        var myseries, depletion_curve;
+        var myseries, error_range, depletion_curve;
         charttype="Total";
         color="#053372";
         depletion_color="#222222";
@@ -620,12 +635,13 @@ var LIBRARY_OBJECT = (function() {
         xhr.done(function(result) {
             if ("success" in result) {
                 console.log(result);
-                myseries=
+                myseries =
                     {
                         name: seriesname,
                         data: result.values,
-                        type: 'area',
+                        type: 'line',
                         color:color,
+                        lineWidth: 3,
                         tooltip: {
                             valueDecimals: 2,
                             valueSuffix: ' Liquid Water Eqv. Thickness (cm)',
@@ -634,7 +650,17 @@ var LIBRARY_OBJECT = (function() {
                         }
                     };
                 regional_chart.addSeries(myseries);
-
+                error_range = {
+                    data:result.error_range,
+                    name: seriesname+ ' Error Range',
+                    type: 'arearange',
+                    // visible: true,
+                    fillOpacity: 0.3,
+                    lineWidth: 0,
+                    // linkedTo: ':previous',
+                    color: color
+                }
+                regional_chart.addSeries(error_range);
                 depletion_curve=
                     {
                         name: seriesname + " Depletion Curve",
@@ -643,7 +669,7 @@ var LIBRARY_OBJECT = (function() {
                         color:depletion_color,
                         tooltip: {
                             valueDecimals: 2,
-                            valueSuffix: ' Change in Volume since April 16, 2002 (Acre-ft)',
+                            valueSuffix: ' Change in Volume (Acre-ft)',
                             xDateFormat: '%A, %b %e, %Y',
                             headerFormat: '<span style="font-size: 12px; font-weight:bold;">{point.key} (Click to visualize the map on this time)</span><br/>'
                         },

@@ -466,7 +466,7 @@ var LIBRARY_OBJECT = (function() {
                             visible: false,
                             tooltip: {
                                 valueDecimals: 2,
-                                valueSuffix: ' Change in Volume since April 16, 2002 (Acre-ft)',
+                                valueSuffix: ' Change in Volume (Acre-ft)',
                                 xDateFormat: '%A, %b %e, %Y',
                                 headerFormat: '<span style="font-size: 12px; font-weight:bold;">{point.key} (Click to visualize the map on this time)</span><br/>'
                             }

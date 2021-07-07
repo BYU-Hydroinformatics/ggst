@@ -318,6 +318,13 @@ def file_range(region_name, storage_type):
     return min_val, max_val
 
 
+def delete_region_dir(region_name):
+    grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
+    output_dir = os.path.join(grace_dir, region_name)
+    shutil.rmtree(output_dir)
+    return True
+
+
 class GraceArray(object):
 
     def __init__(self, storage_type, signal_process, region, grace_dir):
@@ -419,4 +426,3 @@ class TimeSeries(PointArray):
         graph_json["point"] = [round(lat, 2), round(lon, 2)]
         graph_json = json.dumps(graph_json)
         return graph_json
-

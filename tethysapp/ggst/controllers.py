@@ -96,3 +96,22 @@ def add_region(request):
     context = {"region_name_input": region_name_input,  "add_button": add_button}
 
     return render(request, 'ggst/add_region.html', context)
+
+
+@user_passes_test(user_permission_test)
+def delete_region(request):
+
+    region_select = get_region_select()
+    num_regions = len(region_select.options)
+
+    delete_button = Button(display_text='Delete Region',
+                           icon='glyphicon glyphicon-minus',
+                           style='danger',
+                           name='submit-delete-region',
+                           attributes={'id': 'submit-delete-region'}, )  # Delete region button
+
+    context = {"region_select": region_select,
+               "num_regions": num_regions,
+               "delete_button": delete_button}
+
+    return render(request, 'ggst/delete_region.html', context)

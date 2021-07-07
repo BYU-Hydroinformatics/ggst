@@ -71,6 +71,16 @@ class Ggst(TethysAppBase):
                 controller='ggst.controllers_ajax.region_add'
             ),
             UrlMap(
+                name='delete-region',
+                url='ggst/delete-region',
+                controller='ggst.controllers.delete_region'
+            ),
+            UrlMap(
+                name='submit-delete-region',
+                url='ggst/delete-region/delete',
+                controller='ggst.controllers_ajax.region_delete'
+            ),
+            UrlMap(
                 name='subset_region',
                 url='ggst/api/subset_region',
                 controller='ggst.api.subset_region_api'

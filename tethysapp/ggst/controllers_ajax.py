@@ -4,7 +4,8 @@ import json
 from django.contrib.auth.decorators import (user_passes_test)
 from django.http import JsonResponse
 
-from .utils import (file_range,
+from .utils import (delete_region_dir,
+                    file_range,
                     get_grace_timestep_options,
                     generate_timeseries,
                     get_region_bounds,
@@ -20,18 +21,36 @@ from .app import Ggst as app
 def region_add(request):
 
     if request.is_ajax() and request.method == 'POST':
-        # try:
-        info = request.POST
+        try:
+            info = request.POST
 
-        region_name = info.get('region_name')
-        region_store = region_name.replace(' ', '_').lower()
-        files_list = request.FILES.getlist('shapefile')
-        output_dir = process_shapefile(region_store, files_list)
-        response = {"success": "success",
-                    "output_dir": output_dir}
-        return JsonResponse(response)
-        # except Exception as e:
-        #     return JsonResponse({'error': f'Error processing request: {e}'})
+            region_name = info.get('region_name')
+            region_store = region_name.replace(' ', '_').lower()
+            files_list = request.FILES.getlist('shapefile')
+            output_dir = process_shapefile(region_store, files_list)
+            response = {"success": "success",
+                        "output_dir": output_dir}
+            return JsonResponse(response)
+        except Exception as e:
+            return JsonResponse({'error': f'Error processing request: {e}'})
+
+
+@user_passes_test(user_permission_test)
+def region_delete(request):
+
+    if request.is_ajax() and request.method == 'POST':
+        try:
+            info = request.POST
+
+            region_name = info.get('region_name')
+            dir_deleted = delete_region_dir(region_name)
+            if dir_deleted:
+                response = {"success": "success"}
+                return JsonResponse(response)
+            else:
+                return JsonResponse({"error": "Failed to delete directory."})
+        except Exception as e:
+            return JsonResponse({'error': f'Error processing request: {e}'})
 
 
 def get_time_step_options(request):
@@ -51,29 +70,29 @@ def get_time_step_options(request):
 def get_global_plot(request):
 
     if request.is_ajax() and request.method == 'POST':
-        # try:
-        return_obj = {}
-        info = request.POST
-        lon = info.get('lon')
-        lat = info.get('lat')
-        storage_type = info.get('storage_type')
-        print(storage_type, lat, lon)
-        grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
-        # ds = TimeSeries(storage_type, signal_process, float(lat), float(lon), 'global', grace_dir)
-        graph = generate_timeseries(storage_type,
-                                    lat,
-                                    lon,
-                                    'global')
-        graph = json.loads(graph)
-        return_obj["values"] = graph["values"]
-        return_obj["integr_values"] = graph["integr_values"]
-        return_obj["error_range"] = graph["error_range"]
-        return_obj["location"] = graph["point"]
-        return_obj['success'] = "success"
+        try:
+            return_obj = {}
+            info = request.POST
+            lon = info.get('lon')
+            lat = info.get('lat')
+            storage_type = info.get('storage_type')
+            print(storage_type, lat, lon)
+            grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
+            # ds = TimeSeries(storage_type, signal_process, float(lat), float(lon), 'global', grace_dir)
+            graph = generate_timeseries(storage_type,
+                                        lat,
+                                        lon,
+                                        'global')
+            graph = json.loads(graph)
+            return_obj["values"] = graph["values"]
+            return_obj["integr_values"] = graph["integr_values"]
+            return_obj["error_range"] = graph["error_range"]
+            return_obj["location"] = graph["point"]
+            return_obj['success'] = "success"
 
-        return JsonResponse(return_obj)
-        # except Exception as e:
-        #     return JsonResponse({'error': str(e)})
+            return JsonResponse(return_obj)
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
 
 
 def get_region_plot(request):
@@ -94,6 +113,7 @@ def get_region_plot(request):
                                         region)
             graph = json.loads(graph)
             return_obj["values"] = graph["values"]
+            return_obj["error_range"] = graph["error_range"]
             return_obj["integr_values"] = graph["integr_values"]
             return_obj["location"] = graph["point"]
             return_obj['success'] = "success"
@@ -141,16 +161,16 @@ def get_region_center(request):
 
 def get_legend_range(request):
     if request.is_ajax() and request.method == 'POST':
-        # try:
-        return_obj = {}
-        info = request.POST
-        storage_type = info.get('storage_type')
-        region_name = info.get('region_name')
-        print(region_name, storage_type)
-        range_min, range_max = file_range(region_name, storage_type)
-        return_obj['success'] = 'success'
-        return_obj['range_min'] = range_min
-        return_obj['range_max'] = range_max
-        return JsonResponse(return_obj)
-        # except Exception as e:
-        #     return JsonResponse({'error': str(e)})
+        try:
+            return_obj = {}
+            info = request.POST
+            storage_type = info.get('storage_type')
+            region_name = info.get('region_name')
+            print(region_name, storage_type)
+            range_min, range_max = file_range(region_name, storage_type)
+            return_obj['success'] = 'success'
+            return_obj['range_min'] = range_min
+            return_obj['range_max'] = range_max
+            return JsonResponse(return_obj)
+        except Exception as e:
+            return JsonResponse({'error': str(e)})

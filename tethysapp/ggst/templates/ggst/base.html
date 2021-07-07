@@ -17,6 +17,7 @@
   <li class="title">App Navigation</li>
 {% url 'ggst:home' as home_url %}
 {% url 'ggst:add-region' as add_region_url %}
+{% url 'ggst:delete-region' as delete_region_url %}
 {% url 'ggst:global-map' as global_map_url %}
 
 <li class="{% if request.path == home_url %}active{% endif %}"><a href="{{home_url}}">Home</a></li>
@@ -24,6 +25,7 @@
 {% if user.is_superuser or user.is_staff %}
 <li class="title">Configuration</li>
 <li class="{% if request.path == add_region_url %}active{% endif %}"><a href="{{add_region_url}}">Add a Region</a></li>
+<li class="{% if request.path == delete_region_url %}active{% endif %}"><a href="{{delete_region_url}}">Delete a Region</a></li>
 {% endif %}
 {% endblock %}
 
