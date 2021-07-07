@@ -10,6 +10,7 @@ from .utils import (file_range,
                     get_region_bounds,
                     user_permission_test,
                     process_shapefile,
+                    get_regional_ts,
                     TimeSeries)
 
 from .app import Ggst as app
@@ -104,12 +105,22 @@ def get_region_plot(request):
 
 def get_region_chart(request):
     if request.is_ajax() and request.method == 'POST':
-        # try:
-        return_obj = {}
-        info = request.POST
-        region = info.get('region')
-        storage_type = info.get('storage_type')
-        return JsonResponse(return_obj)
+        try:
+            return_obj = {}
+            info = request.POST
+            region = info.get('region')
+            storage_type = info.get('storage_type')
+            graph = get_regional_ts(region, storage_type)
+            # return_obj["values"] = graph["values"]
+            graph = json.loads(graph)
+            return_obj["area"] = graph["area"]
+            return_obj["values"] = graph["values"]
+            return_obj["integr_values"] = graph["integr_values"]
+            return_obj["error_range"] = graph["error_range"]
+            return_obj["success"] = "success"
+            return JsonResponse(return_obj)
+        except Exception as e:
+            return JsonResponse({'error': f'Error processing request: {e}'})
 
 
 def get_region_center(request):

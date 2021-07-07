@@ -166,6 +166,10 @@ def subset_shape(gdf: gpd.GeoDataFrame,
     print('before')
     subset_paths = [clip_nc(nc_file, gdf, region_name, grace_dir) for nc_file in nc_files_list]
     print('after')
+    utm_gdf = gdf.to_crs(gdf.estimate_utm_crs())
+    region_area = utm_gdf.area.sum()
+    with open(os.path.join(output_dir, 'area.json'), 'w') as f:
+        json.dump({"area": region_area}, f)
     logger.info('End of the subsetting...')
     return output_dir
 
@@ -229,6 +233,10 @@ def generate_timeseries(storage_type, lat, lon, region):
     time_array = ds.time.values
     lat_array = ds['lat'][:]
     lon_array = ds['lon'][:]
+    # Find the lon size
+    lon_interval_size = ds.variables['lon'][1] - ds.variables['lon'][0]
+    # Find the lat size
+    lat_interval_size = ds.variables['lat'][1] - ds.variables['lat'][0]
     lon_idx = (np.abs(lon_array - stnd_lon)).argmin().values
     lat_idx = (np.abs(lat_array - stn_lat)).argmin().values
 
@@ -240,8 +248,8 @@ def generate_timeseries(storage_type, lat, lon, region):
         value = data[lat_idx, lon_idx].values
         error_bar = uncertainty[lat_idx, lon_idx].values
         utc_time = int(time_stamp.astype(int) / 1000000)
-        difference_data_value = (value - init_value) * 0.01 * 6371000 * math.radians(0.25) * \
-                                6371000 * math.radians(0.25) * abs(math.cos(math.radians(lat_idx))) * 0.000810714
+        difference_data_value = (value - init_value) * 0.01 * 6371000 * math.radians(lon_interval_size) * \
+                                6371000 * math.radians(lat_interval_size) * abs(math.cos(math.radians(lat_idx))) * 0.000810714
         ts_plot.append([utc_time, round(float(value), 3)])
         ts_plot_int.append([utc_time, round(float(difference_data_value), 3)])
         error_range.append([utc_time, round(float(value - error_bar), 3), round(float(value + error_bar), 3)])
@@ -257,10 +265,33 @@ def generate_timeseries(storage_type, lat, lon, region):
 def get_regional_ts(region, storage_type):
     graph_json = {}
     ts_plot = []
+    ts_plot_int = []
+    error_range = []
     grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
     nc_file = os.path.join(grace_dir, region, f'{region}_{storage_type}.nc')
     ds = xarray.open_dataset(nc_file)
-    return None
+    region_area = json.load(open(os.path.join(grace_dir, region, 'area.json'), 'r'))['area']
+    print(region_area)
+    lwe_da = ds.lwe_thickness.mean(['lat', 'lon'])
+    error_da = ds.uncertainty.mean(['lat', 'lon'])
+
+    init_value = lwe_da.values[0]
+    for x, y in zip(lwe_da, error_da):
+        value = x.values
+        error_bar = y.values
+        utc_time = int(x.time.values.astype(int) / 1000000)
+        difference_data_value = (value - init_value) * 0.00000075 * region_area
+        ts_plot.append([utc_time, round(float(value), 3)])
+        error_range.append([utc_time, round(float(value - error_bar), 3), round(float(value + error_bar), 3)])
+        ts_plot_int.append([utc_time, round(float(difference_data_value), 3)])
+
+    graph_json["values"] = ts_plot
+    graph_json["integr_values"] = ts_plot_int
+    graph_json["error_range"] = error_range
+    graph_json['area'] = region_area
+    graph_json = json.dumps(graph_json)
+
+    return graph_json
 
 
 def get_region_bounds(region_name):

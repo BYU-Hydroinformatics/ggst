@@ -339,6 +339,9 @@ var LIBRARY_OBJECT = (function() {
             "&colorscalerange="+range_min+","+range_max+"&PALETTE="+style+"&transparent=FALSE";
         $("#legend-image").attr("src", src);
         map.timeDimension.setCurrentTime(layer_arr[1]);
+        if(mode_type==='add'){
+            add_regional_graph();
+        }
     };
 
 
@@ -603,11 +606,52 @@ var LIBRARY_OBJECT = (function() {
         var depletion_color
         var charttype;
         var seriesname;
+        var myseries, depletion_curve;
         charttype="Total";
         color="#053372";
         depletion_color="#222222";
 
-        seriesname= $selectStorageType.text();
+        seriesname= $("#select-storage-type option:selected").text();
+        var xhr = ajax_update_database("get-region-summary", {
+            region: region,
+            storage_type: storage_type
+        });
+
+        xhr.done(function(result) {
+            if ("success" in result) {
+                console.log(result);
+                myseries=
+                    {
+                        name: seriesname,
+                        data: result.values,
+                        type: 'area',
+                        color:color,
+                        tooltip: {
+                            valueDecimals: 2,
+                            valueSuffix: ' Liquid Water Eqv. Thickness (cm)',
+                            xDateFormat: '%A, %b %e, %Y',
+                            headerFormat: '<span style="font-size: 12px; font-weight:bold;">{point.key} (Click to visualize the map on this time)</span><br/>'
+                        }
+                    };
+                regional_chart.addSeries(myseries);
+
+                depletion_curve=
+                    {
+                        name: seriesname + " Depletion Curve",
+                        data: result.integr_values,
+                        type: 'area',
+                        color:depletion_color,
+                        tooltip: {
+                            valueDecimals: 2,
+                            valueSuffix: ' Change in Volume since April 16, 2002 (Acre-ft)',
+                            xDateFormat: '%A, %b %e, %Y',
+                            headerFormat: '<span style="font-size: 12px; font-weight:bold;">{point.key} (Click to visualize the map on this time)</span><br/>'
+                        },
+                        visible:false
+                    };
+                regional_chart.addSeries(depletion_curve);
+            }
+        });
     };
 
     init_all = function(){
@@ -642,7 +686,6 @@ var LIBRARY_OBJECT = (function() {
             let {layer_val, storage_type, region, symbology} = get_dropdown_vals();
             get_region_center(region);
             add_wms(region, layer_val, storage_type, symbology);
-            add_regional_graph();
             //             update_wms(region, layer_val, storage_type, symbology, range_min, range_max, 'update');
 
             // original_map_chart();

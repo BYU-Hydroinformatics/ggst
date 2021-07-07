@@ -84,6 +84,11 @@ class Ggst(TethysAppBase):
                 name='region_time_step',
                 url='ggst/region-map/timestep',
                 controller='ggst.controllers_ajax.get_time_step_options'
+            ),
+            UrlMap(
+                name='regional_time_series',
+                url='ggst/region-map/get-region-summary',
+                controller='ggst.controllers_ajax.get_region_chart'
             )
         )
 
