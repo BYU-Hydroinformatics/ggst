@@ -113,7 +113,7 @@ var LIBRARY_OBJECT = (function() {
 
     init_map = function(){
         map = L.map('map', {
-            zoom: 5,
+            zoom: 3,
             center: [map_lat, map_lon],
             // crs: L.CRS.EPSG3857
         });
@@ -175,7 +175,7 @@ var LIBRARY_OBJECT = (function() {
         graceGroup = L.layerGroup().addTo(map);
         contourGroup = L.layerGroup().addTo(map);
 
-        var opacity_input = L.control({position: 'topright'});
+        var opacity_input = L.control({position: 'topleft'});
         opacity_input.onAdd = function(map){
             var div = L.DomUtil.create('div', 'opacity_input lcontrol');
             div.innerHTML = '<b>Opacity:</b><input type="number" class="form-control input-sm" name="opacity" id="opacity_val" ' +
@@ -273,7 +273,11 @@ var LIBRARY_OBJECT = (function() {
         let wmsUrl = wms_url + region_name + '/' + region_name + '_' + storage_type + '.nc';
         let opacity = $("#opacity_val").val();
         let layer_arr = layer_val.toString().split("|");
-        let time_string = layer_arr[0]
+        let time_string = layer_arr[0];
+        $('.lcontrol').removeClass('hidden');
+        $('.leaflet-bar-timecontrol').removeClass('hidden');
+        graceGroup.clearLayers();
+        contourGroup.clearLayers();
         contourLayer = L.tileLayer.wms(wmsUrl, {
             layers: 'lwe_thickness',
             format: 'image/png',
@@ -284,7 +288,7 @@ var LIBRARY_OBJECT = (function() {
             colorscalerange: [range_min, range_max],
             version:'1.3.0',
             zIndex: 10,
-            time: time_string
+            // time: time_string
         });
 
         if(mode_type==='add') {
@@ -298,7 +302,7 @@ var LIBRARY_OBJECT = (function() {
         }else if (mode_type==='update'){
             contourTimeLayer = L.timeDimension.layer.wms(contourLayer, {
                 // updateTimeDimension: true,
-                // setDefaultTime: true,
+                setDefaultTime: true,
                 cache: 48,
                 // requestTimeFromCapabilities: true,
             });
@@ -314,13 +318,13 @@ var LIBRARY_OBJECT = (function() {
             colorscalerange: [range_min, range_max],
             version:'1.3.0',
             zIndex:5,
-            time: time_string
+            // time: time_string
         });
 
         if(mode_type==='add') {
             tdWmsLayer = L.timeDimension.layer.wms(wmsLayer, {
-                updateTimeDimension: true,
-                setDefaultTime: true,
+                // updateTimeDimension: true,
+                // setDefaultTime: false,
                 cache: 48,
                 requestTimeFromCapabilities: true,
                 updateTimeDimensionMode: 'replace'
@@ -328,7 +332,7 @@ var LIBRARY_OBJECT = (function() {
         }else if(mode_type==='update'){
             tdWmsLayer = L.timeDimension.layer.wms(wmsLayer, {
                 // updateTimeDimension: true,
-                // setDefaultTime: true,
+                // setDefaultTime: false,
                 cache: 48,
                 // requestTimeFromCapabilities: true,
             });
@@ -366,12 +370,6 @@ var LIBRARY_OBJECT = (function() {
     };
 
     add_wms = function(region_name, layer_val, storage_type, style){
-        // map.removeLayer(tdWmsLayer);
-        // map.removeLayer(contourTimeLayer);
-        $('.lcontrol').removeClass('hidden');
-        $('.leaflet-bar-timecontrol').removeClass('hidden');
-        graceGroup.clearLayers();
-        contourGroup.clearLayers();
         get_legend_range(region_name, layer_val, storage_type, style);
     };
 
@@ -388,8 +386,12 @@ var LIBRARY_OBJECT = (function() {
                     $("#select-layer").append(layer_option);
                 });
                 let layer_val = $selectLayer.val();
-                $selectLayer.val(layer_val);
-                $("#select-layer option:selected").text(result['layer_options'][0][0]);
+                // $selectLayer.val(layer_val);
+                // $("#select-layer").text(result['layer_options'].slice(-1)[0]);
+                // $("#select-layer").val(result['layer_options'].slice(-1)[1]).trigger('change.select2');
+                // $("#select-layer").select2('destroy');
+                $('#select-layer').select2(result['layer_options'].slice(-1)[1], null);
+                // $('#select-layer').val(result['layer_options'].slice(-1)[1]).select2();
                 let symbology = $selectStyle.val();
                 let region = $selectRegion.val();
                 add_wms(region, layer_val, storage_type, symbology);
@@ -634,7 +636,6 @@ var LIBRARY_OBJECT = (function() {
 
         xhr.done(function(result) {
             if ("success" in result) {
-                console.log(result);
                 myseries =
                     {
                         name: seriesname,
@@ -706,7 +707,6 @@ var LIBRARY_OBJECT = (function() {
     // the DOM tree finishes loading
     $(function() {
         init_all();
-        $selectRegion.val(region_name).trigger('change');
 
         $selectRegion.change(function(){
             let {layer_val, storage_type, region, symbology} = get_dropdown_vals();
@@ -715,7 +715,9 @@ var LIBRARY_OBJECT = (function() {
             //             update_wms(region, layer_val, storage_type, symbology, range_min, range_max, 'update');
 
             // original_map_chart();
-        }).change();
+        })
+        $selectRegion.val(region_name).trigger('change');
+            // .change();
         $selectLayer.change(function(){
             let {layer_val, storage_type, region, symbology} = get_dropdown_vals();
             update_wms(region, layer_val, storage_type, symbology, range_min, range_max, 'update');

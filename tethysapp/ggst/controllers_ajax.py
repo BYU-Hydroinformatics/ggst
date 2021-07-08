@@ -76,9 +76,6 @@ def get_global_plot(request):
             lon = info.get('lon')
             lat = info.get('lat')
             storage_type = info.get('storage_type')
-            print(storage_type, lat, lon)
-            grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
-            # ds = TimeSeries(storage_type, signal_process, float(lat), float(lon), 'global', grace_dir)
             graph = generate_timeseries(storage_type,
                                         lat,
                                         lon,
@@ -166,7 +163,6 @@ def get_legend_range(request):
             info = request.POST
             storage_type = info.get('storage_type')
             region_name = info.get('region_name')
-            print(region_name, storage_type)
             range_min, range_max = file_range(region_name, storage_type)
             return_obj['success'] = 'success'
             return_obj['range_min'] = range_min

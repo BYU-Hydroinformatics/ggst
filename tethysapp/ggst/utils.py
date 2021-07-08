@@ -121,7 +121,6 @@ def clip_nc(nc_file: str,
             grace_dir: str) -> str:
     # logger.info(f'Subset {nc_file} for {region_name}')
     ds = xarray.open_dataset(nc_file)
-    print(nc_file)
     # ds = ds.assign({"lon": (((ds.lon + 180) % 360) - 180)}).sortby('lon')
     if 'spatial_ref' in ds.variables:
         ds = ds.drop_sel('spatial_ref')
@@ -157,15 +156,11 @@ def subset_shape(gdf: gpd.GeoDataFrame,
                  region_name: str) -> str:
     logger.info('Starting the subsetting...')
     grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), '')
-    print(grace_dir)
     nc_files_list = glob.glob(f'{grace_dir}*.nc')
-    print(nc_files_list)
     output_dir = os.path.join(grace_dir, region_name)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-    print('before')
     subset_paths = [clip_nc(nc_file, gdf, region_name, grace_dir) for nc_file in nc_files_list]
-    print('after')
     utm_gdf = gdf.to_crs(gdf.estimate_utm_crs())
     region_area = utm_gdf.area.sum()
     with open(os.path.join(output_dir, 'area.json'), 'w') as f:
@@ -188,7 +183,6 @@ def process_shapefile(region_store: str,
     prj_string = prj[0].read().decode()
     gdf = gpd.GeoDataFrame(data=attributes, geometry=geometry, crs=prj_string)
     gdf.to_crs('EPSG:4326', inplace=True)
-    print(region_store)
     output_dir = subset_shape(gdf, region_store)
     return output_dir
 
@@ -225,9 +219,6 @@ def generate_timeseries(storage_type, lat, lon, region):
     else:
         nc_file = os.path.join(grace_dir, region, f'{region}_{storage_type}.nc')
         stnd_lon = stn_lon
-
-    print(nc_file)
-    print(stn_lat, stn_lon, stnd_lon)
 
     ds = xarray.open_dataset(nc_file)
     time_array = ds.time.values
@@ -271,7 +262,6 @@ def get_regional_ts(region, storage_type):
     nc_file = os.path.join(grace_dir, region, f'{region}_{storage_type}.nc')
     ds = xarray.open_dataset(nc_file)
     region_area = json.load(open(os.path.join(grace_dir, region, 'area.json'), 'r'))['area']
-    print(region_area)
     lwe_da = ds.lwe_thickness.mean(['lat', 'lon'])
     error_da = ds.uncertainty.mean(['lat', 'lon'])
 
@@ -343,11 +333,9 @@ class GraceArray(object):
         else:
             nc_file = os.path.join(grace_dir, region, f'{region}_{signal_process}_{storage_type}.nc')
 
-        print(f'{nc_file} inside get nc file')
         self.nc_file = nc_file
 
     def _get_data_array(self):
-        print(f'{self.nc_file} inside data array')
         ds = xarray.open_dataset(self.nc_file)
         self.dataset = ds
 
