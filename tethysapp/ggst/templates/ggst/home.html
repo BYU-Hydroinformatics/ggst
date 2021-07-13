@@ -5,6 +5,12 @@
   <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
     <a data-toggle="modal" data-target="#help-modal"><span class="glyphicon glyphicon-question-sign"></span></a>
   </div>
+  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="API">
+    <a data-toggle="modal" data-target="#api-modal"><span class="glyphicon glyphicon-info-sign"></span></a>
+  </div>
+  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Home">
+    <a href="{% url 'ggst:home' %}"><span class="glyphicon glyphicon-home"></span></a>
+  </div>
 {% endblock %}
 
 {% block app_content %}
@@ -32,26 +38,171 @@
 
 {# Use the after_app_content block for modals #}
 {% block after_app_content %}
-  <!-- Example Modal -->
-  <div class="modal fade" id="help-modal" tabindex="-1" role="dialog" aria-labelledby="help-modal-label">
+<div class="modal fade" id="help-modal" tabindex="-1" role="dialog" aria-labelledby="help-modal-label">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h5 class="modal-title" id="help-modal-label">Example Modal</h5>
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Guide</h4>
+            </div>
+            <div class="modal-body">
+                <p><b>Subsetting of the regions is made possible through <a href="https://github.com/c-h-david/shbaam" target="_blank">SHBAAM</a> (Satellite Hydrology Bits Analysis And Mapping)</b></p>
+                <!--<p><b>For any questions, comments or subsetting requests contact Dr. Norm Jones at <a href="mailto:njones@byu.edu">njones@byu.edu</a></b></p>-->
+                <h5>The following steps highlight the several functions of the GRACE web app</h5>
+                <ol>
+                    <li class="welcome-step">Select a Region
+                        <p><b>Click the "Select a Region" dropdown and select an option</b></p>
+                        <p><b>Or simply select the Global Map tab from the navigation pane</b></p>
+                    </li>
+                    <li class="welcome-step">View different storage types
+                        <p><b>You have four options to choose from:</b></p>
+                        <ul>
+                            <li class="welcome-substep1">Total Water Storage Anomaly(GRACE Data), Surface Water Storage Anomaly(derived from GLDAS Model), Soil Moisture Storage Anomaly(derived from GLDAS Model), Groundwater Storage Anomaly(Calculated/inferred using previously mentioned storage types).
+                        </ul>
+                    </li>
+                    <li class="welcome-step">View different timesteps
+                        <p><b>You have two options to choose from:</b></p>
+                        <ul>
+                            <li class="welcome-substep1">Move the slider in the lower left-hand corner of the map
+                            <li class="welcome-substep1">Select a date from the dropdown on the left
+                        </ul>
+                    </li>
+                    <li class="welcome-step">View Animation
+                        <ul>
+                            <li class="welcome-substep1">Use the animation controls in the lower left-hand corner of the map to start or stop animation
+                            <li class="welcome-substep1">Use the fps slider on the right side of the control bar to increase and decrease animation speed
+                        </ul>
+                    </li>
+                    <li class="welcome-step">Contour/Map Settings
+                        <ul>
+                            <li class="welcome-substep1">Use the Select symbology dropdown to view different color schemes for the map contours.
+                            <li class="welcome-substep1">Use the Max and Min toggles in the top left corner of the page to adjust the contour values.  The opacity toggle allows you to adjust the transparency of the map data layer
+                        </ul>
+                    </li>
+                    <li class="welcome-step">View Time Series
+                        <p><b>The Grace application allows the user to generate a time series plot for a specific location.  To generate a time series:</b></p>
+                        <ul>
+                            <li class="welcome-substep1">Click on the <b>Marker Icon</b> <span id= marker-icon class="glyphicon glyphicon-map-marker"></span> on the left side of the map, then place the marker within the data region.
+                            <li class="welcome-substep1">The Time Series for that point will be generated below the map.
+                        </ul>
+                        <p>Note: You can also click anywhere on the time series graph to change the layer shown on the map to a specific time.  The time series can be exported in a number of formats by clicking the menu button on the chart(top-right).</p>
+                    </li>
+                    <li class="welcome-step">Click 'Exit' in the top-right of the app to return to the Main Apps Library</li>
+                    <h5>Limitations Disclaimer:</h5>
+                    <p>
+                        <b>
+                        We designed GGST to lower the level of technical knowledge required to interact with groundwater storage anomaly data from the GRACE mission data and provide the user with
+                        robust regional analysis capabilities. As part of making these data easier to access, it is important for users to understand the limitations and proper applications of
+                        these data. The data themselves are at a relatively coarse resolution, 1o latitude by 1o longitude, which are grid cells approximately 100 x 100 km, depending on the latitude
+                        of the study region. Even at this resolution, basing decisions on a single cell would involve large, unknown uncertainties as the GRACE data are collected at a coarser resolution,
+                        3o latitude by 3o longitude, then processed to estimate the higher resolution TWSa data set. These data are best used to evaluate long-term regional trends, rather than evaluating
+                        local issues such as well placement. As with any remote sensing data, they should be validated with field data where possible. Even with these caveats, the GWa data set provides
+                        managers with important insights into their aquifers, helping them identify and study long-term regional trends and identify regions that are depleting, recharging, or sustainably
+                        using groundwater resources. GGST displays the uncertainties in the data calculations, described above, as error bands on the time series plots to provide context on regions or time
+                        periods where higher levels of uncertainty may exist.
+                        </b>
+                    </p>
+                    <p>External Resources and Links:</p>
+                    <p><a href="https://github.com/BYU-Hydroinformatics/ggst" target="_blank">View Code</a></p>
+                    <p><a href="https://servirglobal.net/about-servir" target="_blank">About SERVIR</a></p>
+                    <p><a href="https://servirglobal.net/Privacy-Terms-of-Use" target="_blank">Privacy and Terms of Conditions</a></p>
+                </ol>
+            </div>
+            <div class="modal-footer">
+                <div align="center" id="logos">
+                    <div class="logo-image"><a href="http://www.usaid.gov/" target="_blank"><img src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/usaid.png"></a></div>
+                    <div class="logo-image"><a href="http://appliedsciences.nasa.gov/" target="_blank"><img src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/nasa.png"></a></div>
+                    <div class="logo-image"><a href="http://www.cilss.bf/" target="_blank"><img src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/cilss.png"></a></div>
+                    <div class="logo-image"><a href="http://www.rcmrd.org/" target="_blank"><img src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/rcmrd.png"></a></div>
+                    <div class="logo-image"><a href="http://www.icimod.org/" target="_blank"><img src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/icimod.png"></a></div>
+                    <div class="logo-image"><a href="http://www.adpc.net/" target="_blank"><img src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/adpc.png"></a></div>
+                </div>
+            </div>
+
+
         </div>
-        <div class="modal-body">
-          <p>You can add custom buttons to the app header using the <code>header_buttons</code> block. Use anchor/link tags for the button and wrap it in a div with the class <code>header-button</code>. For buttons with the gliphyicons, add the <code>glyphicon-button</code> class as well.</p>
-          <p>Ever have trouble using a modal in a Tethys app? Use the <code>after_app_content</code> block for modal content to allow them to function properly. See: <a href="https://getbootstrap.com/javascript/#modals">Bootstrap Modals</a></p>
-          <p>Add tooltips to any element by adding the <code>data-toggle</code>, <code>data-placement</code>, and <code>title</code> attributes to the button. See: <a href="https://getbootstrap.com/javascript/#tooltips">Bootstrap Tooltips</a></p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-        </div>
-      </div>
     </div>
-  </div>
+    <!--End modal content-->
+</div>
+
+
+<!-- API Modal -->
+<div class="modal fade" id="api-modal" tabindex="-1" role="dialog" aria-labelledby="api-modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title" id="api-modal-label">Developers API</h2>
+            </div>
+            <div class="modal-body">
+                <p>
+                    A Developers API is provided for those who wish to incorporate the GRACE Tethys APP data into their own
+                    separate application or script.
+                </p>
+                <br>
+                <h3>API Methods</h3>
+                <p>All API methods must be called using the following pattern:</p>
+                <p><b>{{ host }}/apps/[parent-app]/api/[MethodName]/?param1=value1&#38;param2=value2&#38;...paramN=valueN</b></p>
+                <p>See documentation and specific examples for all available methods below.</p>
+                <br>
+                <br>
+                <h4>GetPointValues</h4>
+                <table>
+                    <tr>
+                        <td><b>Parent App</b></td>
+                        <td colspan="5">ggst</td>
+                    </tr>
+                    <tr>
+                        <th>Supported Methods</th>
+                        <td colspan="5">GET</td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td colspan="5">A JSON object with a timeseries for a given point.</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="7"><b>Params</b></td>
+                        <td><b>Name</b></td>
+                        <td><b>Description</b></td>
+                        <td><b>Valid Values</b></td>
+                        <td><b>Required</b></td>
+                    </tr>
+                    <tr>
+                        <td>latitude</td>
+                        <td>Latitude in WGS 84 projection</td>
+                        <td>Any value on land within the GRACE Explorer Domain (-60,90)</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>longitude</td>
+                        <td>Longitude in the WGS 84 projection</td>
+                        <td>Any value within the GRACE Explorer Domain (-180,180)</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>storage_type</td>
+                        <td>Storage type you wish to access</td>
+                        <td>Use one of the following: (tws, sw, sm, gw)</td>
+                        <td>Yes</td>
+                    </tr>
+
+                </table>
+                <h5>Example:</h5>
+                <a href="{{ host }}/apps/ggst/api/GetPointValues/?latitude=20.7&longitude=80.2&storage_type=gw" target="_blank">
+                    <code>{{ host }}/apps/ggst/api/GetPointValues/?latitude=20.7&longitude=80.2&storage_type=gw</code>
+                </a>
+            </div>
+            <div class="modal-footer">
+                <span><i>Developed at the BYU Hydroinformatics Lab</i></span>&nbsp;
+                <a href="https://github.com/BYU-Hydroinformatics/ggst" target="_blank" class="btn btn-default">View Code</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 {% endblock %}
 
 {% block app_actions %}

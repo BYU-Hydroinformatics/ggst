@@ -99,7 +99,10 @@ class Ggst(TethysAppBase):
                 name='regional_time_series',
                 url='ggst/region-map/get-region-summary',
                 controller='ggst.controllers_ajax.get_region_chart'
-            )
+            ),
+            UrlMap(name='api_get_point_values',
+                   url='ggst/api/GetPointValues',
+                   controller='ggst.api.api_get_point_values'),
         )
 
         return url_maps
