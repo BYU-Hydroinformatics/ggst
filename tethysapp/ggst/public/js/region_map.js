@@ -314,7 +314,7 @@ var LIBRARY_OBJECT = (function() {
             transparent: true,
             styles: 'boxfill/'+style,
             crs: L.CRS.EPSG4326,
-            opacity: 'opacity',
+            opacity: opacity,
             colorscalerange: [range_min, range_max],
             version:'1.3.0',
             zIndex:5,
@@ -342,7 +342,7 @@ var LIBRARY_OBJECT = (function() {
         graceGroup.addLayer(tdWmsLayer);
         contourGroup.addLayer(contourTimeLayer);
         contourTimeLayer.bringToFront();
-
+        // tdWmsLayer.setOpacity(opacity);
         var src = wmsUrl + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=lwe_thickness"+
             "&colorscalerange="+range_min+","+range_max+"&PALETTE="+style+"&transparent=FALSE";
         $("#legend-image").attr("src", src);
@@ -586,7 +586,7 @@ var LIBRARY_OBJECT = (function() {
             },
 
             title: {
-                text: $selectRegion.text() + ' Regional Average Water Storage Anomaly'
+                text: $("#region-select option:selected").text() + ' Regional Average Water Storage Anomaly'
             },
 
             series: [],

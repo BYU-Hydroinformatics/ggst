@@ -148,6 +148,13 @@ var LIBRARY_OBJECT = (function() {
                     'Tiles &copy; Esri 2012 <a href="https://leaflet-extras.github.io/leaflet-providers/preview/">See Here</a>'
             }
         )
+        var Stamen_TonerHybrid = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}{r}.{ext}', {
+            attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            subdomains: 'abcd',
+            minZoom: 0,
+            maxZoom: 20,
+            ext: 'png'
+        });
         var baseLayers = {
             "ESRI_World_Imagery": Esri_WorldImagery,
             "ESRI World Street Map": Esri_WorldStreetMap
@@ -232,6 +239,7 @@ var LIBRARY_OBJECT = (function() {
 
         layer_control = L.control.layers(baseLayers, overlay_maps).addTo(map);
         baseLayers.ESRI_World_Imagery.addTo(map);
+        layer_control.addOverlay(Stamen_TonerHybrid, 'Borders and Labels');
 
         drawnItems = new L.FeatureGroup();
         map.addLayer(drawnItems)
@@ -298,6 +306,7 @@ var LIBRARY_OBJECT = (function() {
         graceGroup.clearLayers();
         contourGroup.clearLayers();
         let wmsUrl = wms_url + 'GRC_' + storage_type + '.nc';
+        let opacity = $("#opacity_val").val();
         // let range_min = -50;
         // let range_max = 50;
         let layer_arr = layer_val.toString().split("|");
@@ -339,7 +348,7 @@ var LIBRARY_OBJECT = (function() {
             transparent: true,
             styles: 'boxfill/'+style,
             crs: L.CRS.EPSG4326,
-            opacity: '1.0',
+            opacity: opacity,
             colorscalerange: [range_min, range_max],
             version:'1.3.0',
             zIndex:5,
@@ -366,6 +375,8 @@ var LIBRARY_OBJECT = (function() {
         graceGroup.addLayer(tdWmsLayer);
         contourGroup.addLayer(contourTimeLayer);
         contourTimeLayer.bringToFront();
+        tdWmsLayer.setOpacity(opacity);
+
 
         var src = wmsUrl + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=lwe_thickness"+
             "&colorscalerange="+range_min+","+range_max+"&PALETTE="+style+"&transparent=TRUE";
