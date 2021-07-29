@@ -13,10 +13,14 @@ from zipfile import ZipFile
 import geopandas as gpd
 import numpy as np
 import pandas as pd
+import pyproj
 import shapefile
+import utm
 import xarray
+from pyproj import CRS
 from shapely.geometry import mapping
 from shapely.geometry import shape
+from shapely.ops import transform
 from tethys_sdk.gizmos import SelectInput
 
 from .app import Ggst as app
@@ -152,6 +156,25 @@ def clip_nc(nc_file: str,
     return output_path
 
 
+def calculate_area(gdf: gpd.GeoDataFrame):
+    areas = []
+    for row in gdf.itertuples():
+        centroid = row.geometry.centroid
+        utm_tuple = utm.from_latlon(centroid.y, centroid.x)
+        if centroid.y > 0:
+            south = False
+        else:
+            south = True
+        crs = CRS.from_dict({'proj': 'utm', 'zone': utm_tuple[2], south: south})
+        crs_code = f'EPSG:{crs.to_authority()[1]}'
+        row_as_df = pd.DataFrame.from_records([row], columns=row._fields)
+        row_as_gdf = gpd.GeoDataFrame(row_as_df, geometry=row_as_df.geometry, crs='EPSG:4326')
+        row_as_utm = row_as_gdf.to_crs(crs_code)
+        areas.append(row_as_utm.area.sum())
+    area = sum(areas)
+    return area
+
+
 def subset_shape(gdf: gpd.GeoDataFrame,
                  region_name: str) -> str:
     logger.info('Starting the subsetting...')
@@ -161,8 +184,7 @@ def subset_shape(gdf: gpd.GeoDataFrame,
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     subset_paths = [clip_nc(nc_file, gdf, region_name, grace_dir) for nc_file in nc_files_list]
-    utm_gdf = gdf.to_crs(gdf.estimate_utm_crs())
-    region_area = utm_gdf.area.sum()
+    region_area = calculate_area(gdf)
     with open(os.path.join(output_dir, 'area.json'), 'w') as f:
         json.dump({"area": region_area}, f)
     logger.info('End of the subsetting...')
