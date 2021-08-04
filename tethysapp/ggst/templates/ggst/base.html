@@ -19,6 +19,7 @@
 {% url 'ggst:add-region' as add_region_url %}
 {% url 'ggst:delete-region' as delete_region_url %}
 {% url 'ggst:global-map' as global_map_url %}
+{% url 'ggst:update-global-files' as update_global_files %}
 
 <li class="{% if request.path == home_url %}active{% endif %}"><a href="{{home_url}}">Home</a></li>
 <li class="{% if request.path == global_map_url %}active{% endif %}"><a href="{{global_map_url}}">Global Map</a></li>
@@ -26,6 +27,7 @@
 <li class="title">Configuration</li>
 <li class="{% if request.path == add_region_url %}active{% endif %}"><a href="{{add_region_url}}">Add a Region</a></li>
 <li class="{% if request.path == delete_region_url %}active{% endif %}"><a href="{{delete_region_url}}">Delete a Region</a></li>
+<li class="{% if request.path == update_global_files %}active{% endif %}"><a href="{{update_global_files}}">Update Global Files</a></li>
 {% endif %}
 {% endblock %}
 

@@ -46,6 +46,11 @@ class Ggst(TethysAppBase):
                 controller='ggst.controllers.region_map'
             ),
             UrlMap(
+                name='update-global-files',
+                url='ggst/update-global-files',
+                controller='ggst.controllers.update_global_files'
+            ),
+            UrlMap(
                 name='region-map-plot',
                 url='ggst/region-map/get-plot-region',
                 controller='ggst.controllers_ajax.get_region_plot'
@@ -119,6 +124,24 @@ class Ggst(TethysAppBase):
                 name='grace_thredds_catalog',
                 type=CustomSetting.TYPE_STRING,
                 description='Path to the Ground Water Thredds Catalog XML URL',
+                required=True,
+            ),
+            CustomSetting(
+                name='global_output_directory',
+                type=CustomSetting.TYPE_STRING,
+                description='Path to the GRACE data directory',
+                required=True,
+            ),
+            CustomSetting(
+                name='earthdata_username',
+                type=CustomSetting.TYPE_STRING,
+                description='NASA Earth Data username',
+                required=True,
+            ),
+            CustomSetting(
+                name='earthdata_pass',
+                type=CustomSetting.TYPE_STRING,
+                description='NASA Earth Data pass',
                 required=True,
             ),
         )

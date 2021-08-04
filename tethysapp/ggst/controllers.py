@@ -115,3 +115,19 @@ def delete_region(request):
                "delete_button": delete_button}
 
     return render(request, 'ggst/delete_region.html', context)
+
+
+def update_global_files(request):
+    """
+    Controller for the Update Global Files page.
+    """
+    update_button = Button(display_text='Update Files',
+                           icon='glyphicon glyphicon-plus',
+                           style='success',
+                           name='submit-delete-region',
+                           attributes={'id': 'submit-update-files'}, )  # Update files button
+    context = {
+        'update_button': update_button
+    }
+
+    return render(request, 'ggst/update_global_files.html', context)
