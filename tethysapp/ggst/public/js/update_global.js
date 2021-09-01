@@ -17,7 +17,8 @@ var LIBRARY_OBJECT = (function() {
     /************************************************************************
      *                      MODULE LEVEL / GLOBAL VARIABLES
      *************************************************************************/
-    var public_interface,
+    var run_global_files,
+        public_interface,
         $region_input;
 
 
@@ -54,6 +55,19 @@ var LIBRARY_OBJECT = (function() {
             addSuccessMessage('Region Delete Complete!');
         }
     };
+
+    run_global_files = function(region){
+        $.ajax({
+            type: 'POST',
+            url: 'update/',
+            data: {
+                'run': 'run'
+            },
+        }).done(function () {
+            console.log('Global File functions are running')
+        })
+    };
+    $("#submit-update-files").click(run_global_files);
 
 
     /************************************************************************

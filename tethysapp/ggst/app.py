@@ -51,6 +51,11 @@ class Ggst(TethysAppBase):
                 controller='ggst.controllers.update_global_files'
             ),
             UrlMap(
+                name='update-global-files-trigger',
+                url='ggst/update-global-files/update',
+                controller='ggst.controllers_ajax.global_files_update'
+            ),
+            UrlMap(
                 name='region-map-plot',
                 url='ggst/region-map/get-plot-region',
                 controller='ggst.controllers_ajax.get_region_plot'
@@ -144,5 +149,10 @@ class Ggst(TethysAppBase):
                 description='NASA Earth Data pass',
                 required=True,
             ),
+            CustomSetting(
+                name='conda_python_path',
+                type=CustomSetting.TYPE_STRING,
+                description='Path to the tethys conda env path. Output of which python command. '
+            )
         )
         return custom_settings

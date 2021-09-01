@@ -3,6 +3,7 @@ import json
 import logging
 import math
 import os
+import os.path
 import shutil
 import warnings
 from io import BytesIO
@@ -13,15 +14,17 @@ from zipfile import ZipFile
 import geopandas as gpd
 import numpy as np
 import pandas as pd
-import pyproj
+import requests
+import subprocess
 import shapefile
 import utm
 import xarray
 from pyproj import CRS
 from shapely.geometry import mapping
 from shapely.geometry import shape
-from shapely.ops import transform
 from tethys_sdk.gizmos import SelectInput
+from pathlib import Path
+
 
 from .app import Ggst as app
 
@@ -76,7 +79,7 @@ def get_storage_type_select():
     select_storage_type = SelectInput(display_text='Select Storage Component',
                                       name='select-storage-type',
                                       multiple=False,
-                                      options=[('Total Water Storage (GRACE)', "tws"),
+                                      options=[('Total Water Storage (GRACE)', "grace"),
                                                ('Surface Water Storage (GLDAS)', "sw"),
                                                ('Soil Moisture Storage (GLDAS)', "sm"),
                                                ('Groundwater Storage (Calculated)', "gw")],
@@ -115,7 +118,7 @@ def get_region_select():
     region_select = SelectInput(display_text='Select a Region',
                                 name='region-select',
                                 options=region_list,)
-
+    print(os.environ["CONDA_PREFIX"])
     return region_select
 
 
@@ -185,6 +188,7 @@ def subset_shape(gdf: gpd.GeoDataFrame,
         os.makedirs(output_dir)
     subset_paths = [clip_nc(nc_file, gdf, region_name, grace_dir) for nc_file in nc_files_list]
     region_area = calculate_area(gdf)
+    gdf.to_file(os.path.join(output_dir, 'shape.geojson'), driver='GeoJSON')
     with open(os.path.join(output_dir, 'area.json'), 'w') as f:
         json.dump({"area": region_area}, f)
     logger.info('End of the subsetting...')
@@ -436,3 +440,19 @@ class TimeSeries(PointArray):
         graph_json["point"] = [round(lat, 2), round(lon, 2)]
         graph_json = json.dumps(graph_json)
         return graph_json
+
+
+def trigger_global_process():
+    file_path = os.path.join(Path(__file__).parent.absolute(), "update_global_files.py")
+    grace_output_dir = os.path.join(app.get_custom_setting("global_output_directory"), "")
+    grace_thredds_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), "")
+    earthdata_username = app.get_custom_setting("earthdata_username")
+    earthdata_pass = app.get_custom_setting("earthdata_pass")
+    python_executable = app.get_custom_setting("conda_python_path")
+    run = subprocess.Popen([python_executable,
+                            file_path,
+                            grace_output_dir,
+                            grace_thredds_dir,
+                            earthdata_username,
+                            earthdata_pass])
+    return

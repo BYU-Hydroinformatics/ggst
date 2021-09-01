@@ -1,8 +1,8 @@
-import os
 import json
 
 from django.contrib.auth.decorators import (user_passes_test)
-from django.http import JsonResponse
+from django.http import (JsonResponse,
+                         HttpResponseRedirect)
 
 from .utils import (delete_region_dir,
                     file_range,
@@ -11,10 +11,8 @@ from .utils import (delete_region_dir,
                     get_region_bounds,
                     user_permission_test,
                     process_shapefile,
-                    get_regional_ts,
-                    TimeSeries)
-
-from .app import Ggst as app
+                    trigger_global_process,
+                    get_regional_ts)
 
 
 @user_passes_test(user_permission_test)
@@ -51,6 +49,13 @@ def region_delete(request):
                 return JsonResponse({"error": "Failed to delete directory."})
         except Exception as e:
             return JsonResponse({'error': f'Error processing request: {e}'})
+
+
+@user_passes_test(user_permission_test)
+def global_files_update(request):
+    if request.is_ajax() and request.method == 'POST':
+        trigger_global_process()
+        return HttpResponseRedirect('../')
 
 
 def get_time_step_options(request):

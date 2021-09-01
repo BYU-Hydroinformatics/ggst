@@ -1,8 +1,10 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
-from django.shortcuts import render
+from django.shortcuts import render, reverse, redirect
 from tethys_sdk.gizmos import (TextInput,
                                Button)
 
+from .app import Ggst as app
 from .utils import (get_catalog_url,
                     get_layer_select,
                     get_region_select,
@@ -11,6 +13,8 @@ from .utils import (get_catalog_url,
                     get_symbology_select,
                     get_storage_type_select,
                     user_permission_test)
+
+job_manager = app.get_job_manager()
 
 
 def home(request):
@@ -124,10 +128,20 @@ def update_global_files(request):
     update_button = Button(display_text='Update Files',
                            icon='glyphicon glyphicon-plus',
                            style='success',
-                           name='submit-delete-region',
-                           attributes={'id': 'submit-update-files'}, )  # Update files button
+                           name='submit-update-files',
+                           attributes={'id': 'submit-update-files'},
+                           # href=reverse('ggst:run-dask', kwargs={'job_type': 'distributed'})
+                           )  # Update files button
     context = {
         'update_button': update_button
     }
 
     return render(request, 'ggst/update_global_files.html', context)
+
+
+@user_passes_test(user_permission_test)
+def error_message(request):
+    messages.add_message(request, messages.ERROR, 'Invalid Scheduler!')
+    return redirect(reverse('ggst:home'))
+
+
