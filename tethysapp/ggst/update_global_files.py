@@ -182,8 +182,8 @@ def download_grace_catalog(grace_url, output_dir):
     grace_catalog = TDSCatalog(grace_url)
 
     for name, ds in grace_catalog.datasets.items():
-        file_url = ds.access_urls['file']
-        if 'GRCTellus.JPL' in file_url and file_url.endswith('nc'):
+        if 'GRCTellus.JPL' in name and name.endswith('nc'):
+            file_url = ds.access_urls['dap']
             file_name = file_url.split('/')[-1]
             end_date = re.search(r'200204_\d{6}', file_name).group(0).split('_')[1]
             end_date_obj = datetime.strptime(end_date, '%Y%m')
@@ -205,10 +205,11 @@ def download_grace_catalog(grace_url, output_dir):
                     print('deleting the previous file')
                     os.remove(file_list[0])
                     download_catalog_url(updated_url, output_path)
-        if 'SCALE_FACTOR' in file_url:
+        if 'SCALE_FACTOR' in name:
             output_file = 'scale_factors.nc'
             output_path = os.path.join(output_dir, output_file)
             if not os.path.exists(output_path):
+                file_url = ds.access_urls['dap']
                 parts = urlparse(file_url)
                 updated_url = parts._replace(path='opendap/hyrax' + parts.path).geturl()
                 download_catalog_url(updated_url, output_path)
@@ -382,7 +383,7 @@ def generate_global_gw_nc(grace_dir):
     )
     ds_sampled = ds_sampled.reindex(y=ds_sampled.y[::-1]).rename({'y': 'lat', 'x': 'lon'})
     resampled_ds = ds_sampled.sel(lat=slice(-59.5, 89.5))
-    monthly_mean = resampled_ds.resample(time='1M').mean().dropna('time', 'all').drop(['WGS84', 'spatial_ref'])
+    monthly_mean = resampled_ds.resample(time='1M').mean().dropna('time', 'all').drop(['WGS84'])
     time_df = monthly_mean['time'].to_dataframe().reset_index(drop=True)
     time_df['converted'] = time_df['time'].apply(lambda x: x.to_pydatetime().replace(day=1, hour=0))
     monthly_mean['time'] = time_df['converted'].values

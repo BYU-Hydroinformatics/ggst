@@ -118,7 +118,6 @@ def get_region_select():
     region_select = SelectInput(display_text='Select a Region',
                                 name='region-select',
                                 options=region_list,)
-    print(os.environ["CONDA_PREFIX"])
     return region_select
 
 
