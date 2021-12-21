@@ -106,6 +106,7 @@ var LIBRARY_OBJECT = (function() {
                 submit_button.html(submit_button_html);
                 reset_form(return_data);
             }else{
+                submit_button.html(submit_button_html);
                 console.log(return_data);
             }
         });

@@ -1,46 +1,46 @@
 import json
 
-from django.contrib.auth.decorators import (user_passes_test)
-from django.http import (JsonResponse,
-                         HttpResponseRedirect)
+from django.contrib.auth.decorators import user_passes_test
+from django.http import JsonResponse, HttpResponseRedirect
 
-from .utils import (delete_region_dir,
-                    file_range,
-                    get_grace_timestep_options,
-                    generate_timeseries,
-                    get_region_bounds,
-                    user_permission_test,
-                    process_shapefile,
-                    trigger_global_process,
-                    get_regional_ts)
+from .utils import (
+    delete_region_dir,
+    file_range,
+    get_grace_timestep_options,
+    generate_timeseries,
+    get_region_bounds,
+    user_permission_test,
+    process_shapefile,
+    trigger_global_process,
+    get_regional_ts,
+)
 
 
 @user_passes_test(user_permission_test)
 def region_add(request):
 
-    if request.is_ajax() and request.method == 'POST':
-        try:
-            info = request.POST
+    if request.is_ajax() and request.method == "POST":
+        # try:
+        info = request.POST
 
-            region_name = info.get('region_name')
-            region_store = region_name.replace(' ', '_').lower()
-            files_list = request.FILES.getlist('shapefile')
-            output_dir = process_shapefile(region_store, files_list)
-            response = {"success": "success",
-                        "output_dir": output_dir}
-            return JsonResponse(response)
-        except Exception as e:
-            return JsonResponse({'error': f'Error processing request: {e}'})
+        region_name = info.get("region_name")
+        region_store = region_name.replace(" ", "_").lower()
+        files_list = request.FILES.getlist("shapefile")
+        output_dir = process_shapefile(region_store, files_list)
+        response = {"success": "success", "output_dir": output_dir}
+        return JsonResponse(response)
+        # except Exception as e:
+        #     return JsonResponse({"error": f"Error processing request: {e}"})
 
 
 @user_passes_test(user_permission_test)
 def region_delete(request):
 
-    if request.is_ajax() and request.method == 'POST':
+    if request.is_ajax() and request.method == "POST":
         try:
             info = request.POST
 
-            region_name = info.get('region_name')
+            region_name = info.get("region_name")
             dir_deleted = delete_region_dir(region_name)
             if dir_deleted:
                 response = {"success": "success"}
@@ -48,90 +48,84 @@ def region_delete(request):
             else:
                 return JsonResponse({"error": "Failed to delete directory."})
         except Exception as e:
-            return JsonResponse({'error': f'Error processing request: {e}'})
+            return JsonResponse({"error": f"Error processing request: {e}"})
 
 
 @user_passes_test(user_permission_test)
 def global_files_update(request):
-    if request.is_ajax() and request.method == 'POST':
+    if request.is_ajax() and request.method == "POST":
         trigger_global_process()
-        return HttpResponseRedirect('../')
+        return HttpResponseRedirect("../")
 
 
 def get_time_step_options(request):
-    if request.is_ajax() and request.method == 'POST':
+    if request.is_ajax() and request.method == "POST":
         try:
             return_obj = {}
             info = request.POST
-            storage_type = info.get('storage_type')
+            storage_type = info.get("storage_type")
             layer_options = get_grace_timestep_options(storage_type)
-            return_obj['layer_options'] = layer_options
-            return_obj['success'] = 'success'
+            return_obj["layer_options"] = layer_options
+            return_obj["success"] = "success"
             return JsonResponse(return_obj)
         except Exception as e:
-            return JsonResponse({'error': str(e)})
+            return JsonResponse({"error": str(e)})
 
 
 def get_global_plot(request):
 
-    if request.is_ajax() and request.method == 'POST':
+    if request.is_ajax() and request.method == "POST":
         try:
             return_obj = {}
             info = request.POST
-            lon = info.get('lon')
-            lat = info.get('lat')
-            storage_type = info.get('storage_type')
-            graph = generate_timeseries(storage_type,
-                                        lat,
-                                        lon,
-                                        'global')
+            lon = info.get("lon")
+            lat = info.get("lat")
+            storage_type = info.get("storage_type")
+            graph = generate_timeseries(storage_type, lat, lon, "global")
             graph = json.loads(graph)
             return_obj["values"] = graph["values"]
             return_obj["integr_values"] = graph["integr_values"]
             return_obj["error_range"] = graph["error_range"]
             return_obj["location"] = graph["point"]
-            return_obj['success'] = "success"
+            return_obj["success"] = "success"
 
             return JsonResponse(return_obj)
         except Exception as e:
-            return JsonResponse({'error': str(e)})
+            return JsonResponse({"error": str(e)})
 
 
 def get_region_plot(request):
 
-    if request.is_ajax() and request.method == 'POST':
+    if request.is_ajax() and request.method == "POST":
         # try:
         return_obj = {}
         info = request.POST
-        lon = info.get('lon')
-        lat = info.get('lat')
-        region = info.get('region')
-        storage_type = info.get('storage_type')
+        lon = info.get("lon")
+        lat = info.get("lat")
+        region = info.get("region")
+        storage_type = info.get("storage_type")
         try:
 
-            graph = generate_timeseries(storage_type,
-                                        lat,
-                                        lon,
-                                        region)
+            graph = generate_timeseries(storage_type, lat, lon, region)
             graph = json.loads(graph)
             return_obj["values"] = graph["values"]
             return_obj["error_range"] = graph["error_range"]
             return_obj["integr_values"] = graph["integr_values"]
             return_obj["location"] = graph["point"]
-            return_obj['success'] = "success"
+            return_obj["success"] = "success"
 
             return JsonResponse(return_obj)
         except Exception as e:
-            return JsonResponse({'error': f'Error processing request: {e}'})
+            return JsonResponse({"error": f"Error processing request: {e}"})
 
 
 def get_region_chart(request):
-    if request.is_ajax() and request.method == 'POST':
+    if request.is_ajax() and request.method == "POST":
         try:
             return_obj = {}
             info = request.POST
-            region = info.get('region')
-            storage_type = info.get('storage_type')
+            region = info.get("region")
+            storage_type = info.get("storage_type")
             graph = get_regional_ts(region, storage_type)
             # return_obj["values"] = graph["values"]
             graph = json.loads(graph)
@@ -142,36 +136,38 @@ def get_region_chart(request):
             return_obj["success"] = "success"
             return JsonResponse(return_obj)
         except Exception as e:
-            return JsonResponse({'error': f'Error processing request: {e}'})
+            return JsonResponse({"error": f"Error processing request: {e}"})
 
 
 def get_region_center(request):
-    if request.is_ajax() and request.method == 'POST':
+    if request.is_ajax() and request.method == "POST":
         try:
             return_obj = {}
             info = request.POST
-            region_name = info.get('region')
+            region_name = info.get("region")
             bbox = get_region_bounds(region_name)
-            lat, lon = (int(bbox[1]) + int(bbox[3])) / 2, (int(bbox[0]) + int(bbox[2])) / 2
-            return_obj['lat'] = lat
-            return_obj['lon'] = lon
-            return_obj['success'] = 'success'
+            lat, lon = (int(bbox[1]) + int(bbox[3])) / 2, (
+                int(bbox[0]) + int(bbox[2])
+            ) / 2
+            return_obj["lat"] = lat
+            return_obj["lon"] = lon
+            return_obj["success"] = "success"
             return JsonResponse(return_obj)
         except Exception as e:
-            return JsonResponse({'error': str(e)})
+            return JsonResponse({"error": str(e)})
 
 
 def get_legend_range(request):
-    if request.is_ajax() and request.method == 'POST':
+    if request.is_ajax() and request.method == "POST":
         try:
             return_obj = {}
             info = request.POST
-            storage_type = info.get('storage_type')
-            region_name = info.get('region_name')
+            storage_type = info.get("storage_type")
+            region_name = info.get("region_name")
             range_min, range_max = file_range(region_name, storage_type)
-            return_obj['success'] = 'success'
-            return_obj['range_min'] = range_min
-            return_obj['range_max'] = range_max
+            return_obj["success"] = "success"
+            return_obj["range_min"] = range_min
+            return_obj["range_max"] = range_max
             return JsonResponse(return_obj)
         except Exception as e:
-            return JsonResponse({'error': str(e)})
+            return JsonResponse({"error": str(e)})
