@@ -39,6 +39,8 @@ var LIBRARY_OBJECT = (function() {
         $selectLayer,
         $selectRegion,
         $selectStorageType,
+        shapeGroup,
+        shapeLayer,
         tdWmsLayer,
         wms_legend,
         wms_url,
@@ -55,6 +57,7 @@ var LIBRARY_OBJECT = (function() {
         get_dropdown_vals,
         get_legend_range,
         get_region_center,
+        get_region_shape,
         get_ts,
         get_timestep,
         init_all,
@@ -174,6 +177,7 @@ var LIBRARY_OBJECT = (function() {
 
         graceGroup = L.layerGroup().addTo(map);
         contourGroup = L.layerGroup().addTo(map);
+        shapeGroup = L.layerGroup({"interactive": false}).addTo(map);
 
         var opacity_input = L.control({position: 'topleft'});
         opacity_input.onAdd = function(map){
@@ -186,7 +190,8 @@ var LIBRARY_OBJECT = (function() {
 
         overlay_maps = {
             "GRACE Layer": graceGroup,
-            "Contours": contourGroup
+            "Contours": contourGroup,
+            "Outline": shapeGroup
         };
 
         layer_control = L.control.layers(baseLayers, overlay_maps).addTo(map);
@@ -268,6 +273,22 @@ var LIBRARY_OBJECT = (function() {
             }
         });
     };
+
+    get_region_shape = function(region){
+        const xhr = ajax_update_database('geojson', {'region': region});
+        xhr.done(function(result){
+            if('success' in result){
+                shapeGroup.clearLayers();
+                shapeLayer = L.geoJSON(result["geojson"], {
+                    color: "#000000",
+                    interactive: false,
+                    fill: false
+                });
+                shapeGroup.addLayer(shapeLayer);
+                // L.geoJSON(result["geojson"]).addTo(map);
+            }
+        });
+    }
 
     update_wms = function(region_name, layer_val, storage_type, style, range_min, range_max, mode_type){
         let wmsUrl = wms_url + region_name + '/' + region_name + '_' + storage_type + '.nc';
@@ -711,13 +732,14 @@ var LIBRARY_OBJECT = (function() {
         $selectRegion.change(function(){
             let {layer_val, storage_type, region, symbology} = get_dropdown_vals();
             get_region_center(region);
+            get_region_shape(region);
             add_wms(region, layer_val, storage_type, symbology);
             //             update_wms(region, layer_val, storage_type, symbology, range_min, range_max, 'update');
 
             // original_map_chart();
         })
         $selectRegion.val(region_name).trigger('change');
-            // .change();
+        // .change();
         $selectLayer.change(function(){
             let {layer_val, storage_type, region, symbology} = get_dropdown_vals();
             update_wms(region, layer_val, storage_type, symbology, range_min, range_max, 'update');

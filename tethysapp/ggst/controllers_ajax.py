@@ -12,7 +12,7 @@ from .utils import (
     user_permission_test,
     process_shapefile,
     trigger_global_process,
-    get_regional_ts,
+    get_regional_ts, get_geojson,
 )
 
 
@@ -168,6 +168,20 @@ def get_legend_range(request):
             return_obj["success"] = "success"
             return_obj["range_min"] = range_min
             return_obj["range_max"] = range_max
+            return JsonResponse(return_obj)
+        except Exception as e:
+            return JsonResponse({"error": str(e)})
+
+
+def get_region_geojson(request):
+    if request.is_ajax() and request.method == "POST":
+        try:
+            return_obj = {}
+            info = request.POST
+            region_name = info.get("region")
+            geojson_obj = get_geojson(region_name)
+            return_obj["geojson"] = json.loads(geojson_obj)
+            return_obj["success"] = "success"
             return JsonResponse(return_obj)
         except Exception as e:
             return JsonResponse({"error": str(e)})

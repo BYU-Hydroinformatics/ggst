@@ -106,6 +106,11 @@ class Ggst(TethysAppBase):
                 controller="ggst.controllers_ajax.get_time_step_options",
             ),
             UrlMap(
+                name="region_geojson",
+                url="ggst/region-map/geojson",
+                controller="ggst.controllers_ajax.get_region_geojson",
+            ),
+            UrlMap(
                 name="regional_time_series",
                 url="ggst/region-map/get-region-summary",
                 controller="ggst.controllers_ajax.get_region_chart",
