@@ -4,7 +4,38 @@ from rest_framework.decorators import api_view, authentication_classes
 import json
 import geopandas as gpd
 from shapely.geometry import shape
-from .utils import gen_zip_api, generate_timeseries
+from .utils import gen_zip_api, generate_timeseries, process_shapefile
+
+
+@api_view(["POST"])
+@authentication_classes(
+    (
+        TokenAuthentication,
+        SessionAuthentication,
+    )
+)
+def subset_region_zip(request):
+    if request.method == "POST":
+        region_name = None
+        info = request.POST
+        r_files = request.FILES
+        if len(r_files.keys()) == 0:
+            return JsonResponse({"error": "No zipfile to process. Please check and try again."})
+        if info.get("name"):
+            region_name = info.get("name")
+        if len(r_files.keys()) > 1:
+            return JsonResponse({"error": "Please send only one zipfile and try again."})
+        try:
+            file_key = list(r_files.keys())[0]
+            zip_file = r_files.getlist(file_key)
+            shapefile = process_shapefile(region_name, zip_file, "api")
+            in_memory_zip = gen_zip_api(shapefile, region_name)
+            response = HttpResponse(in_memory_zip.getvalue())
+            response["Content-Type"] = "application/x-zip-compressed"
+            response["Content-Disposition"] = f"attachment; filename={region_name}.zip"
+            return response
+        except Exception as e:
+            return JsonResponse({"error": f"Error processing request: {e}"})
 
 
 @api_view(["GET"])

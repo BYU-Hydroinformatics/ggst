@@ -96,6 +96,11 @@ class Ggst(TethysAppBase):
                 controller="ggst.api.subset_region_api",
             ),
             UrlMap(
+                name="subset_region_zip",
+                url="ggst/api/subset_region_zip",
+                controller="ggst.api.subset_region_zip",
+            ),
+            UrlMap(
                 name="global_time_step",
                 url="ggst/global-map/timestep",
                 controller="ggst.controllers_ajax.get_time_step_options",

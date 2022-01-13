@@ -225,21 +225,45 @@ def subset_shape(gdf: gpd.GeoDataFrame, region_name: str) -> str:
     return output_dir
 
 
-def process_shapefile(region_store: str, files_list: list) -> str:
+def process_interface_files(files_list):
     process_files = [(BytesIO(f_name.read()), f_name.name) for f_name in files_list]
     dbf, prj, shp, shx = sorted(process_files, key=lambda x: x[1])
-    r = shapefile.Reader(shp=shp[0], shx=shx[0], dbf=dbf[0])
+    return dbf[0], prj[0], shp[0], shx[0]
+
+
+def process_api_files(files_list):
+    input_zip = ZipFile(files_list[0])
+    shp_list = [".shp", ".shx", ".prj", ".dbf"]
+    files_dict = {name: input_zip.read(name) for name in input_zip.namelist() if name[-4:] in shp_list}
+    zip_keys = sorted(files_dict.keys())
+    dbf = BytesIO(files_dict[zip_keys[0]])
+    prj = BytesIO(files_dict[zip_keys[1]])
+    shp = BytesIO(files_dict[zip_keys[2]])
+    shx = BytesIO(files_dict[zip_keys[3]])
+    return dbf, prj, shp, shx
+
+
+def process_shapefile(region_store: str, files_list: list, upload_type: str) -> [str, gpd.GeoDataFrame]:
+    dbf, prj, shp, shx = None, None, None, None
+    if upload_type == "interface":
+        dbf, prj, shp, shx = process_interface_files(files_list)
+    if upload_type == "api":
+        dbf, prj, shp, shx = process_api_files(files_list)
+    r = shapefile.Reader(shp=shp, shx=shx, dbf=dbf)
     attributes, geometry = [], []
     field_names = [field[0] for field in r.fields[1:]]
     for row in r.shapeRecords():
         geometry.append(shape(row.shape.__geo_interface__))
         attributes.append(dict(zip(field_names, row.record)))
 
-    prj_string = prj[0].read().decode()
+    prj_string = prj.read().decode()
     gdf = gpd.GeoDataFrame(data=attributes, geometry=geometry, crs=prj_string)
     gdf.to_crs("EPSG:4326", inplace=True)
-    output_dir = subset_shape(gdf, region_store)
-    return output_dir
+    if upload_type == "interface":
+        output_dir = subset_shape(gdf, region_store)
+        return output_dir
+    if upload_type == "api":
+        return gdf
 
 
 def gen_zip_api(gdf: gpd.GeoDataFrame, region_name: str) -> Any:
