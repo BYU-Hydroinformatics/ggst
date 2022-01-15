@@ -92,12 +92,12 @@ class Ggst(TethysAppBase):
             ),
             UrlMap(
                 name="subset_region",
-                url="ggst/api/subset_region",
+                url="ggst/api/subsetRegion",
                 controller="ggst.api.subset_region_api",
             ),
             UrlMap(
                 name="subset_region_zip",
-                url="ggst/api/subset_region_zip",
+                url="ggst/api/subsetRegionZipfile",
                 controller="ggst.api.subset_region_zip",
             ),
             UrlMap(
@@ -122,8 +122,18 @@ class Ggst(TethysAppBase):
             ),
             UrlMap(
                 name="api_get_point_values",
-                url="ggst/api/GetPointValues",
+                url="ggst/api/getPointValues",
                 controller="ggst.api.api_get_point_values",
+            ),
+            UrlMap(
+                name="api_get_storage_options",
+                url="ggst/api/getStorageOptions",
+                controller="ggst.api.api_get_storage_options",
+            ),
+            UrlMap(
+                name="api_get_region_timeseries",
+                url="ggst/api/getRegionTimeseries",
+                controller="ggst.api.region_zip_timeseries",
             ),
         )
 

@@ -4,7 +4,13 @@ from rest_framework.decorators import api_view, authentication_classes
 import json
 import geopandas as gpd
 from shapely.geometry import shape
-from .utils import gen_zip_api, generate_timeseries, process_shapefile
+from .utils import (
+    gen_zip_api,
+    generate_timeseries,
+    process_shapefile,
+    storage_options,
+    region_api_ts,
+)
 
 
 @api_view(["POST"])
@@ -20,11 +26,15 @@ def subset_region_zip(request):
         info = request.POST
         r_files = request.FILES
         if len(r_files.keys()) == 0:
-            return JsonResponse({"error": "No zipfile to process. Please check and try again."})
+            return JsonResponse(
+                {"error": "No zipfile to process. Please check and try again."}
+            )
         if info.get("name"):
             region_name = info.get("name")
         if len(r_files.keys()) > 1:
-            return JsonResponse({"error": "Please send only one zipfile and try again."})
+            return JsonResponse(
+                {"error": "Please send only one zipfile and try again."}
+            )
         try:
             file_key = list(r_files.keys())[0]
             zip_file = r_files.getlist(file_key)
@@ -34,6 +44,41 @@ def subset_region_zip(request):
             response["Content-Type"] = "application/x-zip-compressed"
             response["Content-Disposition"] = f"attachment; filename={region_name}.zip"
             return response
+        except Exception as e:
+            return JsonResponse({"error": f"Error processing request: {e}"})
+
+
+@api_view(["POST"])
+@authentication_classes(
+    (
+        TokenAuthentication,
+        SessionAuthentication,
+    )
+)
+def region_zip_timeseries(request):
+    if request.method == "POST":
+        region_name = None
+        storage_type = None
+        info = request.POST
+        r_files = request.FILES
+        if len(r_files.keys()) == 0:
+            return JsonResponse(
+                {"error": "No zipfile to process. Please check and try again."}
+            )
+        if len(r_files.keys()) > 1:
+            return JsonResponse(
+                {"error": "Please send only one zipfile and try again."}
+            )
+
+        if info.get("name"):
+            region_name = info.get("name")
+        if info.get("storage_type"):
+            storage_type = info.get("storage_type")
+        try:
+            file_key = list(r_files.keys())[0]
+            zip_file = r_files.getlist(file_key)
+            json_obj = region_api_ts(region_name, storage_type, zip_file)
+            return JsonResponse(json_obj)
         except Exception as e:
             return JsonResponse({"error": f"Error processing request: {e}"})
 
@@ -71,6 +116,15 @@ def subset_region_api(request):
             json_obj["error"] = "Error processing request: " + str(e)
 
             return JsonResponse(json_obj)
+
+
+def api_get_storage_options(request):
+    return_obj = {}
+
+    if request.method == "GET":
+        options = storage_options()
+        return_obj["storage_options"] = options
+        return JsonResponse(return_obj)
 
 
 def api_get_point_values(request):

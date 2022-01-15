@@ -358,9 +358,7 @@ def calculate_gldas_anomalies(ds, surface_area_da):
 
 
 def generate_noah025_global_files(grace_dir):
-    def aggregate_noah025_anomalies(
-        noah_variables, variable_name="lwe_thickness"
-    ):
+    def aggregate_noah025_anomalies(noah_variables, variable_name="lwe_thickness"):
         noah_ds = (
             gldas_noah_anomalies[noah_variables]
             .to_array()
@@ -382,7 +380,10 @@ def generate_noah025_global_files(grace_dir):
             }
         )
         return final_ds
-    gldas_noah_ds = xr.open_dataset(os.path.join(grace_dir, "noah025.nc"), chunks="auto")
+
+    gldas_noah_ds = xr.open_dataset(
+        os.path.join(grace_dir, "noah025.nc"), chunks="auto"
+    )
     print(type(gldas_noah_ds))
     # GLDAS Grid Cell Area
     areas = calculate_surface_area(gldas_noah_ds)
@@ -395,30 +396,20 @@ def generate_noah025_global_files(grace_dir):
     )
     gldas_noah_anomalies = calculate_gldas_anomalies(gldas_noah_ds, surface_area_da)
     print("GLOBAL 025SW")
-    final_sw_ds = aggregate_noah025_anomalies(
-        NOAH_SW_VARIABLES
-    )
+    final_sw_ds = aggregate_noah025_anomalies(NOAH_SW_VARIABLES)
     print(type(final_sw_ds))
     final_sw_ds.load().to_netcdf(os.path.join(grace_dir, "GRC_025sw.nc"))
     print("GLOBAL 025SM")
-    final_sm_ds = aggregate_noah025_anomalies(
-        NOAH_SM_VARIABLES
-    )
+    final_sm_ds = aggregate_noah025_anomalies(NOAH_SM_VARIABLES)
     final_sm_ds.to_netcdf(os.path.join(grace_dir, "GRC_025sm.nc"))
     print("GLOBAL 025SWE")
-    final_swe_ds = aggregate_noah025_anomalies(
-        NOAH_SWE_VARIABLES
-    )
+    final_swe_ds = aggregate_noah025_anomalies(NOAH_SWE_VARIABLES)
     final_swe_ds.to_netcdf(os.path.join(grace_dir, "GRC_025swe.nc"))
     print("GLOBAL 025CANOPY")
-    final_canopy_ds = aggregate_noah025_anomalies(
-        NOAH_CANOPY_VARIABLES
-    )
+    final_canopy_ds = aggregate_noah025_anomalies(NOAH_CANOPY_VARIABLES)
     final_canopy_ds.to_netcdf(os.path.join(grace_dir, "GRC_025canopy.nc"))
     print("GLOBAL 025TWS")
-    final_tws_ds = aggregate_noah025_anomalies(
-        NOAH_TWS_VARIABLES
-    )
+    final_tws_ds = aggregate_noah025_anomalies(NOAH_TWS_VARIABLES)
     final_tws_ds.to_netcdf(os.path.join(grace_dir, "GRC_025tws.nc"))
     print("Done generating global NOAH 025 files")
     return None

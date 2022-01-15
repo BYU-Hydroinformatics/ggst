@@ -12,7 +12,8 @@ from .utils import (
     user_permission_test,
     process_shapefile,
     trigger_global_process,
-    get_regional_ts, get_geojson,
+    get_regional_ts,
+    get_geojson,
 )
 
 

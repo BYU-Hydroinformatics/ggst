@@ -87,20 +87,25 @@ def get_signal_process_select():
     return select_signal_process
 
 
+def storage_options():
+    options = [
+        ("Total Water Storage (GRACE)", "grace"),
+        ("Surface Water Storage (GLDAS)", "sw"),
+        ("Soil Moisture Storage (GLDAS)", "sm"),
+        ("Groundwater Storage (Calculated)", "gw"),
+        ("Surface Water Storage (GLDAS NOAH .25)", "025sw"),
+        ("Soil Moisture Storage (GLDAS NOAH .25)", "025sm"),
+        ("Groundwater Storage (Calculated NOAH .25)", "025gw"),
+    ]
+    return options
+
+
 def get_storage_type_select():
     select_storage_type = SelectInput(
         display_text="Select Storage Component",
         name="select-storage-type",
         multiple=False,
-        options=[
-            ("Total Water Storage (GRACE)", "grace"),
-            ("Surface Water Storage (GLDAS)", "sw"),
-            ("Soil Moisture Storage (GLDAS)", "sm"),
-            ("Groundwater Storage (Calculated)", "gw"),
-            ("Surface Water Storage (GLDAS NOAH .25)", "025sw"),
-            ("Soil Moisture Storage (GLDAS NOAH .25)", "025sm"),
-            ("Groundwater Storage (Calculated NOAH .25)", "025gw"),
-        ],
+        options=storage_options(),
         initial=["Total Water Storage (GRACE)"],
     )
     return select_storage_type
@@ -147,8 +152,12 @@ def get_region_select():
 
 
 def clip_nc(
-    nc_file: str, gdf: gpd.GeoDataFrame, region_name: str, grace_dir: str
-) -> str:
+    nc_file: str,
+    gdf: gpd.GeoDataFrame,
+    region_name: str,
+    grace_dir: str,
+    export: bool = True,
+) -> [str, xarray.Dataset]:
     # logger.info(f'Subset {nc_file} for {region_name}')
     ds = xarray.open_dataset(nc_file)
     # ds = ds.assign({"lon": (((ds.lon + 180) % 360) - 180)}).sortby('lon')
@@ -169,21 +178,21 @@ def clip_nc(
     if "WGS84" in ds.variables:
         clipped = clipped.drop("WGS84")
 
-    output_path = os.path.join(
-        grace_dir, region_name, f"{region_name}{nc_file.split('/')[-1][3:]}"
-    )
-    # ts_path = os.path.join(grace_dir, region_name, f"{region_name}{nc_file.split('/')[-1][3:-3]}_ts.nc")
-    # error_path = os.path.join(grace_dir, region_name, f"{region_name}{nc_file.split('/')[-1][3:-3]}_error.nc")
-    # clipped = clipped.drop_vars(['WGS84', 'spatial_ref'])
-    # lwe_thickness = clipped.lwe_thickness.mean(['lat', 'lon'])
-    # uncertainty = clipped.uncertainty.mean(['lat', 'lon'])
-    clipped.to_netcdf(
-        output_path,
-        encoding={"lwe_thickness": {"_FillValue": -99999.0, "missing_value": -99999.0}},
-    )
-    # lwe_thickness.to_netcdf(ts_path)
-    # uncertainty.to_netcdf(error_path)
-    return output_path
+    if export:
+        output_path = os.path.join(
+            grace_dir, region_name, f"{region_name}{nc_file.split('/')[-1][3:]}"
+        )
+        clipped.to_netcdf(
+            output_path,
+            encoding={
+                "lwe_thickness": {"_FillValue": -99999.0, "missing_value": -99999.0}
+            },
+        )
+        # lwe_thickness.to_netcdf(ts_path)
+        # uncertainty.to_netcdf(error_path)
+        return output_path
+    else:
+        return clipped
 
 
 def calculate_area(gdf: gpd.GeoDataFrame):
@@ -234,7 +243,11 @@ def process_interface_files(files_list):
 def process_api_files(files_list):
     input_zip = ZipFile(files_list[0])
     shp_list = [".shp", ".shx", ".prj", ".dbf"]
-    files_dict = {name: input_zip.read(name) for name in input_zip.namelist() if name[-4:] in shp_list}
+    files_dict = {
+        name: input_zip.read(name)
+        for name in input_zip.namelist()
+        if name[-4:] in shp_list
+    }
     zip_keys = sorted(files_dict.keys())
     dbf = BytesIO(files_dict[zip_keys[0]])
     prj = BytesIO(files_dict[zip_keys[1]])
@@ -243,7 +256,9 @@ def process_api_files(files_list):
     return dbf, prj, shp, shx
 
 
-def process_shapefile(region_store: str, files_list: list, upload_type: str) -> [str, gpd.GeoDataFrame]:
+def process_shapefile(
+    region_store: str, files_list: list, upload_type: str
+) -> [str, gpd.GeoDataFrame]:
     dbf, prj, shp, shx = None, None, None, None
     if upload_type == "interface":
         dbf, prj, shp, shx = process_interface_files(files_list)
@@ -276,6 +291,43 @@ def gen_zip_api(gdf: gpd.GeoDataFrame, region_name: str) -> Any:
     zf.close()
     shutil.rmtree(output_dir)
     return in_memory_zip
+
+
+def region_api_ts(region_name, storage_type, zipfile):
+    graph_json = {}
+    shape_file = process_shapefile(region_name, zipfile, "api")
+    grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), "")
+    nc_file = os.path.join(grace_dir, f"GRC_{storage_type}.nc")
+    region_area = calculate_area(shape_file)
+    ds = clip_nc(nc_file, shape_file, region_name, grace_dir, False)
+    lwe_da = ds.lwe_thickness.mean(["lat", "lon"])
+    error_da = ds.uncertainty.mean(["lat", "lon"])
+    ts_plot = []
+    error_range = []
+    ts_plot_int = []
+    init_value = lwe_da.values[0]
+    for x, y in zip(lwe_da, error_da):
+        value = x.values
+        error_bar = y.values
+        utc_time = np.datetime_as_string(x.time.values, unit="D")
+        difference_data_value = (value - init_value) * 0.00000075 * region_area
+        ts_plot.append([utc_time, round(float(value), 3)])
+        error_range.append(
+            [
+                utc_time,
+                round(float(value - error_bar), 3),
+                round(float(value + error_bar), 3),
+            ]
+        )
+        ts_plot_int.append([utc_time, round(float(difference_data_value), 3)])
+
+    graph_json["values"] = ts_plot
+    graph_json["depletion"] = ts_plot_int
+    graph_json["error_range"] = error_range
+    graph_json["area"] = region_area
+    graph_json["success"] = "success"
+    # graph_json = json.dumps(graph_json)
+    return graph_json
 
 
 def generate_timeseries(storage_type, lat, lon, region):
