@@ -625,18 +625,18 @@ def process_global_files(grace_dir, thredds_dir):
     start_time = time.time()
     gldas_dir = os.path.join(grace_dir, "gldas")
     mascon_dir = os.path.join(grace_dir, "mascon")
-    # download_gldas_catalog(
-    #     "https://hydro1.gesdisc.eosdis.nasa.gov/opendap/GLDAS/catalog.xml", gldas_dir
-    # )
-    # download_grace_catalog(
-    #     "https://opendap.jpl.nasa.gov/opendap/hyrax/"
-    #     "allData/tellus/L3/mascon/RL06/JPL/v02/CRI/"
-    #     "netcdf/catalog.xml",
-    #     mascon_dir,
-    # )
+    download_gldas_catalog(
+        "https://hydro1.gesdisc.eosdis.nasa.gov/opendap/GLDAS/catalog.xml", gldas_dir
+    )
+    download_grace_catalog(
+        "https://opendap.jpl.nasa.gov/opendap/hyrax/"
+        "allData/tellus/L3/mascon/RL06/JPL/v02/CRI/"
+        "netcdf/catalog.xml",
+        mascon_dir,
+    )
     #
-    # concatenate_gldas_files(grace_dir)
-    # generate_gldas_global_files(grace_dir)
+    concatenate_gldas_files(grace_dir)
+    generate_gldas_global_files(grace_dir)
     # generate_noah025_global_files(grace_dir)
     generate_grace_global_files(grace_dir)
     grc_files = glob.glob(f"{grace_dir}GRC_*.nc")
