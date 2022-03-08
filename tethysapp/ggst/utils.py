@@ -274,6 +274,7 @@ def process_shapefile(
     prj_string = prj.read().decode()
     gdf = gpd.GeoDataFrame(data=attributes, geometry=geometry, crs=prj_string)
     gdf.to_crs("EPSG:4326", inplace=True)
+    gdf.loc[:, gdf.columns.drop('geometry')] = gdf.loc[:, gdf.columns.drop('geometry')].astype(str)
     if upload_type == "interface":
         output_dir = subset_shape(gdf, region_store)
         return output_dir
