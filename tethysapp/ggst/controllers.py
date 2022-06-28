@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, reverse, redirect
 from tethys_sdk.gizmos import TextInput, Button
+from tethys_sdk.routing import controller
 
 from .app import Ggst as app
 from .utils import (
@@ -18,6 +19,7 @@ from .utils import (
 job_manager = app.get_job_manager()
 
 
+@controller
 def home(request):
     """
     Controller for the app home page.
@@ -29,6 +31,10 @@ def home(request):
     return render(request, "ggst/home.html", context)
 
 
+@controller(
+    name='global-map',
+    url='ggst/global-map',
+)
 def global_map(request):
     """
     Controller for the Global Map page.
@@ -48,6 +54,10 @@ def global_map(request):
     return render(request, "ggst/global_map.html", context)
 
 
+@controller(
+    name='region-map',
+    url='ggst/region-map',
+)
 def region_map(request):
     """
     Controller for the Region Map home page.
@@ -81,18 +91,22 @@ def region_map(request):
 
 
 @user_passes_test(user_permission_test)
+@controller(
+    name='add-region',
+    url='ggst/add-region',
+)
 def add_region(request):
 
     region_name_input = TextInput(
         display_text="Region Display Name",
         name="region-name-input",
         placeholder="e.g.: Utah",
-        icon_append="glyphicon glyphicon-home",
+        icon_append="bi bi-house-door",
     )  # Input for the Region Display Name
 
     add_button = Button(
         display_text="Add Region",
-        icon="glyphicon glyphicon-plus",
+        icon="bi bi-plus",
         style="success",
         name="submit-add-region",
         attributes={"id": "submit-add-region"},
@@ -104,6 +118,10 @@ def add_region(request):
 
 
 @user_passes_test(user_permission_test)
+@controller(
+    name='delete-region',
+    url='ggst/delete-region',
+)
 def delete_region(request):
 
     region_select = get_region_select()
@@ -111,7 +129,7 @@ def delete_region(request):
 
     delete_button = Button(
         display_text="Delete Region",
-        icon="glyphicon glyphicon-minus",
+        icon="bi bi-dash",
         style="danger",
         name="submit-delete-region",
         attributes={"id": "submit-delete-region"},
@@ -126,13 +144,17 @@ def delete_region(request):
     return render(request, "ggst/delete_region.html", context)
 
 
+@controller(
+    name='update-global-files',
+    url='ggst/update-global-files',
+)
 def update_global_files(request):
     """
     Controller for the Update Global Files page.
     """
     update_button = Button(
         display_text="Update Files",
-        icon="glyphicon glyphicon-plus",
+        icon="bi bi-plus",
         style="success",
         name="submit-update-files",
         attributes={"id": "submit-update-files"},

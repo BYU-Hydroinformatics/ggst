@@ -5,6 +5,7 @@ import math
 import os
 import os.path
 import shutil
+from typing import Union
 import warnings
 from io import BytesIO
 from pathlib import Path
@@ -157,7 +158,7 @@ def clip_nc(
     region_name: str,
     grace_dir: str,
     export: bool = True,
-) -> [str, xarray.Dataset]:
+) -> Union[str, xarray.Dataset]:
     # logger.info(f'Subset {nc_file} for {region_name}')
     ds = xarray.open_dataset(nc_file)
     # ds = ds.assign({"lon": (((ds.lon + 180) % 360) - 180)}).sortby('lon')
@@ -258,7 +259,7 @@ def process_api_files(files_list):
 
 def process_shapefile(
     region_store: str, files_list: list, upload_type: str
-) -> [str, gpd.GeoDataFrame]:
+) -> Union[str, gpd.GeoDataFrame]:
     dbf, prj, shp, shx = None, None, None, None
     if upload_type == "interface":
         dbf, prj, shp, shx = process_interface_files(files_list)

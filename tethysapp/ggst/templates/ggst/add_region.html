@@ -1,10 +1,10 @@
 {% extends "ggst/base.html" %}
 {% load tethys_gizmos %}
-{% load staticfiles %}
+{% load static %}
 
 {% block header_buttons %}
-  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
-    <a data-toggle="modal" data-target="#help-modal"><span class="glyphicon glyphicon-question-sign"></span></a>
+  <div class="header-button glyphicon-button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Help">
+    <a data-bs-toggle="modal" data-target="#help-modal"><span class="bi bi-question-circle-fill"></span></a>
   </div>
 {% endblock %}
 
