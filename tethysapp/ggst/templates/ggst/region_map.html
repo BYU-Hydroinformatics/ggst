@@ -74,7 +74,7 @@
     <span id="marker-icon-style" class="bi bi-geo-alt-fill"></span>
     on left side of the map.  Then place the marker at the location for which you wish to extract a time series from the current map layer.</p>
 </div>
-<div class="hidden">
+<div class="d-none">
     <div id="map-info" user-status="{% if user.is_superuser or user.is_staff %}admin{% else %} regular{% endif%}"
          wms-url="{{wms_url}}" map-lat="{{map_lat}}" map-lon="{{map_lon}}" region-name="{{region_name}}"></div>
 </div>
