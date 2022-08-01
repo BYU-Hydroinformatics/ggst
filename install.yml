@@ -16,6 +16,7 @@ requirements:
       - rioxarray
       - netCDF4
       - geopandas
+      - numpy=1.21
   pip:
       - area
       - utm

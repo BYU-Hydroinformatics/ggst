@@ -56,7 +56,11 @@
 <li class="nav-item"><a class="nav-link{% if request.path == home_url %} active{% endif %}" href="{{ home_url }}">Return to Home</a></li>
 <li class="nav-item"><a class="nav-link{% if request.path == global_map_url %} active{% endif %}" href="{{ global_map_url }}">Global Map</a></li>
 <br>
-<a data-bs-toggle="modal" data-bs-target="#storage-modal"><i style="white-space:nowrap; float:left; margin-left:2%; color:blue; cursor:pointer;" id= info-storage-button class="bi bi-info-circle-fill">_</i></a>
+<!-- This div is required to get the anchor tag inline with the select label b/c of flex styling on the nav - DO NOT REMOVE -->
+<div>
+    <a data-bs-toggle="modal" data-bs-target="#storage-modal"><i style="white-space:nowrap; float:left; margin-left:2%; color:blue; cursor:pointer;" id="info-storage-button" class="bi bi-info-circle-fill">_</i></a>
+    {% gizmo storage_type_select %}
+</div>
 {% gizmo storage_type_select %}
 {% gizmo layer_select %}
 <label for="leg_min">Min:</label><input type="number" class="form-control input-sm" name="leg_min" id="leg_min" min="-5000" max="5000" step="1" value="-50">
