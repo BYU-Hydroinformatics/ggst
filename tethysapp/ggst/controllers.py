@@ -31,10 +31,7 @@ def home(request):
     return render(request, "ggst/home.html", context)
 
 
-@controller(
-    name='global-map',
-    url='ggst/global-map',
-)
+@controller(name='global-map', url='ggst/global-map')
 def global_map(request):
     """
     Controller for the Global Map page.
@@ -54,10 +51,7 @@ def global_map(request):
     return render(request, "ggst/global_map.html", context)
 
 
-@controller(
-    name='region-map',
-    url='ggst/region-map',
-)
+@controller(name='region-map', url='ggst/region-map')
 def region_map(request):
     """
     Controller for the Region Map home page.
@@ -91,10 +85,7 @@ def region_map(request):
 
 
 @user_passes_test(user_permission_test)
-@controller(
-    name='add-region',
-    url='ggst/add-region',
-)
+@controller(name='add-region', url='ggst/add-region')
 def add_region(request):
 
     region_name_input = TextInput(
@@ -118,10 +109,7 @@ def add_region(request):
 
 
 @user_passes_test(user_permission_test)
-@controller(
-    name='delete-region',
-    url='ggst/delete-region',
-)
+@controller(name='delete-region', url='ggst/delete-region')
 def delete_region(request):
 
     region_select = get_region_select()
@@ -144,10 +132,7 @@ def delete_region(request):
     return render(request, "ggst/delete_region.html", context)
 
 
-@controller(
-    name='update-global-files',
-    url='ggst/update-global-files',
-)
+@controller(name='update-global-files', url='ggst/update-global-files')
 def update_global_files(request):
     """
     Controller for the Update Global Files page.
