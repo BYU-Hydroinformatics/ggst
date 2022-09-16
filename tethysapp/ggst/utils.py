@@ -15,7 +15,6 @@ from zipfile import ZipFile
 import geopandas as gpd
 import numpy as np
 import pandas as pd
-import requests
 import subprocess
 import shapefile
 import utm
@@ -24,7 +23,6 @@ from pyproj import CRS
 from shapely.geometry import mapping
 from shapely.geometry import shape
 from tethys_sdk.gizmos import SelectInput
-from pathlib import Path
 
 
 from .app import Ggst as app
@@ -224,9 +222,7 @@ def subset_shape(gdf: gpd.GeoDataFrame, region_name: str) -> str:
     output_dir = os.path.join(grace_dir, region_name)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-    subset_paths = [
-        clip_nc(nc_file, gdf, region_name, grace_dir) for nc_file in nc_files_list
-    ]
+    [clip_nc(nc_file, gdf, region_name, grace_dir) for nc_file in nc_files_list]
     region_area = calculate_area(gdf)
     gdf.to_file(os.path.join(output_dir, "shape.geojson"), driver="GeoJSON")
     with open(os.path.join(output_dir, "area.json"), "w") as f:
@@ -471,7 +467,7 @@ def delete_region_dir(region_name):
 
 def get_geojson(region_name):
     grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), "")
-    geojson_file = os.path.join(grace_dir, region_name, f"shape.geojson")
+    geojson_file = os.path.join(grace_dir, region_name, f"{shape.geojson}")
     geojson_obj = gpd.read_file(geojson_file).to_json()
     return geojson_obj
 
@@ -605,7 +601,7 @@ def trigger_global_process():
     earthdata_username = app.get_custom_setting("earthdata_username")
     earthdata_pass = app.get_custom_setting("earthdata_pass")
     python_executable = app.get_custom_setting("conda_python_path")
-    run = subprocess.Popen(
+    subprocess.Popen(
         [
             python_executable,
             file_path,
