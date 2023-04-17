@@ -18,3 +18,8 @@ GGST was built using the Tethys Platform. Tethys is a web-based application deve
 Anyone can open the app and view the currently uploaded regions and download the timeseries plots. View the screenshot below to see how to manipulate the map and download the data. You can change the storage component displayed and the color bar style. Use the animation bar to view the storage change over time. You can also download the time series plots as an image or as a table. The web app does not yet support downloading the NETCDF file raster that is displayed but this can be downloaded using the API.
 
 
+**API and Google Colab Notebook**
+====
+The advantages of the API are that you can retrieve data about a new region of interest without having admin access to the Tethys web application. You can also download a complete zipfile of the regions NETCDF raster files. You may implement the API on your own but we recommend using our Google Colab Notebook hosted on Github which is designed to run each of the API functions and help you download and visualize the data. For more detailed documentation please visit our API page. Below is a gif produced of the Niger Chad Basin using our Google Colab Notebook.
+
+
