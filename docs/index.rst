@@ -31,7 +31,6 @@ The advantages of the API are that you can retrieve data about a new region of i
     :hidden:
 
     algorithm.rst
-    chapter1.rst
-    chapter2.rst
+    
 
 
