@@ -3,7 +3,7 @@ Configuration file for the Sphinx documentation builder.
 # -- Project information
 
 project = 'Grace Groundwater Subsetting Tool'
-copyright = '2021, Graziella'
+copyright = '2021, Dr. Norm Jones'
 author = 'Graziella'
 
 release = '0.1'
