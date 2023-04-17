@@ -24,8 +24,7 @@ The advantages of the API are that you can retrieve data about a new region of i
 
 
 .. toctree::
-    :maxdepth: 2
-    :numbered:
+    :maxdepth: 5
     :titlesonly:
     :glob:
     :hidden:
