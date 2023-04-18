@@ -1,3 +1,6 @@
+.. raw:: html
+   :file: translate.html
+
 **GRACE Groundwater Subsetting Tool**
 =====================================
 
@@ -12,14 +15,14 @@ While a number of tools have been developed for processing and visualizing GRACE
 You can access GGST using the Tethys Web Application or by using the API and the associated Google Colab Notebook that makes the API intuitive to use. A brief introduction to these two methods is provided below.
 
 **Tethys Application**
-=====================
+======================
 GGST was built using the Tethys Platform. Tethys is a web-based application development framework for rapid deployment of end-user-focused tools that follow modern, consistent, scalable, cross-platform, reusable, web programming paradigms. Tethys is built on commonly used web programming frameworks (e.g., Django, GeoServer, PostGIS, OpenLayers). It is open source platform which allows anyone to observe and use the GGST as a decision support system to ensure sustainable usage of groundwater. It was developed in the BYU Hydroinformatics laboratory and is now supported by a growing user and developer community. To access the GGST web application, please visit https://tethys.byu.edu/apps/ggst/ .
 
 Anyone can open the app and view the currently uploaded regions and download the timeseries plots. View the screenshot below to see how to manipulate the map and download the data. You can change the storage component displayed and the color bar style. Use the animation bar to view the storage change over time. You can also download the time series plots as an image or as a table. The web app does not yet support downloading the NETCDF file raster that is displayed but this can be downloaded using the API.
 
 
 **API and Google Colab Notebook**
-====
+=================================
 The advantages of the API are that you can retrieve data about a new region of interest without having admin access to the Tethys web application. You can also download a complete zipfile of the regions NETCDF raster files. You may implement the API on your own but we recommend using our Google Colab Notebook hosted on Github which is designed to run each of the API functions and help you download and visualize the data. For more detailed documentation please visit our API page. Below is a gif produced of the Niger Chad Basin using our Google Colab Notebook.
 
 
