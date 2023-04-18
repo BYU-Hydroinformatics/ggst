@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GRACE Groundwater Subsetting Tool &mdash; Grace Groundwater Subsetting Tool 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Computational Algorithm" href="algorithm.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="#" class="icon icon-home"> Grace Groundwater Subsetting Tool
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="algorithm.html">Computational Algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithm.html#derivation-of-groundwater-dataset">Derivation of Groundwater Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithm.html#grid-subsetting">Grid subsetting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithm.html#uncertainty-estimates">Uncertainty Estimates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithm.html#storage-depletion-curve">Storage Depletion Curve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithm.html#limitations">Limitations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="algorithm.html#software-availability">Software Availability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Uploading.html"><strong>Uploading Regions</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="Uploading.html#deleting-a-region"><strong>Deleting a Region</strong></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Grace Groundwater Subsetting Tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active"><strong>GRACE Groundwater Subsetting Tool</strong></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class ="container">
+<style>
+.divfloat{
+	float:right;
+}
+</style>
+	<div id="google_translate_element" class ="divfloat">
+
+	<script type="text/javascript">
+		function googleTranslateElementInit() {
+			new google.translate.TranslateElement(
+				{pageLanguage: 'en'},
+				'google_translate_element'
+			);
+		}
+	</script>
+
+	<script type="text/javascript" src=
+"https://translate.google.com/translate_a/element.js?
+		cb=googleTranslateElementInit">
+	</script>
+</div><section id="grace-groundwater-subsetting-tool">
+<h1><strong>GRACE Groundwater Subsetting Tool</strong><a class="headerlink" href="#grace-groundwater-subsetting-tool" title="Permalink to this heading"></a></h1>
+<p>The GRACE Groundwater Subsetting Tool (GGST) uses data from the NASA Gravity Recovery And Climate Experiment (GRACE) mission to analyze long-term groundwater storage change for selected regions. GGST can be used to identify and characterize conditions in data-poor areas or identify trends in other regions where trends can be obscured by noise from well data. GGST uses GRACE mission data to compute and display changes in water storage in a web-based mapping system and integrates data from both the GRACE and GRACE-FO missions. GGST uses NASA GLDAS surface water data to derive groundwater storage changes. It accepts shapefiles to define regions representing countries, basins, or aquifers. It then aggregates the water volume changes in those regions and displays the results as time series plots for the whole region or at selected points. It also displays an animated map of the storage change anomalies.</p>
+</section>
+<section id="objective">
+<h1><strong>Objective</strong><a class="headerlink" href="#objective" title="Permalink to this heading"></a></h1>
+<p>The GGST app uses GRACE data to generate time series and animated maps of groundwater storage changes. GRACE provides monthly estimates of water storage anomalies in equivalent water height and has provided monthly gravity field solutions since April 2002. Estimates of mass variability and associated observational errors are available on a global 300 km grid. GRACE has proved an effective tool for characterizing groundwater storage changes in large regions (J. Famiglietti et al., 2011; J. S. Famiglietti, 2014; Rodell, Velicogna, &amp; Famiglietti, 2009; Thomas, Reager, Famiglietti, &amp; Rodell, 2014).</p>
+<p>While a number of tools have been developed for processing and visualizing GRACE data, our tool is designed specifically to support groundwater resource management by regional stakeholders and decision-makers. We accomplish this by carefully processing the raw GRACE data to remove anomalies and to improve resolution. This is done by separating the groundwater component from the other water storage components using GLDAS, by subsetting the data to specific regions of interest, and by presenting the results in a simple, intuitive interface. The algorithm we use to process the GRACE and GLDAS data to produce groundwater anomalies on both a global and regional scale is described in detail in the Algorithm page.</p>
+<p>You can access GGST using the Tethys Web Application or by using the API and the associated Google Colab Notebook that makes the API intuitive to use. A brief introduction to these two methods is provided below.</p>
+</section>
+<section id="tethys-application">
+<h1><strong>Tethys Application</strong><a class="headerlink" href="#tethys-application" title="Permalink to this heading"></a></h1>
+<p>GGST was built using the Tethys Platform. Tethys is a web-based application development framework for rapid deployment of end-user-focused tools that follow modern, consistent, scalable, cross-platform, reusable, web programming paradigms. Tethys is built on commonly used web programming frameworks (e.g., Django, GeoServer, PostGIS, OpenLayers). It is open source platform which allows anyone to observe and use the GGST as a decision support system to ensure sustainable usage of groundwater. It was developed in the BYU Hydroinformatics laboratory and is now supported by a growing user and developer community. To access the GGST web application, please visit <a class="reference external" href="https://tethys.byu.edu/apps/ggst/">https://tethys.byu.edu/apps/ggst/</a> .</p>
+<p>Anyone can open the app and view the currently uploaded regions and download the timeseries plots. View the screenshot below to see how to manipulate the map and download the data. You can change the storage component displayed and the color bar style. Use the animation bar to view the storage change over time. You can also download the time series plots as an image or as a table. The web app does not yet support downloading the NETCDF file raster that is displayed but this can be downloaded using the API.</p>
+</section>
+<section id="api-and-google-colab-notebook">
+<h1><strong>API and Google Colab Notebook</strong><a class="headerlink" href="#api-and-google-colab-notebook" title="Permalink to this heading"></a></h1>
+<p>The advantages of the API are that you can retrieve data about a new region of interest without having admin access to the Tethys web application. You can also download a complete zipfile of the regions NETCDF raster files. You may implement the API on your own but we recommend using our Google Colab Notebook hosted on Github which is designed to run each of the API functions and help you download and visualize the data. For more detailed documentation please visit our API page. Below is a gif produced of the Niger Chad Basin using our Google Colab Notebook.</p>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="algorithm.html" class="btn btn-neutral float-right" title="Computational Algorithm" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Dr. Norm Jones.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

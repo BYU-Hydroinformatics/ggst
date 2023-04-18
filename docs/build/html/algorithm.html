@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Computational Algorithm &mdash; Grace Groundwater Subsetting Tool 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Uploading Regions" href="Uploading.html" />
+    <link rel="prev" title="GRACE Groundwater Subsetting Tool" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Grace Groundwater Subsetting Tool
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Computational Algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#derivation-of-groundwater-dataset">Derivation of Groundwater Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#grid-subsetting">Grid subsetting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#uncertainty-estimates">Uncertainty Estimates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#storage-depletion-curve">Storage Depletion Curve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#limitations">Limitations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#software-availability">Software Availability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Uploading.html"><strong>Uploading Regions</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="Uploading.html#deleting-a-region"><strong>Deleting a Region</strong></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Grace Groundwater Subsetting Tool</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Computational Algorithm</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/algorithm.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="computational-algorithm">
+<h1>Computational Algorithm<a class="headerlink" href="#computational-algorithm" title="Permalink to this heading"></a></h1>
+<p>The GRACE Groundwater Subsetting Tool Web Application relies on the Earth Observation data collected by NASA through satellites- the latter map the gravitational field of the Earth. Changes in gravity are driven by changes in water storage; offering a rare opportunity to monitor groundwater level through satellites coupled with estimated model surface water.</p>
+<p>Collecting data using the satellites began in March 2012. They are launched into an orbit, trailing each other; approximately 137 miles apart. When these satellites are over locations with higher mass concentrations, there is a larger gravitational pull on the lead satellite, pulling it lower than the second satellite, which will also receive a larger pull when it is directly over the same area. These movements- ups and downs- change the distance between the two spacecraft.</p>
+<p>To accurately measure the distance between the two satellites, each is equipped with a k-band microwave whose accuracy is within 10 microns. This has an advantage of quantifying the gravitational anomalies at the locations where the satellites were pulled- this results in a gravitational anomaly map.</p>
+<p>These anomalies are primarily caused by change in water storage. This raw data is then recorded and processed to monitor changes in water resources with a near complete spatial coverage. Hydrologists can also use this data to predict trends in underground water; albeit limitations due to resolution of data and uncertainty.</p>
+</section>
+<section id="derivation-of-groundwater-dataset">
+<h1>Derivation of Groundwater Dataset<a class="headerlink" href="#derivation-of-groundwater-dataset" title="Permalink to this heading"></a></h1>
+<p>The groundwater component of the GRACE raw data can be separated using a mass balance approach, using the NASA’s Global Land Data Assimilation System (GLDAS) models to compute the surface water component of the data.  To compute the surface water storage, researchers sum the components of the GLDAS models that represent surface water storage and subtract this total from the GRACE  dataset to estimate a groundwater storage anomaly dataset. The latter has a nominal resolution of 3 degree latitude by 3 degrees longitude, which is rescaled down to 0.5 degree using scaling factors by redistributing mass changes from the 3 degrees to 0.5 degree.</p>
+<p>This application uses four sets of data;</p>
+<ul class="simple">
+<li><p>The GRACE TWSa dataset</p></li>
+<li><p>The GLDAS canopy storage dataset (CAN)</p></li>
+<li><p>The GLDAS snow water equivalent (SWE) and</p></li>
+<li><p>The GLDAS soil moisture (SM)</p></li>
+</ul>
+<p>To compute the groundwater storage anomaly (GWa), we use three components of the GLDAS models: SWE, CAN, and SM. We convert each GLDAS component to an anomaly format by subtracting the mean centered on values from 2004 to 2009 and then average across the three GLDAS models to produce a component anomaly dataset: SWEa, CANa, and SMa. We use the standard deviation from the three GLDAS models to help estimate uncertainty.</p>
+<p>We download GLDAS files, format them as netCDFs and store them locally. Normally the data is grids with a 1 degree latitude by 1 degree longitude resolution; which we then convert to a 0.5 degree resolution. This conversion is performed by an area-weighted average of the four GRACE grid cells coincident with each GLDAS grid cell.</p>
+<p>The converted files are used to compute the groundwater anomaly using a mass balance approach. It is the difference between the TWSa and the sum of the surface water components anomalies.</p>
+<p>GWa = TWSa – (SWEa + CANa + SMa)                                                              (1)</p>
+<p>The result is then the Ground Water storage anomaly, a tested and approved method to predict long term changes in groundwater storage.</p>
+</section>
+<section id="grid-subsetting">
+<h1>Grid subsetting<a class="headerlink" href="#grid-subsetting" title="Permalink to this heading"></a></h1>
+<p>For the regional subsetting, the user provides a shapefile which defines the boundary of the region of interest. We then select the cells which have cell centers within the defined boundary and calculate the average storage anomaly for each of the components: TWSa, SWEa, CANa, and SMa resulting in a time series from 2002 to the present for each component on a monthly time step. The figure below shows the Chad Basin in Niger subsetted and displayed with the region shapefile. For water storage, the average of each component is multiplied by the area of the region, resulting in volume anomalies.</p>
+</section>
+<section id="uncertainty-estimates">
+<h1>Uncertainty Estimates<a class="headerlink" href="#uncertainty-estimates" title="Permalink to this heading"></a></h1>
+<p>It is critical to understand that the results of these predictions have uncertainties and limitations.</p>
+<p>To compute the uncertainty of the groundwater storage component, we combine the uncertainty estimates from both the GRACE and GLDAS by computing the square root of the sum of the squares of the uncertainty of the individual components as measured by their standard deviations.</p>
+<blockquote>
+<div><ol class="arabic simple" start="2">
+<li></li>
+</ol>
+</div></blockquote>
+<p>The limitations that arise from this data is that it is not suitable to use for placement of wells; rather for an estimate in general trends in groundwater storage.</p>
+</section>
+<section id="storage-depletion-curve">
+<h1>Storage Depletion Curve<a class="headerlink" href="#storage-depletion-curve" title="Permalink to this heading"></a></h1>
+<p>The GGST offers an option of viewing time series data in the format of a storage depletion curve, which is the time-integral of the storage anomaly.</p>
+<p>The storage depletion curve presents cumulative changes in water component storage relative to levels when the GRACE missions began distributing data in April 2002. The storage depletion curve is used in groundwater management since it offers a simple visualization on how much storage aquifers have gained or lost since a given point in time.</p>
+<p>To compute the depletion, We sum the GWSa over time to determine changes in groundwater storage volume over time for the region. These data show if a region is depleting storage in the region, or if groundwater is recharging in the region thereby providing valuable information relative to groundwater sustainability.</p>
+<p>Here is an illustration on the Northern Africa and the Arabian Peninsula from 2002 - 2021. It show that the groundwater in that region has been depleting since the early 2009 and onward.</p>
+</section>
+<section id="limitations">
+<h1>Limitations<a class="headerlink" href="#limitations" title="Permalink to this heading"></a></h1>
+<p>GRACE comes with limitations that users need to know and understand. The data are at a relatively small resolution, 1 degree latitude by 1 degree longitude, representing a 100 x 100 km approximately. At such a low resolution, basing decisions on a single cell comes with high and unknown uncertainties as GRACE data is at a coarser resolution -3 degrees latitude by 3 degrees longitude- which is then processed to higher resolutions TWSa data.</p>
+<p>Even with these limitations, these data provide valuable insights into aquifers such as regions that are depleting, recharging, hence allowing managers to sustainably use their groundwater resources. The best use of the GGST is to draw general trends in aquifers rather than selecting a placement of a well.</p>
+<p>It is also recommended that, whenever possible, these data be validated with local data where possible. GGST displays the uncertainties in the data calculations as error bands on time series, providing context on regions and different time periods.</p>
+</section>
+<section id="software-availability">
+<h1>Software Availability<a class="headerlink" href="#software-availability" title="Permalink to this heading"></a></h1>
+<p>The GGST web application was created using Tethys Platform, developed in our hydroinformatics laboratory. It can be accessed on a Tethys portal hosted at Brigham Young University by browsing to this link and selecting the Grace Groundwater Subsetting Tool application.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="GRACE Groundwater Subsetting Tool" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Uploading.html" class="btn btn-neutral float-right" title="Uploading Regions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Dr. Norm Jones.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
