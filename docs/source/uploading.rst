@@ -1,5 +1,6 @@
 .. raw:: html
    :file: translate.html
+
 **ADDING AND DELETING REGIONS**
 ====
 
@@ -21,3 +22,4 @@ Please refer to the following images as a visual guide:
 **Deleting a Region**
 ---------------------
 Deleting a region is very simple. Proceed to the Delete a Region page. Select the region from the drop down menu and hit the delete button. A message will display when the deletion has been completed.
+
