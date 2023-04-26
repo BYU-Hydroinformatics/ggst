@@ -1,6 +1,9 @@
+
+**ADDING AND DELETING REGIONS**
 ====
-**Uploading Regions**
-====
+
+**Uploading a Region**
+-----------------------
 The Grace Groundwater Subsetting Tool web application is be hosted on three different Tethys portals:
 
 Servir West Africa Portal: official Tethys portal hosted by the SERVIR Science Coordination Office (SCO) for the West Africa Hub (https://tethyswa.servirglobal.net/apps/)
@@ -13,7 +16,7 @@ To add a new region, the user will need to upload four files. Beware, the four f
 Please refer to the following images as a visual guide:
 
 
-====
+
 **Deleting a Region**
-====
+---------------------
 Deleting a region is very simple. Proceed to the Delete a Region page. Select the region from the drop down menu and hit the delete button. A message will display when the deletion has been completed.
