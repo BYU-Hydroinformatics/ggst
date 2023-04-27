@@ -37,7 +37,7 @@ The result is then the Ground Water storage anomaly, a tested and approved metho
 ---------------
 For the regional subsetting, the user provides a shapefile which defines the boundary of the region of interest. We then select the cells which have cell centers within the defined boundary and calculate the average storage anomaly for each of the components: TWSa, SWEa, CANa, and SMa resulting in a time series from 2002 to the present for each component on a monthly time step. The figure below shows the Chad Basin in Niger subsetted and displayed with the region shapefile. For water storage, the average of each component is multiplied by the area of the region, resulting in volume anomalies.
 
-
+.. image:: images-algorithm/examplesubsettedregion.png
 
 **Uncertainty Estimates**
 ----------------------
@@ -45,7 +45,10 @@ It is critical to understand that the results of these predictions have uncertai
 
 To compute the uncertainty of the groundwater storage component, we combine the uncertainty estimates from both the GRACE and GLDAS by computing the square root of the sum of the squares of the uncertainty of the individual components as measured by their standard deviations.
 
-                             (2)
+.. math::
+
+   \sigma GWA =  \sqrt {(\sigma TWsa)^2 - (\sigma SWEa)^2 - (\sigma CANa)^2 - (\sigma SMa)^2} 
+
 
 The limitations that arise from this data is that it is not suitable to use for placement of wells; rather for an estimate in general trends in groundwater storage.
 
@@ -61,6 +64,7 @@ To compute the depletion, We sum the GWSa over time to determine changes in grou
 
 Here is an illustration on the Northern Africa and the Arabian Peninsula from 2002 - 2021. It show that the groundwater in that region has been depleting since the early 2009 and onward.
  
+.. image:: images-algorithm/depletioncurve.png
 
 **Limitations**
 ------------
@@ -73,6 +77,7 @@ It is also recommended that, whenever possible, these data be validated with loc
 
 **Software Availability**
 ------------------
-The GGST web application was created using Tethys Platform, developed in our hydroinformatics laboratory. It can be accessed on a Tethys portal hosted at Brigham Young University by browsing to this link and selecting the Grace Groundwater Subsetting Tool application.
+The GGST web application was created using Tethys Platform, developed in our hydroinformatics laboratory. It can be accessed on a Tethys portal hosted at Brigham Young University by browsing to this `link <https://tethys-staging.byu.edu/apps>`_ and selecting the Grace Groundwater Subsetting Tool application.
 
 
+ 
