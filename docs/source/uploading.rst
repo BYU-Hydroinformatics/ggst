@@ -16,11 +16,20 @@ To upload regions on the application, visit the portal of your choice and log in
 To add a new region, the user will need to upload four files. Beware, the four files need to be selected all at once and should not zipped together.
 
 Please refer to the following images as a visual guide:
+
 .. image:: images-upload/uploadregion1.png
 
+.. image:: images-upload/uploadregion2.png
 
+.. image:: images-upload/uploadregion3.png
+
+.. image:: images-upload/uploadregion4.png
+
+.. image:: images-upload/uploadregion5.png
 
 **Deleting a Region**
 ---------------------
 Deleting a region is very simple. Proceed to the Delete a Region page. Select the region from the drop down menu and hit the delete button. A message will display when the deletion has been completed.
+
+.. image:: images-upload/deleteregion.png
 
