@@ -26,7 +26,8 @@ Anyone can open the app and view the currently uploaded regions and download the
 **API and Google Colab Notebook**
 ---------------
 The advantages of the API are that you can retrieve data about a new region of interest without having admin access to the Tethys web application. You can also download a complete zipfile of the regions NETCDF raster files. You may implement the API on your own but we recommend using our Google Colab Notebook hosted on Github which is designed to run each of the API functions and help you download and visualize the data. For more detailed documentation please visit our API page. Below is a gif produced of the Niger Chad Basin using our Google Colab Notebook.
-Nah
+
+.. image:: images-overview/Chad animation.gif
 
 
 
