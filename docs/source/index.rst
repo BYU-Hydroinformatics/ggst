@@ -25,6 +25,14 @@ Anyone can open the app and view the currently uploaded regions and download the
 
 .. image:: images-overview/GGST_Tethys_MapViewer.png
 
+To upload and delete regions from the Tethys Web Application you must login with an admin account. If you have admin access, follow the instructions on the uploading Regions page. If not, consider using our API method or feel free to reach out to our team if you would like a region uploaded.
+
+The GGST app can be accessed in the following locations:
+
+* **Servir West Africa Portal**: official Tethys portal hosted by the SERVIR Science Coordination Office (SCO) for the West Africa Hub (https://tethyswa.servirglobal.net/apps/)
+* **BYU Portal**: a Tethys portal hosted by Brigham Young University for all completed apps (https://tethys.byu.edu)
+* **GEOGloWS Portal**: a portal associated with the GEOGloWS organization (https://apps.geoglows.org/apps/)
+
 **API and Google Colab Notebook**
 ---------------
 The advantages of the API are that you can retrieve data about a new region of interest without having admin access to the Tethys web application. You can also download a complete zipfile of the regions NETCDF raster files. You may implement the API on your own but we recommend using our Google Colab Notebook hosted on Github which is designed to run each of the API functions and help you download and visualize the data. For more detailed documentation please visit our API page. Below is a gif produced of the Niger Chad Basin using our Google Colab Notebook.
