@@ -1,3 +1,6 @@
+.. raw:: html
+   :file: translate.html
+   
 **APPLICATION PROGRAMMING INTERFACE (API)**
 =================================
 
@@ -23,19 +26,7 @@ https://tethys-staging.byu.edu/apps/[parent-app]/api/[MethodName]/?param1=value1
 
 To test the API, the user will need a zip file of the region of interest. We have provided an example of files in the appropriate format. You may use your own zip files if you choose so.
 
-`Download API Test file 1 <test_files/API_Fileset.zip>`_ | `Download API Test file 2  <test_files/API_Fileset.zip>`_
-
-.. button-link:: test_files/API_Fileset.zip
-
-    Button text
-
-.. raw:: html
-        <a href="test_files/API_Fileset.zip">
-                <button type="button" class="btn btn-default btn-md text-info">
-	                <span class="glyphicon glyphicon-download" aria-hidden="true"></span> Download Test File 1
-                </button>
-	</a>
-
+`Download API Test Files <https://github.com/BYU-Hydroinformatics/ggst/blob/main/docs/source/test_files/API_Fileset.zip>`_
 
 Let explore each one individually and offer an example:
 
@@ -188,7 +179,7 @@ This Table elaborates on each of these files and their naming conventions:
 +--------------------------+----------------+-------------+---------------------+
 
 
-*To learn more about how this is calculated please visit our  :ref:`algorithm`   page
+*To learn more about how this is calculated please visit our algorithm page.
 
 This section will also help you create a dataframe, plot your data, and visualize your data on an animated map
 
