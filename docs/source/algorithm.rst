@@ -28,7 +28,9 @@ We download GLDAS files, format them as netCDFs and store them locally. Normally
 
 The converted files are used to compute the groundwater anomaly using a mass balance approach. It is the difference between the TWSa and the sum of the surface water components anomalies.
 
-GWa = TWSa – (SWEa + CANa + SMa)                                                              (1)
+.. math::
+
+   GWA =  TWsa - (SWEa+ CANa+ SMa) 
 
 The result is then the Ground Water storage anomaly, a tested and approved method to predict long term changes in groundwater storage. 
 
