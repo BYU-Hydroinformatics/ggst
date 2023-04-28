@@ -13,14 +13,14 @@ In addition to obtaining the GRACE-derived groundwater storage anomaly, it is po
 Using water levels derived from a monitoring well, we can estimate the recharge as follows:
 
 .. math::
-  R = S_y \frac{\Delta h}{t}
+      R = S_y \frac{\Delta h}{t}
   
 where Δh is the rebound in water level, t is the time period (typically one year) and Sy is the specific yield or appropriate storage coefficient.
 
 The storage coefficient is necessary because the water level rise in the surrounding aquifer occurs in the fractional void space and the storage coefficient converts it to the appropriate liquid water equivalent component in the [length]/[time] infiltration rate units used by recharge. If we perform this analysis using the groundwater storage anomaly curve derived from GRACE, we do not need to use a storage coefficient as the anomoly is already in liquid water equivalent form and we can directly estimate the recharge as:
 
 .. math::
-  R = \frac{\Delta GWSa}{\Delta t}
+      R = \frac{\Delta GWSa}{\Delta t}
 
 where ΔGWSa = the rise in groundwater extracted from the GRACE-derived groundwater storage anomaly curve.
 
@@ -33,19 +33,19 @@ There are two general approaches for determining the height of the rise associat
 With the more conservative method, the rise is measured from the trough to the next peak as follows:
 
 .. math::
-      R_{method 1} = \frac{\Delta GWSa}{\delta t} = \frac{S_p-S_B}{\Delta t } = R_S
+      R_{method_1} = \frac{\Delta GWSa}{\Delta t} = \frac{S_p-S_B}{\Delta t } = R_S
   
 Another method is to assume that the groundwater decline as a result of pumping and discharge continues at the same rate in the wet season and therefore the rise should be computed from a linear extrapolation of the declining line as follows:
 .. math::
-      R_{method 2} = \frac{\Delta GWSa}{\delta t} = \frac{S_p-S_L}{\Delta t } = R_S + R_D
+      R_{method_2} = \frac{\Delta GWSa}{\Delta t} = \frac{S_p-S_L}{\Delta t } = R_S + R_D
   
-The recharge rates extracted from these two equations could be considered a low and a high estimate, although in our experience method 1 seems to be the most accurate. An example of applying the WTF method to estimate recharge in Southern Niger can be found here:
+The recharge rates extracted from these two equations could be considered a low and a high estimate, although in our experience method 1 seems to be the most accurate. An example of applying the WTF method to estimate recharge in Southern Niger can be found : `Evaluating Groundwater Storage Change and Recharge Using GRACE Data: A Case Study of Aquifers in Niger, West Africa <https://www.mdpi.com/2072-4292/14/7/1532>`_.
 
- `Evaluating Groundwater Storage Change and Recharge Using GRACE Data: A Case Study of Aquifers in Niger, West Africa <https://www.mdpi.com/2072-4292/14/7/1532>`_.
- This study includes a comparison of the extracted recharge rates with the results from other studies in the region.
+This study includes a comparison of the extracted recharge rates with the results from other studies in the region.
+ 
  **Downloading the Water Level Time Series from the GGST App**
- -------------------------------------------------------------
- To apply the WTF method to estimate recharge on GRACE data, one must first download the groundwater storage anomaly time series from the GGST app. To do so, first load the region and select the Groundwater Storage (Calculated) storage component and then click on the three stacked lines in the upper right corner of the storage anomaly time series displayed and then download the time series as either a comma separated values (CSV) file or an Excel (XLS) file.
+---------------------------------------------------------------
+To apply the WTF method to estimate recharge on GRACE data, one must first download the groundwater storage anomaly time series from the GGST app. To do so, first load the region and select the Groundwater Storage (Calculated) storage component and then click on the three stacked lines in the upper right corner of the storage anomaly time series displayed and then download the time series as either a comma separated values (CSV) file or an Excel (XLS) file.
 .. image:: images-wtf/ggst_download.png
 
 The storage anomaly chart is created, displayed, and downloaded using the HighCharts plugin. The format of the resulting downloaded file is as follows:
