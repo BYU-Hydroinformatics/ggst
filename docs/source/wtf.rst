@@ -41,10 +41,9 @@ Another method is to assume that the groundwater decline as a result of pumping 
   
 The recharge rates extracted from these two equations could be considered a low and a high estimate, although in our experience method 1 seems to be the most accurate. An example of applying the WTF method to estimate recharge in Southern Niger can be found : `Evaluating Groundwater Storage Change and Recharge Using GRACE Data: A Case Study of Aquifers in Niger, West Africa <https://www.mdpi.com/2072-4292/14/7/1532>`_.
 
-This study includes a comparison of the extracted recharge rates with the results from other studies in the region.
- 
- **Downloading the Water Level Time Series from the GGST App**
----------------------------------------------------------------
+**Downloading the Water Level Time Series from the GGST App**
+---------
+
 To apply the WTF method to estimate recharge on GRACE data, one must first download the groundwater storage anomaly time series from the GGST app. To do so, first load the region and select the Groundwater Storage (Calculated) storage component and then click on the three stacked lines in the upper right corner of the storage anomaly time series displayed and then download the time series as either a comma separated values (CSV) file or an Excel (XLS) file.
 .. image:: images-wtf/ggst_download.png
 
@@ -74,7 +73,7 @@ This is because there were periods when the GRACE satellites did not produce usa
 
 For the years with large gaps, it can be difficult to identify seasonal trends and apply the WTF method. One way to resolve this problem is to use a statistical algorithm to detect seasonal patterns in the data and impute synthetic data in the gaps. This can be accomplished using a simple seasonal decomposition model (statsmodels.tsa.seasonal.seasonal_decompose) implemented in the statsmodels Python package to impute the missing data. This model first removes the trend using a convolution filter (the trend component), then computes the average value for each period (the seasonal component), in our case months, with the residual component being the difference between the monthly average (seasonal component) and the actual monthly measurements. With this approach, we decompose the GWSa time series into three components: the trend, the seasonal, and the random components:.
 .. math::
-  Y [t] = T [t] + S [t] + e [t]
+      Y [t] = T [t] + S [t] + e [t]
 where Y[t] is the GWSa, T[t] is the GWSa trend, S[t] is the seasonal GWSa component, and e[t] is the residual GWSa component. The decomposition components for the data shown above are as illustrated here:
 
 .. image:: images-wtf/decomposed.png
@@ -93,7 +92,7 @@ Before runing the code, you will need to prepare and upload a CSV file with the 
         <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab">
     </a>
 
-Before runing the code, you will need to prepare and upload a CSV file with the original data with the gaps. This file will need to contain only two columns, which you can copy and paste from the full CSV and then save as a seperate CSV file ("base_file.csv" for example).
+Before running the code, you will need to prepare and upload a CSV file with the original data with the gaps. This file will need to contain only two columns, which you can copy and paste from the full CSV and then save as a seperate CSV file ("base_file.csv" for example).
 
 .. image:: images-wtf/two_col_csv.png
 
