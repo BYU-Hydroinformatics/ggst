@@ -8,7 +8,7 @@
 ----------------
 In addition to obtaining the GRACE-derived groundwater storage anomaly, it is possible to analyze the storage anomaly time series to extract an estimate of annual recharge using a technique called the Water Table Fluctuation (WTF) method. The WTF method was originally developed to estimate recharge from seasonal fluctuations in groundwater levels measured directly in monitoring wells. When a water level time series exhibits seasonal fluctuations as shown below, it is assumed that the declining period during the dry part of the year results from pumping and groundwater discharge, and the rise during the wet part of the year is the result of recharge.
 
-.. image:: images-wtf/seasonal_flucuation.png
+.. image:: images-wtf/seasonal_fluctuation.png
 
 Using water levels derived from a monitoring well, we can estimate the recharge as follows:
 
@@ -35,11 +35,11 @@ With the more conservative method, the rise is measured from the trough to the n
 .. math::
   R_{method 1} = \frac{\Delta GWSa}{\delta t} = \frac{S_p-S_B}{\delta t } = R_S
   
-  Another method is to assume that the groundwater decline as a result of pumping and discharge continues at the same rate in the wet season and therefore the rise should be computed from a linear extrapolation of the declining line as follows:
+Another method is to assume that the groundwater decline as a result of pumping and discharge continues at the same rate in the wet season and therefore the rise should be computed from a linear extrapolation of the declining line as follows:
 .. math::
   R_{method 2} = \frac{\Delta GWSa}{\delta t} = \frac{S_p-S_L}{\delta t } = R_S + R_D
   
-  The recharge rates extracted from these two equations could be considered a low and a high estimate, although in our experience method 1 seems to be the most accurate. An example of applying the WTF method to estimate recharge in Southern Niger can be found here:
+The recharge rates extracted from these two equations could be considered a low and a high estimate, although in our experience method 1 seems to be the most accurate. An example of applying the WTF method to estimate recharge in Southern Niger can be found here:
 
  `Evaluating Groundwater Storage Change and Recharge Using GRACE Data: A Case Study of Aquifers in Niger, West Africa <https://www.mdpi.com/2072-4292/14/7/1532>`_.
  This study includes a comparison of the extracted recharge rates with the results from other studies in the region.
@@ -86,9 +86,12 @@ To assist users in applying the statsmodel method described above to impute gaps
 Open In Colab
 
 Before runing the code, you will need to prepare and upload a CSV file with the original data with the gaps. This file will need to contain only two columns, which you can copy and paste from the full CSV and then save as a seperate CSV file ("base_file.csv" for example).
+ 
 .. raw:: html
-   <a href="https://colab.research.google.com/github/BYU-Hydroinformatics/ggst-notebooks/blob/main/impute_gaps_GRACE.ipynb" target="_blank">
-  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"> </a>
+
+    <a href="https://colab.research.google.com/github/BYU-Hydroinformatics/ggst-notebooks/blob/main/impute_gaps_GRACE.ipynb"   target="_blank">
+        <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab">
+    </a>
 
 Before runing the code, you will need to prepare and upload a CSV file with the original data with the gaps. This file will need to contain only two columns, which you can copy and paste from the full CSV and then save as a seperate CSV file ("base_file.csv" for example).
 
@@ -99,14 +102,14 @@ Furthermore, the code will automatically detect small gaps, but the large gap fr
 .. image:: images-wtf/2017_gap.png
 At this point, the file is ready to be used with the Colab notebook. The following file is an example of a file prepared in the manner described above:
 
-Sample file: base_file.csv
+Here's a `Sample file  <ggst/docs/source/wtf_files/base_file.csv>`_
 
 **Data Processing Examples**
 ------------
 Once the gaps have been filled, the last step is to plot and analyze the curves one season at a time, extract the DGWSa values from the curve, and calculate the recharge estimate using either method 1 or method 2.
 
-.. image:: images-wtf/base_file.png
+.. image:: images-wtf/excel_example.png
 
-The following Excel file illustrates how to examine and process each season of data from a GRACE-derived and imputed groundwater storage anomaly time series.
+The following `Excel file  <ggst/docs/source/wtf_files/ghana_recharge.xlsx>`_ illustrates how to examine and process each season of data from a GRACE-derived and imputed groundwater storage anomaly time series.
 
-ghana_recharge.xlsx
+
