@@ -20,7 +20,7 @@ where Δh is the rebound in water level, t is the time period (typically one yea
 The storage coefficient is necessary because the water level rise in the surrounding aquifer occurs in the fractional void space and the storage coefficient converts it to the appropriate liquid water equivalent component in the [length]/[time] infiltration rate units used by recharge. If we perform this analysis using the groundwater storage anomaly curve derived from GRACE, we do not need to use a storage coefficient as the anomoly is already in liquid water equivalent form and we can directly estimate the recharge as:
 
 .. math::
-  R = \frac{\Delta GWSa}{\delta t}
+  R = \frac{\Delta GWSa}{\Delta t}
 
 where ΔGWSa = the rise in groundwater extracted from the GRACE-derived groundwater storage anomaly curve.
 
@@ -33,11 +33,11 @@ There are two general approaches for determining the height of the rise associat
 With the more conservative method, the rise is measured from the trough to the next peak as follows:
 
 .. math::
-  R_{method 1} = \frac{\Delta GWSa}{\delta t} = \frac{S_p-S_B}{\delta t } = R_S
+      R_{method 1} = \frac{\Delta GWSa}{\delta t} = \frac{S_p-S_B}{\Delta t } = R_S
   
 Another method is to assume that the groundwater decline as a result of pumping and discharge continues at the same rate in the wet season and therefore the rise should be computed from a linear extrapolation of the declining line as follows:
 .. math::
-  R_{method 2} = \frac{\Delta GWSa}{\delta t} = \frac{S_p-S_L}{\delta t } = R_S + R_D
+      R_{method 2} = \frac{\Delta GWSa}{\delta t} = \frac{S_p-S_L}{\Delta t } = R_S + R_D
   
 The recharge rates extracted from these two equations could be considered a low and a high estimate, although in our experience method 1 seems to be the most accurate. An example of applying the WTF method to estimate recharge in Southern Niger can be found here:
 
