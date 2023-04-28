@@ -56,3 +56,4 @@ The advantages of the API are that you can retrieve data about a new region of i
     self
     algorithm
     uploading
+    api
