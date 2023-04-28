@@ -23,6 +23,19 @@ https://tethys-staging.byu.edu/apps/[parent-app]/api/[MethodName]/?param1=value1
 
 To test the API, the user will need a zip file of the region of interest. We have provided an example of files in the appropriate format. You may use your own zip files if you choose so.
 
+`Download API Test file 1 <test_files/API_Fileset.zip>`_ | `Download API Test file 2  <test_files/API_Fileset.zip>`_
+
+.. button-link:: test_files/API_Fileset.zip
+
+    Button text
+
+.. raw:: html
+        <a href="test_files/API_Fileset.zip">
+                <button type="button" class="btn btn-default btn-md text-info">
+	                <span class="glyphicon glyphicon-download" aria-hidden="true"></span> Download Test File 1
+                </button>
+	</a>
+
 
 Let explore each one individually and offer an example:
 
@@ -119,7 +132,7 @@ Once signed in, click on your username in the right upper corner, opening a pane
 
 The authentication token or API key will be in the third section.
 
-.. image:: images-api/APItoken.png
+.. image:: images-api/APIToken.png
 
 For privacy reason, we have hidden the remaining characters of this user's token.
 
@@ -182,6 +195,15 @@ This section will also help you create a dataframe, plot your data, and visualiz
 To launch the code, please click on this button. The notebook will open in a new tab.
 
 .. raw:: html
-        <a href="https://colab.research.google.com/github/BYU-Hydroinformatics/ggst-notebooks/blob/main/ggst_api.ipynb" target="_blank">
-        <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/> </a>
-   
+
+    <a href="https://colab.research.google.com/github/BYU-Hydroinformatics/ggst-notebooks/blob/main/ggst_api.ipynb" target="_blank">
+        <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab">
+    </a>
+
+     
+
+
+
+     
+
+
