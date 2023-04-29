@@ -3,7 +3,7 @@
 # -- Project information
 
 project = 'Grace Groundwater Subsetting Tool'
-copyright = '2021, Dr. Norm Jones'
+copyright = '2021, Dr. Norm L. Jones'
 author = 'Dr. Jones & Research Assistants'
 
 release = '0.1'
