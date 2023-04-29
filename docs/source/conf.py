@@ -4,7 +4,7 @@
 
 project = 'Grace Groundwater Subsetting Tool'
 copyright = '2021, Dr. Norm L. Jones'
-author = 'Dr. Jones & Research Assistants'
+author = 'Dr. Norm Jones and Research Assistants'
 
 release = '0.1'
 version = '0.1.0'
@@ -12,12 +12,19 @@ version = '0.1.0'
 # -- General configuration
 
 extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.doctest',
     'sphinx.ext.duration',
     'sphinx.ext.doctest',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
+    'sphinx.ext.todo',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.extlinks',
 ]
+
+
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
@@ -34,8 +41,15 @@ html_theme = 'sphinx_rtd_theme'
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
 
-# -- Function to control the width
+#Include the index in the content page
+
+html_sidebars = {
+    '**': ['globaltoc.html', 'localtoc.html', 'searchbox.html'],
+    '**/index': ['globaltoc.html', 'localtoc.html', 'searchbox.html'],
+}
+
 def setup(app):
-    app.add_css_file('screen_width.css')
+    app.add_css_file('style.css')
 
 html_static_path = ['_static']
+
