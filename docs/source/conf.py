@@ -49,7 +49,7 @@ html_sidebars = {
 }
 
 def setup(app):
-    app.add_css_file('style.css')
+    app.add_css_file('screen_width')
 
 html_static_path = ['_static']
 
