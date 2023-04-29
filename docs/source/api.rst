@@ -135,24 +135,24 @@ We have provided an example of calling the GGST API using the Python coding lang
 
 The code is divided into six sections designed to help the user understand how to call each of the four functions and how to plot and vizualize them.
 
-|* Install Packages and Select your Tethys Portal:
-|   In this section, dependencies and other python packages are installed and set up for the processing of the shapefile and rendering of the graph in latter cells.
-|   The dropdown menu lists all the available portals. A portal is a web hosting platform that executes the commands and returns the results as requested by the user. For this API, three portals are available: the tethys staging, tethys main and the tethys West Africa. The first two are maintained by the Brigham Young University Hydroinformatics Laboratory and the last by the SERVIR program in West Africa. The tethys staging portal is the testing ground for web applications developed by the BYU Hydroinformatics laboratory before commiting them to the two main portals.
++ **Install Packages and Select your Tethys Portal**:
+      In this section, dependencies and other python packages are installed and set up for the processing of the shapefile and rendering of the graph in         latter cells.
+      The dropdown menu lists all the available portals. A portal is a web hosting platform that executes the commands and returns the results as               requested by the user. For this API, three portals are available: the tethys staging, tethys main and the tethys West Africa. The first two are           maintained by the Brigham Young University Hydroinformatics Laboratory and the last by the SERVIR program in West Africa. The tethys staging portal       is the testing ground for web applications developed by the BYU Hydroinformatics laboratory before commiting them to the two main portals.
 
-|* Function 1: getStorageOptions
-|   This cell lists all the available options and how to properly declare them in the appropriate cell.
++ **Function 1: getStorageOptions**
+       This cell lists all the available options and how to properly declare them in the appropriate cell.
 
-|* Function 2: getPointValues
-|   The user types in latitude and longitude coordinates and selects the desired storage option from a drop down menu. The next several cells will create a dataframe, chart the timeseries, and plot a graph with estimated error bars.
++ **Function 2: getPointValues**
+       The user types in latitude and longitude coordinates and selects the desired storage option from a drop down menu. The next several cells will            create a dataframe, chart the timeseries, and plot a graph with estimated error bars.
 
-|* Requesting Info for Regional Functions 3 and 4
-|   The last two functions are regional functions and require more inputs to run. This section of the notebook walks you through inputting that additional information. First, you will be asked for your API token which must match your declared portal to work. Second, you will be asked to give your region a name that will be used in naming the files. Lastly, you will be asked to upload a zipped shapefile of the region of interest. This should contain four files (a .shp, .shx, .prj and .dbf ) zipped in a single folder.
++ **Requesting Info for Regional Functions 3 and 4**
+       The last two functions are regional functions and require more inputs to run. This section of the notebook walks you through inputting that                additional information. First, you will be asked for your API token which must match your declared portal to work. Second, you will be asked to            give your region a name that will be used in naming the files. Lastly, you will be asked to upload a zipped shapefile of the region of interest.          This should contain four files (a .shp, .shx, .prj and .dbf ) zipped in a single folder.
 
-|* Function 3: getRegionTimeseries
-|   Asks for your desired storage option using a drop down menu, calls the API, then displays an interactive table and graph of the data returned.
++ **Function 3: getRegionTimeseries**
+       Asks for your desired storage option using a drop down menu, calls the API, then displays an interactive table and graph of the data returned.
 
-|* Function 4: getRegionZipfile
-|   Calls the API and returns a set of netcdf files which can be accessed from a tool bar on the left side of the screen as pictured below
++ **Function 4: getRegionZipfile**
+       Calls the API and returns a set of netcdf files which can be accessed from a tool bar on the left side of the screen as pictured below
 
 Visual guide on netCDF files
 
