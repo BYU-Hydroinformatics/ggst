@@ -48,8 +48,14 @@ html_sidebars = {
     '**/index': ['globaltoc.html', 'localtoc.html', 'searchbox.html'],
 }
 
+#Changing screen width
 def setup(app):
     app.add_css_file('screen_width.css')
 
 html_static_path = ['_static']
+
+#Adding a logo
+
+html_static_path = ['_static']
+html_logo =
 
