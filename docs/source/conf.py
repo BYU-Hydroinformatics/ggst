@@ -57,5 +57,5 @@ html_static_path = ['_static']
 #Adding a logo
 
 html_static_path = ['_static']
-html_logo = '_static/GGST_globe.png'
+html_logo = '_static/ggstlogo.png'
 
