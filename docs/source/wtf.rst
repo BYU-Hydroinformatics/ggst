@@ -116,7 +116,7 @@ Furthermore, the code will automatically detect small gaps, but the large gap fr
 .. image:: images-wtf/2017_gap.png
 At this point, the file is ready to be used with the Colab notebook. The following file is an example of a file prepared in the manner described above:
 
-Here's a `sample file  <ggst/docs/source/wtf_files/base_file.csv>`_
+Here's a `sample file  <https://github.com/BYU-Hydroinformatics/ggst/blob/main/docs/source/wtf_files/base_file.csv>`_
 
 **Data Processing Examples**
 ------------
@@ -124,6 +124,6 @@ Once the gaps have been filled, the last step is to plot and analyze the curves 
 
 .. image:: images-wtf/excel_example.png
 
-The following `Excel file  <ggst/docs/source/wtf_files/ghana_recharge.xlsx>`_ illustrates how to examine and process each season of data from a GRACE-derived and imputed groundwater storage anomaly time series.
+The following `Excel file  <https://github.com/BYU-Hydroinformatics/ggst/blob/main/docs/source/wtf_files/ghana_recharge.xlsx>`_ illustrates how to examine and process each season of data from a GRACE-derived and imputed groundwater storage anomaly time series.
 
 
