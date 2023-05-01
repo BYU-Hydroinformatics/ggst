@@ -50,7 +50,7 @@ The advantages of the API are that you can retrieve data about a new region of i
     :hidden:
     :caption: TABLE OF CONTENT
 
-    self
+    intro
     algorithm
     uploading
     api
