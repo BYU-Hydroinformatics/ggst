@@ -1,7 +1,7 @@
 .. raw:: html
    :file: translate.html
    
-**APPLICATION PROGRAMMING INTERFACE (API)**
+**Application Programming Interface (API)**
 =================================
 
 **Introductory Information**
