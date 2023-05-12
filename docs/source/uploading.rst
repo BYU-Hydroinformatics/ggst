@@ -1,8 +1,5 @@
-.. raw:: html
-   :file: translate.html
-
-**ADDING AND DELETING REGIONS**
-====
+**Adding and Deleting Regions**
+==============================
 
 **Uploading a Region**
 -----------------------
