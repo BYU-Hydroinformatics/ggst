@@ -1,7 +1,7 @@
 .. raw:: html
    :file: translate.html
 
-**COMPUTATIONAL ALGORITHMS**
+**Computatinal Algorithms**
 =======================
 The GRACE Groundwater Subsetting Tool Web Application relies on the Earth Observation data collected by NASA through satellites- the latter map the gravitational field of the Earth. Changes in gravity are driven by changes in water storage; offering a rare opportunity to monitor groundwater level through satellites coupled with estimated model surface water.
 
