@@ -1,8 +1,5 @@
-.. raw:: html
-   :file: translate.html
-
-**THE WATER TABLE FLUCTUATION METHOD**
-====
+**The Water Table Fluctuation Method**
+=====================================
 
 **Introduction**
 ----------------
