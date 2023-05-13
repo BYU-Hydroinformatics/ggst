@@ -1,3 +1,6 @@
+.. raw:: html
+   :file: translate.html
+
 **The Water Table Fluctuation Method**
 =====================================
 
