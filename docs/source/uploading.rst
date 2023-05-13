@@ -1,3 +1,6 @@
+.. raw:: html
+   :file: translate.html
+
 **Adding and Deleting Regions**
 ==============================
 
