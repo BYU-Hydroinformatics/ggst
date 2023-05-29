@@ -7,7 +7,6 @@
 **Introductory Information**
 ------------------------
 The API for the GGST allows users to retrieve ground water information about a point or region without having administrative privileges to the GGST web application.
-
 The GGST API has four functions. Each of these functions requires different inputs and returns different results as desired by the user. The name of each function gives a glimpse of what each accomplishes. The four functions are:
 
 * getStorageOptions
@@ -15,9 +14,16 @@ The GGST API has four functions. Each of these functions requires different inpu
 * getRegionTimeseries
 * subsetRegionZipfile
 To run some of the functions listed above, the user will need an authentication token. Please refer to the third section of this documentation on how to obtain the said token.
-
 The API can be implemented in many ways using a variety of coding languages and platforms. We have provided an example implementation using the python coding language in a google colab notebook. Our example notebook is hosted on github and can be access through a link at the bottom of this page. If you choose to use python to call the API, we recommend the xarray and geopandas python packages be used to process your data. The former helps in visualizing and interacting with the raw netCDF data returned while the latter helps in uploading the shapefile(s) for the subsetting.
 
+To launch the code, please click on this button. The notebook will open in a new tab.
+
+.. raw:: html
+
+    <a href="https://colab.research.google.com/github/BYU-Hydroinformatics/ggst-notebooks/blob/main/ggst_api.ipynb" target="_blank">
+        <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab">
+    </a>
+    
 **API Methods**
 -------
 All four functions follow the same pattern as shown by the URL examples below. Each of the terms in brackets along with the parameters and values would be replaced by string values.
@@ -119,11 +125,15 @@ Tthe last two functions of the API require an authentication token. To obtain on
 Once signed in, click on your username in the right upper corner, opening a panel. Click on the User Settings to reveal the API key.
 
 .. image:: images-api/userpanel.png
+   :scale: 50%
+   :align: center
 
 
 The authentication token or API key will be in the third section.
 
 .. image:: images-api/APIToken.png
+   :scale: 50%
+   :align: center
 
 For privacy reason, we have hidden the remaining characters of this user's token.
 
@@ -157,39 +167,51 @@ The code is divided into six sections designed to help the user understand how t
 Visual guide on netCDF files
 
 .. image:: images-api/visualnetCDF.png
+   :scale: 50%
+   :align: center
 
 This Table elaborates on each of these files and their naming conventions:
 
-+--------------------------+----------------+-------------+---------------------+            
-| **Name**                 |**Abbreviation**| **Source**  |**Source Resolution**|                                            
-+--------------------------+----------------+-------------+---------------------+
-| Total Water Storage      | grace	        |GRACE	      |0.5 degrees          |
-+--------------------------+----------------+-------------+---------------------+
-|Surface Water Storage     | sw	            |GLDAS	      |1.0 degrees          |
-+--------------------------+----------------+-------------+---------------------+
-| Soil Moisture Storage    | sm	            |GLDAS	      |1.0  degrees         |
-+--------------------------+----------------+-------------+---------------------+
-|Groundwater Storage	     |gw	            |Calculated*	|1.0  degrees         |
-+--------------------------+----------------+-------------+---------------------+
-|Snow Water Equivalent     |swe		          |GLDAS	      |1.0  degrees         |
-+--------------------------+----------------+-------------+---------------------+
-|Terrestrial Water Storage |tws		          |GLDAS	      |1.0  degrees         |
-+--------------------------+----------------+-------------+---------------------+
-|Canopy Storage            |canopy		      |GLDAS	      |1.0  degrees         |
-+--------------------------+----------------+-------------+---------------------+
 
+.. list-table::
+
+   * - **Name**  
+     - **Abbreviation** 
+     - **Source**
+     - **Source Resolution**
+   * - Total Water Storage 
+     - grace	
+     - GRACE
+     - 0.5 degrees 
+   * - Surface Water Storage
+     - sw
+     - GLADAS
+     - 1.0 degrees
+   * - Soil Moisture Storage
+     - sm
+     - GLADAS
+     - 1.0 degrees
+   * - Groundwater Storage
+     - gw
+     - Calculated* 
+     - 1.0 degrees 
+   * - Snow Water Equivalent 
+     - swe
+     - GLADAS
+     - 1.0 degrees
+   * - Terrestrial Water Storage 
+     - tws
+     - GLADAS
+     - 1.0 degrees
+   * - Canopy Storage 
+     - canopy
+     - GLADAS
+     - 1.0 degrees
 
 *To learn more about how this is calculated please visit our algorithm page.
-
 This section will also help you create a dataframe, plot your data, and visualize your data on an animated map
 
-To launch the code, please click on this button. The notebook will open in a new tab.
 
-.. raw:: html
-
-    <a href="https://colab.research.google.com/github/BYU-Hydroinformatics/ggst-notebooks/blob/main/ggst_api.ipynb" target="_blank">
-        <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab">
-    </a>
 
      
 
