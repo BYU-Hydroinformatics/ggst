@@ -18,30 +18,30 @@ To add a new region, the user will need to upload four files. Beware, the four f
 Please refer to the following images as a visual guide:
 
 .. image:: images-upload/uploadregion1.png
-   :scale: 70%
-   :align: center
+   :scale: 60%
+ 
 
 .. image:: images-upload/uploadregion2.png
-   :scale: 70%
-   :align: center
+   :scale: 60%
+   
    
 .. image:: images-upload/uploadregion3.png
-   :scale: 70%
-   :align: center
+   :scale: 60%
+  
    
 .. image:: images-upload/uploadregion4.png
-   :scale: 70%
-   :align: center
+   :scale: 60%
+   
    
 .. image:: images-upload/uploadregion5.png
-   :scale: 70%
-   :align: center
+   :scale: 60%
+  
    
 **Deleting a Region**
 ---------------------
 Deleting a region is very simple. Proceed to the Delete a Region page. Select the region from the drop down menu and hit the delete button. A message will display when the deletion has been completed.
 
 .. image:: images-upload/deleteregion.png
-   :scale: 70%
-   :align: center
+   :scale: 80%
+   
 
