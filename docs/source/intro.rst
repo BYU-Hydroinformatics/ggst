@@ -25,7 +25,7 @@ Anyone can open the app and view the currently uploaded regions and download the
 
 .. image:: images-overview/GGST_Tethys_MapViewer.png
    :scale: 50%
-   :align: center
+  
 
 To upload and delete regions from the Tethys Web Application you must login with an admin account. If you have admin access, follow the instructions on the uploading Regions page. If not, consider using our API method or feel free to reach out to our team if you would like a region uploaded.
 
