@@ -126,15 +126,12 @@ Once signed in, click on your username in the right upper corner, opening a pane
 
 .. image:: images-api/userpanel.png
    :scale: 50%
-   :align: center
-
-
+  
 The authentication token or API key will be in the third section.
 
 .. image:: images-api/APIToken.png
    :scale: 50%
-   :align: center
-
+   
 For privacy reason, we have hidden the remaining characters of this user's token.
 
 It is also possible to request an authentication token directly from an adminstrator. We recommend using the sign up method as it is faster.
@@ -168,7 +165,8 @@ Visual guide on netCDF files
 
 .. image:: images-api/visualnetCDF.png
    :scale: 50%
-   :align: center
+ 
+ 
 
 This Table elaborates on each of these files and their naming conventions:
 
