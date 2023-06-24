@@ -59,4 +59,4 @@ html_static_path = ['_static']
 
 #html_static_path = ['_static']
 #html_logo = '_static/ggstlogo.png'
-
+master_doc = 'index'
