@@ -17,7 +17,7 @@ Using water levels derived from a monitoring well, we can estimate the recharge 
   
 where Δh is the rebound in water level, t is the time period (typically one year) and Sy is the specific yield or appropriate storage coefficient.
 
-The storage coefficient is necessary because the water level rise in the surrounding aquifer occurs in the fractional void space and the storage coefficient converts it to the appropriate liquid water equivalent component in the [length]/[time] infiltration rate units used by recharge. If we perform this analysis using the groundwater storage anomaly curve derived from GRACE, we do not need to use a storage coefficient as the anomoly is already in liquid water equivalent form and we can directly estimate the recharge as:
+The storage coefficient is necessary because the water level rise in the surrounding aquifer occurs in the fractional void space and the storage coefficient converts it to the appropriate liquid water equivalent component in the [length]/[time] infiltration rate units used by recharge. If we perform this analysis using the groundwater storage anomaly curve derived from GRACE, we do not need to use a storage coefficient as the anomaly is already in liquid water equivalent form and we can directly estimate the recharge as:
 
 .. math::
       R = \frac{\Delta GWSa}{\Delta t}
@@ -52,7 +52,7 @@ The storage anomaly chart is created, displayed, and downloaded using the HighCh
 
 .. image:: images-wtf/file_units.png
 
-The storage units are liquid water equivalent in cm, as expected, but the date units are reported in milliseseconds since Jan 1, 1970. In order to convert to a more typical date unit, we must first create a new column and then enter the formula shown below for the first date in the list. This formula converts the number from milliseconds to days and then adds that number to the date value corresponding to January 1, 1970, thus creating a proper date value. To see this value, change the number format to the one of the standard date options. Whether it appears as month/day/year or day/month/year will depend on your regional settings.
+The storage units are liquid water equivalent in cm, as expected, but the date units are reported in milliseconds since Jan 1, 1970. In order to convert to a more typical date unit, we must first create a new column and then enter the formula shown below for the first date in the list. This formula converts the number from milliseconds to days and then adds that number to the date value corresponding to January 1, 1970, thus creating a proper date value. To see this value, change the number format to the one of the standard date options. Whether it appears as month/day/year or day/month/year will depend on your regional settings.
 
 .. image:: images-wtf/fixing_the_date.png
 
@@ -80,11 +80,11 @@ This is because there were periods when the GRACE satellites did not produce usa
 
 .. image:: images-wtf/niger_gaps.png
 
-For the years with large gaps, it can be difficult to identify seasonal trends and apply the WTF method. One way to resolve this problem is to use a statistical algorithm to detect seasonal patterns in the data and impute synthetic data in the gaps. This can be accomplished using a simple seasonal decomposition model (statsmodels.tsa.seasonal.seasonal_decompose) implemented in the statsmodels Python package to impute the missing data. This model first removes the trend using a convolution filter (the trend component), then computes the average value for each period (the seasonal component), in our case months, with the residual component being the difference between the monthly average (seasonal component) and the actual monthly measurements. With this approach, we decompose the GWSa time series into three components: the trend, the seasonal, and the random components:.
+For the years with large gaps, it can be difficult to identify seasonal trends and apply the WTF method. One way to resolve this problem is to use a statistical algorithm to detect seasonal patterns in the data and impute synthetic data in the gaps. This can be accomplished using a simple seasonal decomposition model (statsmodels.tsa.seasonal.seasonal_decompose) implemented in the statsmodels Python package to impute the missing data. This model first removes the trend using a convolution filter (the trend component), then computes the average value for each period (the seasonal component), in our case months, with the residual component being the difference between the monthly average (seasonal component) and the actual monthly measurements. With this approach, we decompose the GWSa time series into three components: the trend, the seasonal, and the random components:
 
 .. math::
       Y [t] = T [t] + S [t] + e [t]
-where Y[t] is the GWSa, T[t] is the GWSa trend, S[t] is the seasonal GWSa component, and e[t] is the residual GWSa component. The decomposition components for the data shown above are as illustrated here:
+Where Y[t] is the GWSa, T[t] is the GWSa trend, S[t] is the seasonal GWSa component, and e[t] is the residual GWSa component. The decomposition components for the data shown above are as illustrated here:
 
 .. image:: images-wtf/decomposed.png
 
@@ -99,7 +99,7 @@ The following figure shows the original time series in black, with imputed value
 
 **Data Imputation Tools**
 ----
-To assist users in applying the statsmodel method described above to impute gaps in the GRACE data, we have implemented the Python code to perform the imputation in Google Colab notebook whose link is below. After launching the notebook, follow the instructions in the code.
+To assist users in applying the statsmodel method described above to impute gaps in the GRACE data, we have implemented the Python code to perform the imputation in a Google Colab notebook whose link is below. After launching the notebook, follow the instructions in the code.
 
 .. raw:: html
 
@@ -107,7 +107,7 @@ To assist users in applying the statsmodel method described above to impute gaps
         <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab">
     </a>
 
-Before running the code, you will need to prepare and upload a CSV file with the original data with the gaps. This file will need to contain only two columns, which you can copy and paste from the full CSV and then save as a seperate CSV file ("base_file.csv" for example).
+Before running the code, you will need to prepare and upload a CSV file with the original data with the gaps. This file will need to contain only two columns, which you can copy and paste from the full CSV and then save as a separate CSV file ("base_file.csv" for example).
 
 .. image:: images-wtf/two_col_csv.png
 
@@ -116,11 +116,11 @@ Furthermore, the code will automatically detect small gaps, but the large gap fr
 .. image:: images-wtf/2017_gap.png
 At this point, the file is ready to be used with the Colab notebook. The following file is an example of a file prepared in the manner described above:
 
-Here's a `sample file  <https://github.com/BYU-Hydroinformatics/ggst/blob/main/docs/source/wtf_files/base_file.csv>`_
+Here's a `sample file  <https://github.com/BYU-Hydroinformatics/ggst/blob/main/docs/source/wtf_files/base_file.csv>`_.
 
 **Data Processing Examples**
 ------------
-Once the gaps have been filled, the last step is to plot and analyze the curves one season at a time, extract the DGWSa values from the curve, and calculate the recharge estimate using either method 1 or method 2.
+Once the gaps have been filled, the last step is to plot and analyze the curves one season at a time, extract the GWSa values from the curve, and calculate the recharge estimate using either method 1 or method 2.
 
 .. image:: images-wtf/excel_example.png
 
