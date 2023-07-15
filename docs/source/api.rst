@@ -4,7 +4,7 @@
 **Application Programming Interface (API)**
 =================================
 
-**Introductory Information**
+**Introduction**
 ------------------------
 The API for the GGST allows users to retrieve ground water information about a point or region without having administrative privileges to the GGST web application.
 The GGST API has four functions. Each of these functions requires different inputs and returns different results as desired by the user. The name of each function gives a glimpse of what each accomplishes. The four functions are:
@@ -13,8 +13,9 @@ The GGST API has four functions. Each of these functions requires different inpu
 * getPointValues
 * getRegionTimeseries
 * subsetRegionZipfile
+
 To run some of the functions listed above, the user will need an authentication token. Please refer to the third section of this documentation on how to obtain the said token.
-The API can be implemented in many ways using a variety of coding languages and platforms. We have provided an example implementation using the python coding language in a google colab notebook. Our example notebook is hosted on github and can be access through a link at the bottom of this page. If you choose to use python to call the API, we recommend the xarray and geopandas python packages be used to process your data. The former helps in visualizing and interacting with the raw netCDF data returned while the latter helps in uploading the shapefile(s) for the subsetting.
+The API can be implemented in many ways using a variety of coding languages and platforms. We have provided an example implementation using the Python code language in a Google Colab notebook. Our example notebook is hosted on GitHub and can be access through a link at the bottom of this page. If you choose to use Python to call the API, we recommend the xarray and geopandas Python packages be used to process your data. The former helps in visualizing and interacting with the raw netCDF data returned while the latter helps in uploading the shapefile(s) for the subsetting.
 
 To launch the code, please click on this button. The notebook will open in a new tab.
 
@@ -28,13 +29,15 @@ To launch the code, please click on this button. The notebook will open in a new
 -------
 All four functions follow the same pattern as shown by the URL examples below. Each of the terms in brackets along with the parameters and values would be replaced by string values.
 
-https://tethys-staging.byu.edu/apps/[parent-app]/api/[MethodName]/?param1=value1&param2=value2&...paramN=valueN
+.. raw:: html
+<span> https://tethys-staging.byu.edu/apps/[parent-app]/api/[MethodName]/?param1=value1&param2=value2&...paramN=valueN </span>
 
 To test the API, the user will need a zip file of the region of interest. We have provided an example of files in the appropriate format. You may use your own zip files if you choose so.
 
 `Download API Test Files <https://github.com/BYU-Hydroinformatics/ggst/blob/main/docs/source/test_files/API_Fileset.zip>`_
 
-Let explore each one individually and offer an example:
+Note that you will need to click on the download symbol once the link above opens.
+Let's explore each one individually and offer an example:
 
 1. **The getStorageOptions**
 
@@ -43,12 +46,12 @@ Let explore each one individually and offer an example:
 +------------------------+-----------------------------------------------------------+
 | **Supported Methods**  | GET                                                       |
 +------------------------+-----------------------------------------------------------+
-|**Returns**             | A JSON object with a list of sotrage options              |
+|**Returns**             | A JSON object with a list of storage options              |
 +------------------------+-----------------------------------------------------------+
 | **Parameters(Params)** | There are no parameters for the getStorageOptions function|
 +------------------------+-----------------------------------------------------------+
 
-Follow this link to inspect the JSON returned which lists the list of the storage options available. https://tethys-staging.byu.edu/apps/ggst/api/getStorageOptions/. For simplicity, the options are given a variable name. For instance, The "Total Water Storage (GRACE)" has a variable name of "grace", and similarly the "Soil Moisture Storage (GLDAS)" is shortened to "sm".
+Follow this link to inspect the JSON returned which lists the list of the storage options available. https://tethys-staging.byu.edu/apps/ggst/api/getStorageOptions/. For simplicity, the options are given a variable name. For instance, the "Total Water Storage (GRACE)" has a variable name of "grace", and similarly the "Soil Moisture Storage (GLDAS)" is shortened to "sm".
 
 2. **The getPointValues**
 
@@ -90,7 +93,7 @@ For the last two functions, the user will need to have an authentication token a
 +                        +------------------------+--------------------------+------------------------------------------+---------------------------------------------------------------------------------+--------------+
 |                        | files                  | A zipped folder                                                     | a zipped folder with .shp, .shx, .prj and .dbf files                            | Yes          |
 +                        +------------------------+---------------------------------------------------------------------+---------------------------------------------------------------------------------+--------------+
-|                        | API token              |  token from the thethys portal                                      | token from a tethys user account on the portal                                  | Yes          |
+|                        | API token              |  token from the  tethys portal                                      | token from a tethys user account on the portal                                  | Yes          |
 +------------------------+------------------------+--------------------------+------------------------------------------+---------------------------------------------------------------------------------+--------------+
 
 Example query: files = {'shapefile': ("response.zip", uploaded["".join(uploaded)],'application/zip')} region_timeseries_request = requests.post("https://tethys-staging.byu.edu/apps/ggst/api/getRegionTimeseries/", headers={"Authorization": f"Token {api_token}"}, data = {"name":"api_test", "storage_type": "tws"}, files=files) Response (trimmed for clarity): {'area': 437109427476.4769, 'depletion': [['2000-01-01', 0.0], ['2000-02-01', -273831.117], ['2000-03-01', -661208.652], …….. ['2021-09-01', 4792246.794]], 'error_range': [['2000-01-01', -6.045, -3.205], ['2000-02-01', -7.122, -3.798], ['2000-03-01', -8.648, -4.636], ['2021-09-01', 8.19, 11.796]], ……. 'success': 'success', 'values': [['2000-01-01', -4.625], ['2000-02-01', -5.46], …….. ['2021-09-01', 9.993]]}
@@ -110,19 +113,19 @@ Example query: files = {'shapefile': ("response.zip", uploaded["".join(uploaded)
 +                        +------------------------+--------------------------+------------------------------------------+---------------------------------------------------------------------------------+--------------+
 |                        | files                  | A zipped folder                                                     | a zipped folder with .shp, .shx, .prj and .dbf files                            | Yes          |
 +                        +------------------------+---------------------------------------------------------------------+---------------------------------------------------------------------------------+--------------+
-|                        | API token              |  token from the thethys portal                                      | token from a tethys user account on the portal                                  | Yes          |
+|                        | API token              |  token from the  tethys portal                                      | token from a tethys user account on the portal                                  | Yes          |
 +------------------------+------------------------+--------------------------+------------------------------------------+---------------------------------------------------------------------------------+--------------+
-Here is an example of query using the subsetRegionZipfile method.
+Here is an example query using the subsetRegionZipfile method.
 
 Example Query: files = {'shapefile': ("response.zip", uploaded["".join(uploaded)],'application/zip')} subset_region_request = requests.post("https://tethys-staging.byu.edu/apps/ggst/api/subsetRegionZipfile/", headers={"Authorization": f"Token {api_token}"}, data = {"name":"api_test"}, files=files) z = ZipFile(BytesIO(subset_region_request.content)) z.extractall()
 
-Result: will be a folder with nc files.
+Result will be a folder with nc files.
 
 **Obtaining an Authentication Token**
 ---------------------------------------
-Tthe last two functions of the API require an authentication token. To obtain one, you will need to sign up for an account on `BYU Tethys Portal <https://tethys-staging.byu.edu/apps/>`_. Click on the Log in button to get to the sign up prompt.
+The last two functions of the API require an authentication token. To obtain one, you will need to sign up for an account on `BYU Tethys Portal <https://tethys-staging.byu.edu/apps/>`_. Click on the Log In button to get to the sign up prompt.
 
-Once signed in, click on your username in the right upper corner, opening a panel. Click on the User Settings to reveal the API key.
+Once signed in, click on your username in the upper right corner, opening a panel. Click on the User Settings to reveal the API key.
 
 .. image:: images-api/userpanel.png
    :scale: 50%
@@ -132,43 +135,43 @@ The authentication token or API key will be in the third section.
 .. image:: images-api/APIToken.png
    :scale: 50%
    
-For privacy reason, we have hidden the remaining characters of this user's token.
+For privacy reasons, we have hidden the remaining characters of this user's token.
 
-It is also possible to request an authentication token directly from an adminstrator. We recommend using the sign up method as it is faster.
+It is also possible to request an authentication token directly from an administrator. We recommend using the sign up method as it is faster.
 
 **GGST API Google Colab Notebook**
 ----------------------------------
-We have provided an example of calling the GGST API using the Python coding language in a Google Colab Notebook. Run each cell of the notebook by hitting the play button on the left side and provide the necesssary inputs by following the prompts. The notebook runs through all four of the API functions we described above. In order to run some of the functions in this notebook, the user will have to sign up for a Tethys account and obtain an authentication token (API key) as explained in the previous sections.
+We have provided an example of calling the GGST API using the Python coding language in a Google Colab Notebook. Run each cell of the notebook by hitting the play button on the left side and provide the necessary inputs by following the prompts. The notebook runs through all four of the API functions we described above. In order to run some of the functions in this notebook, the user will have to sign up for a Tethys account and obtain an authentication token (API key) as explained in the previous sections.
 
-The code is divided into six sections designed to help the user understand how to call each of the four functions and how to plot and vizualize them.
+The code is divided into six sections designed to help the user understand how to call each of the four functions and how to plot and visualize them.
 
 + **Install Packages and Select your Tethys Portal**:
-      In this section, dependencies and other python packages are installed and set up for the processing of the shapefile and rendering of the graph in         latter cells.
-      The dropdown menu lists all the available portals. A portal is a web hosting platform that executes the commands and returns the results as               requested by the user. For this API, three portals are available: the tethys staging, tethys main and the tethys West Africa. The first two are           maintained by the Brigham Young University Hydroinformatics Laboratory and the last by the SERVIR program in West Africa. The tethys staging portal       is the testing ground for web applications developed by the BYU Hydroinformatics laboratory before commiting them to the two main portals.
+      In this section, dependencies and other python packages are installed and set up for the processing of the shapefile and rendering of the graph in latter cells.
+      The dropdown menu lists all the available portals. A portal is a web hosting platform that executes the commands and returns the results as requested by the user. For this API, three portals are available: the tethys staging, tethys main and the tethys West Africa. The first two are           maintained by the Brigham Young University Hydroinformatics Laboratory and the last by the SERVIR program in West Africa. The tethys staging portal       is the testing ground for web applications developed by the BYU Hydroinformatics Laboratory before committing them to the two main portals.
 
 + **Function 1: getStorageOptions**
        This cell lists all the available options and how to properly declare them in the appropriate cell.
 
 + **Function 2: getPointValues**
-       The user types in latitude and longitude coordinates and selects the desired storage option from a drop down menu. The next several cells will            create a dataframe, chart the timeseries, and plot a graph with estimated error bars.
+       The user types in latitude and longitude coordinates and selects the desired storage option from a drop-down menu. The next several cells will            create a dataframe, chart the timeseries, and plot a graph with estimated error bars.
 
 + **Requesting Info for Regional Functions 3 and 4**
        The last two functions are regional functions and require more inputs to run. This section of the notebook walks you through inputting that                additional information. First, you will be asked for your API token which must match your declared portal to work. Second, you will be asked to            give your region a name that will be used in naming the files. Lastly, you will be asked to upload a zipped shapefile of the region of interest.          This should contain four files (a .shp, .shx, .prj and .dbf ) zipped in a single folder.
 
 + **Function 3: getRegionTimeseries**
-       Asks for your desired storage option using a drop down menu, calls the API, then displays an interactive table and graph of the data returned.
+       Asks for your desired storage option using a drop-down menu, calls the API, then displays an interactive table and graph of the data returned.
 
 + **Function 4: getRegionZipfile**
-       Calls the API and returns a set of netcdf files which can be accessed from a tool bar on the left side of the screen as pictured below
+       Calls the API and returns a set of netCDF files which can be accessed from a tool bar on the left side of the screen as pictured below.
 
-Visual guide on netCDF files
+Visual guide on netCDF files:
 
 .. image:: images-api/visualnetCDF.png
    :scale: 50%
  
  
 
-This Table elaborates on each of these files and their naming conventions:
+This table elaborates on each of these files and their naming conventions:
 
 
 .. list-table::
@@ -206,8 +209,8 @@ This Table elaborates on each of these files and their naming conventions:
      - GLADAS
      - 1.0 degrees
 
-*To learn more about how this is calculated please visit our algorithm page.
-This section will also help you create a dataframe, plot your data, and visualize your data on an animated map
+*To learn more about how this is calculated please visit our Computational Algorithm page.
+This section will also help you create a dataframe, plot your data, and visualize your data on an animated map.
 
 
 
