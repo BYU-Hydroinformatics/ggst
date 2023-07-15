@@ -74,9 +74,9 @@ Here is an illustration on Northern Africa and the Arabian Peninsula from 2002 -
 
 **Limitations**
 ---------------
-GRACE comes with limitations that users need to know and understand. The data are at a relatively small resolution-1 degree latitude by 1 degree longitude- representing a 100 x 100 km square approximately. At such a low resolution, basing decisions on a single cell comes with high and unknown uncertainties as GRACE data is at a coarser resolution -3 degrees latitude by 3 degrees longitude- which is then processed to higher resolutions TWSa data.
+GRACE comes with limitations that users need to know and understand. The data are at a relatively small resolution-1 degree latitude by 1 degree longitude- representing a 100 x 100 km square, approximately. At such a low resolution, basing decisions on a single cell comes with high and unknown uncertainties as GRACE data is at a coarser resolution -3 degrees latitude by 3 degrees longitude- which is then processed to higher resolutions TWSa data.
 
-Even with these limitations, these data provide valuable insights into aquifers such as regions that are depleting, recharging, hence allowing managers to sustainably use their groundwater resources. The best use of the GGST is to draw general trends in aquifers rather than selecting a placement of a well.
+Even with these limitations, these data provide valuable insights into aquifers such as regions that are depleting and recharging, hence allowing managers to sustainably use their groundwater resources. The best use of the GGST is to draw general trends in aquifers rather than selecting a placement of a well.
 
 It is also recommended that, whenever possible, these data be validated with local data. GGST displays the uncertainties in the data calculations as error bands on time series, providing context on regions and different time periods.
 
