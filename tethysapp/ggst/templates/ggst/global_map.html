@@ -33,7 +33,7 @@
 <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
         integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
         crossorigin=""></script>
-<script type="text/javascript" src="https://cdn.rawgit.com/nezasa/iso8601-js-period/master/iso8601.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/iso8601-js-period@0.2.1/iso8601.min.js"></script>
 <script type="text/javascript" src="https://cdn.rawgit.com/socib/Leaflet.TimeDimension/master/dist/leaflet.timedimension.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw-src.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js"></script>
@@ -61,7 +61,6 @@
     <a data-bs-toggle="modal" data-bs-target="#storage-modal"><i style="white-space:nowrap; float:left; margin-left:2%; color:blue; cursor:pointer;" id="info-storage-button" class="bi bi-info-circle-fill">_</i></a>
     {% gizmo storage_type_select %}
 </div>
-{% gizmo storage_type_select %}
 {% gizmo layer_select %}
 <label for="leg_min">Min:</label><input type="number" class="form-control input-sm" name="leg_min" id="leg_min" min="-5000" max="5000" step="1" value="-50">
 <label for="leg_max">Max:</label><input type="number" class="form-control input-sm" name="leg_max" id="leg_max" min="-5000" max="5000" step="1" value="50">

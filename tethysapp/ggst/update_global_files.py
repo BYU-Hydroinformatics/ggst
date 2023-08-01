@@ -144,6 +144,7 @@ def update_grace_url(url):
 
 
 def get_catalog_urls(catalog_name, catalog):
+    print(catalog_name, catalog)
     cur_ref = catalog.catalog_refs[catalog_name]
     cur_cat = cur_ref.follow()
     urls = [
@@ -188,6 +189,10 @@ def get_grace_urls(catalog):
     return urls
 
 
+def get_version_number(string):
+    return float(string.split('.')[-1])
+
+
 def download_gldas_catalog(gldas_url, output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -206,8 +211,8 @@ def download_gldas_catalog(gldas_url, output_dir):
     for element, group in iterator:
         # appending the group by converting it into a list
         cur_list = list(group)
-        cat_versions = [version.parse(i) for i in cur_list]
-        max_version = max(cat_versions)
+        print(cur_list)
+        max_version = max(cur_list, key=get_version_number)
         latest_versions.append(str(max_version))
     url_dict = {ver: get_catalog_urls(ver, catalog) for ver in latest_versions}
     output_paths = [

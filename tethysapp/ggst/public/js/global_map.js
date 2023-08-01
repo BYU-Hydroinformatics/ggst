@@ -315,7 +315,7 @@ var LIBRARY_OBJECT = (function() {
             layers: 'lwe_thickness',
             format: 'image/png',
             transparent: true,
-            styles: 'contour/'+style,
+            styles: 'contours',
             crs: L.CRS.EPSG4326,
             opacity: '1.0',
             colorscalerange: [range_min, range_max],
@@ -346,7 +346,7 @@ var LIBRARY_OBJECT = (function() {
             layers: 'lwe_thickness',
             format: 'image/png',
             transparent: true,
-            styles: 'boxfill/'+style,
+            styles: 'raster/'+style,
             crs: L.CRS.EPSG4326,
             opacity: opacity,
             colorscalerange: [range_min, range_max],
@@ -379,7 +379,7 @@ var LIBRARY_OBJECT = (function() {
 
 
         var src = wmsUrl + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=lwe_thickness"+
-            "&colorscalerange="+range_min+","+range_max+"&PALETTE="+style+"&transparent=TRUE";
+            "&colorscalerange="+range_min+","+range_max+"&STYLES=raster/"+style+"&transparent=FALSE&WIDTH=50&HEIGHT=300";
         // var src = wmsUrl + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=lwe_thickness&PALETTE=boxfill/"+style+"&transparent=TRUE";
         $("#legend-image").attr("src", src);
         map.timeDimension.setCurrentTime(layer_arr[1]);

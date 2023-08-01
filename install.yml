@@ -12,13 +12,8 @@ requirements:
     channels:
       - conda-forge
     packages:
-      - geopandas
-      - shapely
-      - xarray
       - rioxarray
-      - netCDF4
       - geopandas
-      - numpy=1.21
   pip:
       - area
       - utm
