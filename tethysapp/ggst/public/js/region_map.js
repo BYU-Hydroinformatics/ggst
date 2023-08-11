@@ -561,6 +561,7 @@ var LIBRARY_OBJECT = (function() {
 //                updateChart();
 //                 $loading.addClass('d-none');
                 $("#chart").removeClass('d-none');
+                $("#point-timeseries-modal").modal("show");
             }else{
                 // console.log(result);
                 console.log(result);

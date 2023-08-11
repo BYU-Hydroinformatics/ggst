@@ -70,8 +70,11 @@
 <div id="point-lat-lon"></div>
 <span style="white-space:nowrap; float:left;"><p style="font-size:14; color:black;"><b>Time Series Generator</b></p></span>
 <!--<span style="white-space:nowrap; float:left; margin-left:2%; color:blue; cursor:pointer;" id= info-button onclick=getInstructions() class="bi bi-info-circle-fill"></span>-->
-<br>
-
+<div class="drawdown">
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#point-timeseries-modal">
+        View Point Timeseries
+    </button>
+</div>
 <div id= "ts-instructions" class="time-series-instructions">
     <br><p>To generate a time series for a specific location, click on the <b>Marker Icon</b>
     <span id="marker-icon-style" class="bi bi-geo-alt-fill"></span>
@@ -85,8 +88,8 @@
 
 {% block app_content %}
 <div id="map" style="height: 60vh; width: 100%"></div>
-<div id="reg-chart" style="height: 40vh; width: 100%"></div>
-<div id="chart" style="height: 40vh; width: 100%"></div>
+<div id="reg-chart" style="height: 40vh; width: 100%; overflow: scroll;"></div>
+<!-- <div id="chart" style="height: 40vh; width: 100%; overflow: scroll;"></div> -->
 {% endblock %}
 
 {% block after_app_content %}
@@ -305,6 +308,24 @@
                 <p>Explain how Groundwater was derived</p>
                 <p>Link to shell script for reference</p>
 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Storage Type Info Modal -->
+<div class="modal fade" id="point-timeseries-modal" tabindex="-1" role="dialog" aria-labelledby="point-timeseries-modal">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="point-timeseries-modal">Point Timeseries</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="chart" style="height: 40vh; width: 100%"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
