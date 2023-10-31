@@ -30,7 +30,7 @@ To launch the code, please click on this button. The notebook will open in a new
 All four functions follow the same pattern as shown by the URL examples below. Each of the terms in brackets along with the parameters and values would be replaced by string values.
 
 .. raw:: html
-<span> https://tethys-staging.byu.edu/apps/[parent-app]/api/[MethodName]/?param1=value1&param2=value2&...paramN=valueN </span>
+https://tethys-staging.byu.edu/apps/[parent-app]/api/[MethodName]/?param1=value1&param2=value2&...paramN=valueN
 
 To test the API, the user will need a zip file of the region of interest. We have provided an example of files in the appropriate format. You may use your own zip files if you choose so.
 
