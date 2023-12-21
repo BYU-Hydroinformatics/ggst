@@ -92,6 +92,9 @@ def storage_options():
         ("Surface Water Storage (GLDAS)", "sw"),
         ("Soil Moisture Storage (GLDAS)", "sm"),
         ("Groundwater Storage (Calculated)", "gw"),
+        # ("Surface Water Storage (GLDAS NOAH .25)", "025sw"),
+        # ("Soil Moisture Storage (GLDAS NOAH .25)", "025sm"),
+        # ("Groundwater Storage (Calculated NOAH .25)", "025gw"),
     ]
     return options
 

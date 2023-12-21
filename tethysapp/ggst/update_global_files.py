@@ -326,8 +326,8 @@ def concatenate_gldas_files(grace_dir):
         if "NOAH10" in model_dir:
             gldas_concat_helper(grace_dir, model_dir, "noah", NOAH_VARIABLES)
             print(model_dir)
-        # if "NOAH025" in model_dir:
-        #     gldas_concat_helper(grace_dir, model_dir, "noah025", NOAH_VARIABLES)
+        if "NOAH025" in model_dir:
+            gldas_concat_helper(grace_dir, model_dir, "noah025", NOAH_VARIABLES)
     return True
 
 
@@ -515,7 +515,7 @@ def generate_gldas_global_files(grace_dir):
 def generate_global_grace_nc(grace_dir):
     print("Generate global grace nc")
     mascon_dir = os.path.join(grace_dir, "mascon")
-    grace_file = glob.glob(os.path.join(mascon_dir, "GRC*.nc"))[0]
+    grace_file = glob.glob(os.path.join(mascon_dir, "GRC*.nc4"))[0]
     scale_factors_file = os.path.join(mascon_dir, "scale_factors.nc")
     sf_ds = xr.open_dataset(scale_factors_file)
     sf_ds = sf_ds.assign({"lon": (((sf_ds.lon + 180) % 360) - 180)}).sortby("lon")
@@ -593,9 +593,59 @@ def generate_global_gw_nc(grace_dir):
     return True
 
 
+def generate_global_025gw_nc(grace_dir):
+    print("Global grace gw")
+    global_grace_file = os.path.join(grace_dir, "GRC_grace.nc")
+    grace_ds = xr.open_dataset(global_grace_file)
+    grace_ds.rio.set_spatial_dims(x_dim="lon", y_dim="lat", inplace=True)
+    grace_ds.rio.write_crs("epsg:4326", inplace=True)
+    grace_ds["lwe_thickness"] = grace_ds["lwe_thickness"].rio.write_crs("epsg:4326")
+    grace_ds["uncertainty"] = grace_ds["uncertainty"].rio.write_crs("epsg:4326")
+
+    new_width = int(grace_ds.rio.width / 0.5)
+    new_height = int(grace_ds.rio.height / 0.5)
+    ds_sampled = grace_ds.rio.reproject(
+        grace_ds.rio.crs,
+        shape=(new_height, new_width),
+        resampling=Resampling.average,
+    )
+    ds_sampled = ds_sampled.reindex(y=ds_sampled.y[::-1]).rename(
+        {"y": "lat", "x": "lon"}
+    )
+
+    resampled_ds = ds_sampled.sel(lat=slice(-59.5, 89.5))
+    monthly_mean = (
+        resampled_ds.resample(time="1M").mean().dropna("time", "all").drop(["WGS84"])
+    )
+    time_df = monthly_mean["time"].to_dataframe().reset_index(drop=True)
+    time_df["converted"] = time_df["time"].apply(
+        lambda x: x.to_pydatetime().replace(day=1, hour=0)
+    )
+    monthly_mean["time"] = time_df["converted"].values
+
+    tws_ds = xr.open_dataset(os.path.join(grace_dir, "GRC_025tws.nc"))
+    gw_da = monthly_mean.lwe_thickness - tws_ds.lwe_thickness
+
+    swe_ds = xr.open_dataset(os.path.join(grace_dir, "GRC_025swe.nc"))
+    canopy_ds = xr.open_dataset(os.path.join(grace_dir, "GRC_025canopy.nc"))
+    sm_ds = xr.open_dataset(os.path.join(grace_dir, "GRC_025sm.nc"))
+    gw_uncertainty_da = np.sqrt(
+        np.abs(
+            monthly_mean.uncertainty ** 2
+            - swe_ds.uncertainty ** 2
+            - canopy_ds.uncertainty ** 2
+            - sm_ds.uncertainty ** 2
+        )
+    )
+    gw_ds = xr.Dataset({"lwe_thickness": gw_da, "uncertainty": gw_uncertainty_da})
+    gw_ds.to_netcdf(os.path.join(grace_dir, "GRC_025gw.nc"))
+    return True
+
+
 def generate_grace_global_files(grace_dir):
     generate_global_grace_nc(grace_dir)
     generate_global_gw_nc(grace_dir)
+    # generate_global_025gw_nc(grace_dir)
     return True
 
 
@@ -630,20 +680,20 @@ def process_global_files(grace_dir, thredds_dir):
     start_time = time.time()
     gldas_dir = os.path.join(grace_dir, "gldas")
     mascon_dir = os.path.join(grace_dir, "mascon")
-    download_gldas_catalog(
-        "https://hydro1.gesdisc.eosdis.nasa.gov/opendap/GLDAS/catalog.xml", gldas_dir
-    )
-    download_grace_catalog(
-        "https://opendap.jpl.nasa.gov/opendap/hyrax/"
-        "allData/tellus/L3/mascon/RL06/JPL/v02/CRI/"
-        "netcdf/catalog.xml",
-        mascon_dir,
-    )
+    # download_gldas_catalog(
+    #     "https://hydro1.gesdisc.eosdis.nasa.gov/opendap/GLDAS/catalog.xml", gldas_dir
+    # )
+    # download_grace_catalog(
+    #     "https://opendap.jpl.nasa.gov/opendap/hyrax/"
+    #     "allData/tellus/L3/mascon/RL06/JPL/v02/CRI/"
+    #     "netcdf/catalog.xml",
+    #     mascon_dir,
+    # )
     #
-    concatenate_gldas_files(grace_dir)
-    generate_gldas_global_files(grace_dir)
+    # concatenate_gldas_files(grace_dir)
+    # generate_gldas_global_files(grace_dir)
     # generate_noah025_global_files(grace_dir)
-    generate_grace_global_files(grace_dir)
+    # generate_grace_global_files(grace_dir)
     grc_files = glob.glob(f"{grace_dir}GRC_*.nc")
     [shutil.copy(_file, thredds_dir) for _file in grc_files]
     [
