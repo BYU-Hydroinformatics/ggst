@@ -11,8 +11,6 @@ version = '0.1.0'
 
 # -- General configuration
 
-pip install sphinx-rtd-theme
-
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
