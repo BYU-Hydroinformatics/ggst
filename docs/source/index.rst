@@ -46,7 +46,7 @@ The advantages of the API are that you can retrieve data about a new region of i
     :hidden:
     :caption: TABLE OF CONTENTS
 
-    Home <self>
+    Introduction <self>
     algorithm
     uploading
     api
