@@ -11,6 +11,8 @@ version = '0.1.0'
 
 # -- General configuration
 
+pip install sphinx-rtd-theme
+
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
@@ -23,8 +25,6 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.extlinks',
 ]
-
-
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
