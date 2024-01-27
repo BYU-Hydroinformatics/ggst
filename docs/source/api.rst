@@ -3,9 +3,6 @@
    
 **Application Programming Interface (API)**
 =================================
-
-**Introduction**
-------------------------
 The API for the GGST allows users to retrieve ground water information about a point or region without having administrative privileges to the GGST web application.
 The GGST API has four functions. Each of these functions requires different inputs and returns different results as desired by the user. The name of each function gives a glimpse of what each accomplishes. The four functions are:
 
