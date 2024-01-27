@@ -3,6 +3,7 @@
 
 **Adding and Deleting Regions**
 ==============================
+This section describes how to upload new regions to the GGST app. When a new region uploaded, it is then automically processed and the storage components including subsetting netCDF files and storage time series are computed for the region and stored with the region for visualization in the app. The new region is added to the list of regions for the app and it can be selected and viewed. This section also describes how to delete regions and the association files. 
 
 **Uploading a Region**
 -----------------------
