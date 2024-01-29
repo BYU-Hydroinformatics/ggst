@@ -4,7 +4,7 @@
 
 project = 'GRACE Groundwater Subsetting Tool'
 copyright = '2024, Norman L. Jones'
-author = 'Norm Jones, Sarva Pulla, Gus Williams, Dan Ames, Travis McStraw, Sergio Barbosa, Jorge Sanchez'
+author = 'Norm Jones, Sarva Pulla'
 
 release = '2.0'
 version = '2.0.0'
