@@ -29,11 +29,12 @@ All four functions follow the same pattern as shown by the URL examples below. E
 .. raw:: html
 https://tethys-staging.byu.edu/apps/[parent-app]/api/[MethodName]/?param1=value1&param2=value2&...paramN=valueN
 
-To test the API, the user will need a zip file of the region of interest. We have provided an example of files in the appropriate format. You may use your own zip files if you choose so.
+To test the API, the user will need a zip file of the region of interest. We have provided a set of sample files in the appropriate format. You may use your own files if you choose so.
+
+:download:`API_Fileset.zip </test_files/API_Fileset.zip>`
 
 `Download API Test Files <https://github.com/BYU-Hydroinformatics/ggst/blob/main/docs/source/test_files/API_Fileset.zip>`_
 
-Note that you will need to click on the download symbol once the link above opens.
 Let's explore each one individually and offer an example:
 
 1. **The getStorageOptions**
