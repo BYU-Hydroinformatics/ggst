@@ -115,6 +115,9 @@ At this point, the file is ready to be used with the Colab notebook. The followi
 
 Here's a `sample file  <https://github.com/BYU-Hydroinformatics/ggst/blob/main/docs/source/wtf_files/base_file.csv>`_.
 
+Click here to download a sample file: 
+:download:`base_file.csv </wtf_files/base_file.csv>`
+
 **Data Processing Examples**
 ------------
 Once the gaps have been filled, the last step is to plot and analyze the curves one season at a time, extract the GWSa values from the curve, and calculate the recharge estimate using either method 1 or method 2.
