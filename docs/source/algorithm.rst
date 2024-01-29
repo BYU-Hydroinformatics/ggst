@@ -83,7 +83,7 @@ It is also recommended that, whenever possible, these data be validated with loc
 
 **Software Availability**
 ------------------------
-The GGST web application was created using Tethys Platform, developed in our hydroinformatics laboratory. It can be accessed on a Tethys portal hosted at Brigham Young University by browsing to this `link <https://tethys-staging.byu.edu/apps>`_ and selecting the Grace Groundwater Subsetting Tool application.
+The GGST web application was created using Tethys Platform, developed in our hydroinformatics laboratory. It can be accessed on a Tethys portal associated with the NOAA GeoGLOWS project by browsing to this `link <https://apps.geoglows.org/apps>`_ and selecting the Grace Groundwater Subsetting Tool application.
 
 
  
