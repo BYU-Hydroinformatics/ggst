@@ -116,6 +116,24 @@ At this point, the file is ready to be used with the Colab notebook. The followi
 Here is a sample file you can use with the script: 
 :download:`base_file.csv </wtf_files/base_file.csv>`
 
+**Multi-Linear Trend Analysis**
+--------------------------
+In the seasonal decomposition method described above for gap imputation, a single linear trend was described. Here is the trend resulting from the sample file linked above with a single trend line:
+
+.. image:: images-wtf/trend_1.png
+
+However, many data sets exhibit multiple linear trends. For this dataset, there are four distinct trends. The Python script has an option to perform a multi-linear regression analysis. For this dataset, we set the number_breakpoints variable to 3, and run a multi-linear regression algorithm that fits the data as follows:
+
+.. image:: images-wtf/trend_4_scatter.png
+
+Note that 3 interior breakpoints result in four linear trends. This option results in the following trends:
+
+.. image:: images-wtf/trend_4.png
+
+And finally, the gap imputation with 4 trend lines results in the following:
+
+.. image:: images-wtf/trend_4_results.png
+
 **Data Processing Examples**
 ------------
 Once the gaps have been filled, the last step is to plot and analyze the curves one season at a time, extract the GWSa values from the curve, and calculate the recharge estimate using either method 1 or method 2.
