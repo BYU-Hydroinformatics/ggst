@@ -122,7 +122,7 @@ Once the gaps have been filled, the last step is to plot and analyze the curves 
 
 .. image:: images-wtf/excel_example.png
 
-The following `Excel file illustrates how to examine and process each season of data from a GRACE-derived and imputed groundwater storage anomaly time series:
-:download:`base_file.csv </wtf_files/base_file.csv>`
+The following Excel file illustrates how to examine and process each season of data from a GRACE-derived and imputed groundwater storage anomaly time series:
+:download:`ghana_recharge.xlsx </wtf_files/ghana_recharge.xlsx>`
 
 
