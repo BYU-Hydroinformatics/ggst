@@ -1,3 +1,6 @@
+.. raw:: html
+   :file: translate.html
+
 **Overview**
 ===========
 The GGST app uses GRACE data to generate time series and animated maps of groundwater storage changes. GRACE provides monthly estimates of water storage anomalies in equivalent water height and has provided monthly gravity field solutions since April 2002. Estimates of mass variability and associated observational errors are available on a global 300 km grid. GRACE has proved an effective tool for characterizing groundwater storage changes in large regions (J. Famiglietti et al., 2011; J. S. Famiglietti, 2014; Rodell, Velicogna, & Famiglietti, 2009; Thomas, Reager, Famiglietti, & Rodell, 2014).
