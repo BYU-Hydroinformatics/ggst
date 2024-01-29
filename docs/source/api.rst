@@ -33,8 +33,6 @@ To test the API, the user will need a zip file of the region of interest. We hav
 
 :download:`API_Fileset.zip </test_files/API_Fileset.zip>`
 
-`Download API Test Files <https://github.com/BYU-Hydroinformatics/ggst/blob/main/docs/source/test_files/API_Fileset.zip>`_
-
 Let's explore each one individually and offer an example:
 
 1. **The getStorageOptions**
