@@ -3,11 +3,11 @@
 # -- Project information
 
 project = 'GRACE Groundwater Subsetting Tool'
-copyright = '2021, Norman L. Jones'
-author = 'Dr. Norm Jones and Research Assistants'
+copyright = '2024, Norman L. Jones'
+author = 'Norm Jones, Sarva Pulla, Gus Williams, Dan Ames, Travis McStraw, Sergio Barbosa, Jorge Sanchez'
 
-release = '0.1'
-version = '0.1.0'
+release = '2.0'
+version = '2.0.0'
 
 # -- General configuration
 
