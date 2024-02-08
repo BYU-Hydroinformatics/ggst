@@ -5,26 +5,23 @@ import math
 import os
 import os.path
 import shutil
+import subprocess
 import warnings
 from io import BytesIO
 from pathlib import Path
-from typing import Any
+from typing import Any, Union
 from zipfile import ZipFile
 
 import geopandas as gpd
 import numpy as np
 import pandas as pd
 import requests
-import subprocess
 import shapefile
 import utm
 import xarray
 from pyproj import CRS
-from shapely.geometry import mapping
-from shapely.geometry import shape
+from shapely.geometry import mapping, shape
 from tethys_sdk.gizmos import SelectInput
-from pathlib import Path
-
 
 from .app import Ggst as app
 
@@ -53,20 +50,22 @@ def get_catalog_url():
     return catalog_url
 
 
+def get_styles():
+    catalog_url = app.get_custom_setting("grace_thredds_catalog")
+    wms_url = catalog_url.replace("catalog.xml", "").replace("catalog", "wms")
+    metadata_url = os.path.join(wms_url, "GRC_grace.nc?request=GetMetadata&item=layerDetails&layerName=lwe_thickness")
+    layer_metadata = requests.get(metadata_url).json()
+    palettes = layer_metadata["palettes"]
+    return palettes
+
 def get_symbology_select():
+    styles = get_styles()
     select_signal_process = SelectInput(
         display_text="Select Style",
         name="select-symbology",
         multiple=False,
-        options=[
-            ("GRACE", "grace"),
-            ("Red-Blue", "bluered"),
-            ("Grey Scale", "greyscale"),
-            ("ALG2", "alg2"),
-            ("SST 36", "sst_36"),
-            ("Rainbow", "rainbow"),
-        ],
-        initial=["GRACE"],
+        options=[(style, style) for style in styles],
+        initial=["grace"],
     )
     return select_signal_process
 
@@ -93,9 +92,9 @@ def storage_options():
         ("Surface Water Storage (GLDAS)", "sw"),
         ("Soil Moisture Storage (GLDAS)", "sm"),
         ("Groundwater Storage (Calculated)", "gw"),
-        ("Surface Water Storage (GLDAS NOAH .25)", "025sw"),
-        ("Soil Moisture Storage (GLDAS NOAH .25)", "025sm"),
-        ("Groundwater Storage (Calculated NOAH .25)", "025gw"),
+        # ("Surface Water Storage (GLDAS NOAH .25)", "025sw"),
+        # ("Soil Moisture Storage (GLDAS NOAH .25)", "025sm"),
+        # ("Groundwater Storage (Calculated NOAH .25)", "025gw"),
     ]
     return options
 
@@ -157,7 +156,7 @@ def clip_nc(
     region_name: str,
     grace_dir: str,
     export: bool = True,
-) -> [str, xarray.Dataset]:
+) -> Union[str, xarray.Dataset]:
     # logger.info(f'Subset {nc_file} for {region_name}')
     ds = xarray.open_dataset(nc_file)
     # ds = ds.assign({"lon": (((ds.lon + 180) % 360) - 180)}).sortby('lon')
@@ -223,9 +222,7 @@ def subset_shape(gdf: gpd.GeoDataFrame, region_name: str) -> str:
     output_dir = os.path.join(grace_dir, region_name)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-    subset_paths = [
-        clip_nc(nc_file, gdf, region_name, grace_dir) for nc_file in nc_files_list
-    ]
+    [clip_nc(nc_file, gdf, region_name, grace_dir) for nc_file in nc_files_list]
     region_area = calculate_area(gdf)
     gdf.to_file(os.path.join(output_dir, "shape.geojson"), driver="GeoJSON")
     with open(os.path.join(output_dir, "area.json"), "w") as f:
@@ -258,7 +255,7 @@ def process_api_files(files_list):
 
 def process_shapefile(
     region_store: str, files_list: list, upload_type: str
-) -> [str, gpd.GeoDataFrame]:
+) -> Union[str, gpd.GeoDataFrame]:
     dbf, prj, shp, shx = None, None, None, None
     if upload_type == "interface":
         dbf, prj, shp, shx = process_interface_files(files_list)
@@ -470,7 +467,7 @@ def delete_region_dir(region_name):
 
 def get_geojson(region_name):
     grace_dir = os.path.join(app.get_custom_setting("grace_thredds_directory"), "")
-    geojson_file = os.path.join(grace_dir, region_name, f"shape.geojson")
+    geojson_file = os.path.join(grace_dir, region_name, f"{shape.geojson}")
     geojson_obj = gpd.read_file(geojson_file).to_json()
     return geojson_obj
 
@@ -604,7 +601,7 @@ def trigger_global_process():
     earthdata_username = app.get_custom_setting("earthdata_username")
     earthdata_pass = app.get_custom_setting("earthdata_pass")
     python_executable = app.get_custom_setting("conda_python_path")
-    run = subprocess.Popen(
+    subprocess.Popen(
         [
             python_executable,
             file_path,

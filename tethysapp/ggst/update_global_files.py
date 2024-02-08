@@ -17,6 +17,7 @@ import numpy as np
 import pandas as pd
 import requests
 import xarray as xr
+import dask
 from packaging import version
 from rasterio.enums import Resampling
 from shapely.geometry import mapping
@@ -26,9 +27,10 @@ from siphon.catalog import TDSCatalog
 
 warnings.simplefilter("ignore")
 
+logging.basicConfig(level=logging.NOTSET)
 logger = logging.getLogger("update_global_files")
-logger.setLevel(logging.DEBUG)
 
+GRACE_CMR_URL = "https://cmr.earthdata.nasa.gov/search/granules.json?echo_collection_id=C2536962485-POCLOUD&page_num=1&page_size=20"
 # CLSM variables of interest
 CLSM_VARIABLES = [
     "time",
@@ -144,6 +146,7 @@ def update_grace_url(url):
 
 
 def get_catalog_urls(catalog_name, catalog):
+    print(catalog_name, catalog)
     cur_ref = catalog.catalog_refs[catalog_name]
     cur_cat = cur_ref.follow()
     urls = [
@@ -188,6 +191,10 @@ def get_grace_urls(catalog):
     return urls
 
 
+def get_version_number(string):
+    return float(string.split(".")[-1])
+
+
 def download_gldas_catalog(gldas_url, output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -206,8 +213,8 @@ def download_gldas_catalog(gldas_url, output_dir):
     for element, group in iterator:
         # appending the group by converting it into a list
         cur_list = list(group)
-        cat_versions = [version.parse(i) for i in cur_list]
-        max_version = max(cat_versions)
+        print(cur_list)
+        max_version = max(cur_list, key=get_version_number)
         latest_versions.append(str(max_version))
     url_dict = {ver: get_catalog_urls(ver, catalog) for ver in latest_versions}
     output_paths = [
@@ -227,54 +234,103 @@ def download_catalog_url(final_url, output_path):
                 return True
 
 
+def get_grace_listing_response(listing_url=GRACE_CMR_URL):
+    listing_request = requests.get(listing_url)
+    listing_response = listing_request.json()
+    return listing_response
+
+
+def get_latest_grace_link(listing_url=GRACE_CMR_URL):
+    listing_response = get_grace_listing_response(listing_url)
+    download_links = []
+
+    for entry in listing_response["feed"]["entry"]:
+        for link in entry["links"]:
+            if link["rel"] == "http://esipfed.org/ns/fedsearch/1.1/data#":
+                if "GRCTellus" in link["href"]:
+                    download_links.append(link["href"])
+
+    most_recent_link = None
+    most_recent_date = datetime.min
+
+    for link in download_links:
+        # Extracting the date part from the file name
+        file_name = link.split("/")[-1]
+        parts = file_name.split(".")
+        date_part = parts[2]  # '200204_202310'
+        end_date_str = date_part.split("_")[1]  # Extracting the second part
+
+        # Convert the date string to datetime object
+        date_obj = datetime.strptime(end_date_str, "%Y%m")
+
+        # Compare with the most recent date found so far
+        if date_obj > most_recent_date:
+            most_recent_date = date_obj
+            most_recent_link = link
+    return most_recent_link
+
+
+def get_scale_factors_link(listing_url=GRACE_CMR_URL):
+    listing_response = get_grace_listing_response(listing_url)
+    download_links = []
+
+    for entry in listing_response["feed"]["entry"]:
+        for link in entry["links"]:
+            if link["rel"] == "http://esipfed.org/ns/fedsearch/1.1/data#":
+                if "SCALE" in link["href"]:
+                    download_links.append(link["href"])
+    output_link = download_links[0]
+    return output_link
+
+
+def download_grace_file(grace_url, output_dir):
+    print("Downloading GRACE")
+    latest_grace_link = get_latest_grace_link(grace_url)
+    file_list = glob.glob(os.path.join(output_dir, "*200204*"))
+    file_name = latest_grace_link.split("/")[-1]
+    end_date = re.search(r"200204_\d{6}", file_name).group(0).split("_")[1]
+    end_date_obj = datetime.strptime(end_date, "%Y%m")
+    output_path = os.path.join(output_dir, file_name)
+    if len(file_list) == 0:
+        print("downloading at empty")
+        download_catalog_url(latest_grace_link, output_path)
+    else:
+        for _file in file_list:
+            old_file = _file.split("/")[-1]
+            prev_end_date = re.search(r"200204_\d{6}", old_file).group(0).split("_")[1]
+            prev_end_date_obj = datetime.strptime(prev_end_date, "%Y%m")
+            if end_date_obj > prev_end_date_obj:
+                print("deleting the previous file")
+                if os.path.exists(_file):
+                    os.remove(_file)
+        download_catalog_url(latest_grace_link, output_path)
+    return True
+
+
+def download_grace_sf(output_dir, grace_url):
+    sf_output_file = "scale_factors.nc"
+    sf_output_path = os.path.join(output_dir, sf_output_file)
+    if not os.path.exists(sf_output_path):
+        link = get_scale_factors_link(grace_url)
+        download_catalog_url(link, sf_output_path)
+    return True
+
+
 def download_grace_catalog(grace_url, output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    grace_catalog = TDSCatalog(grace_url)
-
-    for name, ds in grace_catalog.datasets.items():
-        if "GRCTellus.JPL" in name and name.endswith("nc"):
-            file_url = ds.access_urls["dap"]
-            file_name = file_url.split("/")[-1]
-            end_date = re.search(r"200204_\d{6}", file_name).group(0).split("_")[1]
-            end_date_obj = datetime.strptime(end_date, "%Y%m")
-            print(end_date_obj)
-            file_list = glob.glob(os.path.join(output_dir, "*200204*"))
-            parts = urlparse(file_url)
-            updated_url = parts._replace(path="opendap/hyrax" + parts.path).geturl()
-            output_path = os.path.join(output_dir, file_name)
-            print(file_list)
-            if len(file_list) == 0:
-                print("downloading at empty")
-                download_catalog_url(updated_url, output_path)
-            else:
-                print("delete the  previous file")
-                old_file = file_list[0].split("/")[-1]
-                prev_end_date = (
-                    re.search(r"200204_\d{6}", old_file).group(0).split("_")[1]
-                )
-                prev_end_date_obj = datetime.strptime(prev_end_date, "%Y%m")
-                if end_date_obj > prev_end_date_obj:
-                    print("deleting the previous file")
-                    os.remove(file_list[0])
-                    download_catalog_url(updated_url, output_path)
-        if "SCALE_FACTOR" in name:
-            output_file = "scale_factors.nc"
-            output_path = os.path.join(output_dir, output_file)
-            if not os.path.exists(output_path):
-                file_url = ds.access_urls["dap"]
-                parts = urlparse(file_url)
-                updated_url = parts._replace(path="opendap/hyrax" + parts.path).geturl()
-                download_catalog_url(updated_url, output_path)
-
+    download_grace_file(grace_url, output_dir)
+    download_grace_sf(output_dir, grace_url)
     return True
 
 
 def gldas_concat_helper(grace_dir, model_dir, model_type, gldas_variables):
     gldas_dir = os.path.join(grace_dir, "gldas")
     nc_files_glob = os.path.join(gldas_dir, model_dir, "*.nc4")
-    list_of_files = glob.glob(os.path.join(gldas_dir, model_dir, "*"))
+
+    # Getting all files and sorting based on date in the filename
+    list_of_files = glob.glob(nc_files_glob)
     sorted_files = sorted(
         [
             (
@@ -283,46 +339,53 @@ def gldas_concat_helper(grace_dir, model_dir, model_type, gldas_variables):
                 ),
                 _file,
             )
-            for _file in list_of_files
+            for _file in list_of_files if re.search(r"\d{6}", _file)
         ]
     )
+
+    # Exit if no files found
+    if not sorted_files:
+        print("No files found to process.")
+        return False
+
     timesteps, final_files = map(list, zip(*sorted_files))
     gldas_output_file = os.path.join(grace_dir, f"{model_type}.nc")
-    if not os.path.exists(gldas_output_file):
-        gldas_ds = xr.open_mfdataset(nc_files_glob, parallel=False).drop_vars(
-            "time_bnds"
-        )[gldas_variables]
-        gldas_ds.to_netcdf(gldas_output_file)
+
+    # Using Dask for lazy loading and parallel processing
+    dask.config.set(scheduler='threads')  # Adjust this based on your system's capabilities
+
+    if os.path.exists(gldas_output_file):
+        with xr.open_dataset(gldas_output_file, chunks={"time": "auto"}) as existing_ds:
+            new_files = [f for f, t in zip(final_files, timesteps) if t > existing_ds.time.max().values]
+            if new_files:
+                with xr.open_mfdataset(new_files, parallel=True, chunks={"time": "auto"}) as additional_ds:
+                    additional_ds = additional_ds.drop_vars("time_bnds")[gldas_variables]
+                    final_ds = xr.concat([existing_ds, additional_ds], dim='time')
+                    final_ds.to_netcdf(gldas_output_file)
     else:
-        gldas_ds = xr.open_dataset(gldas_output_file)
-        concat_list = list(
-            np.array(final_files)[timesteps > gldas_ds.time.max().values]
-        )
-        if len(concat_list) > 0:
-            gldas_vic_concat = xr.open_mfdataset(concat_list, parallel=True).drop_vars(
-                "time_bnds"
-            )[gldas_variables]
-            final_ds = xr.concat([gldas_ds, gldas_vic_concat], "time")
-            os.remove(gldas_output_file)
-            final_ds.to_netcdf(gldas_output_file)
+        with xr.open_mfdataset(final_files, parallel=True, chunks={"time": "auto"}) as gldas_ds:
+            gldas_ds = gldas_ds.drop_vars("time_bnds")[gldas_variables]
+            gldas_ds.to_netcdf(gldas_output_file)
 
     return True
+
 
 
 def concatenate_gldas_files(grace_dir):
     gldas_dir = os.path.join(grace_dir, "gldas")
     for model_dir in os.listdir(gldas_dir):
         if "VIC" in model_dir:
+            print(model_dir)
             gldas_concat_helper(grace_dir, model_dir, "vic", VIC_VARIABLES)
-            print(model_dir)
         if "CLSM" in model_dir:
+            print(model_dir)
             gldas_concat_helper(grace_dir, model_dir, "clsm", CLSM_VARIABLES)
-            print(model_dir)
         if "NOAH10" in model_dir:
-            gldas_concat_helper(grace_dir, model_dir, "noah", NOAH_VARIABLES)
             print(model_dir)
-        # if "NOAH025" in model_dir:
-        #     gldas_concat_helper(grace_dir, model_dir, "noah025", NOAH_VARIABLES)
+            gldas_concat_helper(grace_dir, model_dir, "noah", NOAH_VARIABLES)
+        if "NOAH025" in model_dir:
+            print(model_dir)
+            gldas_concat_helper(grace_dir, model_dir, "noah025", NOAH_VARIABLES)
     return True
 
 
@@ -357,35 +420,39 @@ def calculate_gldas_anomalies(ds, surface_area_da):
     return ds
 
 
-def generate_noah025_global_files(grace_dir):
-    def aggregate_noah025_anomalies(noah_variables, variable_name="lwe_thickness"):
-        noah_ds = (
-            gldas_noah_anomalies[noah_variables]
-            .to_array()
-            .sum("variable")
-            .to_dataset(name=variable_name)
-        )
-        # create a new dataset with all the model tws mean values
-        # returns a single value at each time step
-        model_ds = xr.Dataset(
-            {
-                "noah": noah_ds[variable_name],
-            }
-        )
-        # create a final netcdf array with the mean and std values
-        final_ds = xr.Dataset(
-            {
-                "lwe_thickness": model_ds.to_array().mean("variable"),
-                "uncertainty": model_ds.to_array().std("variable"),
-            }
-        )
-        return final_ds
+def aggregate_noah025_anomalies(
+    gldas_noah_anomalies, noah_variables, variable_name="lwe_thickness"
+):
+    noah_ds = (
+        gldas_noah_anomalies[noah_variables]
+        .to_array()
+        .sum("variable")
+        .to_dataset(name=variable_name)
+    )
+    # create a new dataset with all the model tws mean values
+    # returns a single value at each time step
+    model_ds = xr.Dataset(
+        {
+            "noah": noah_ds[variable_name],
+        }
+    )
+    # create a final netcdf array with the mean and std values
+    final_ds = xr.Dataset(
+        {
+            "lwe_thickness": model_ds.to_array().mean("variable"),
+            "uncertainty": model_ds.to_array().std("variable"),
+        }
+    )
+    return final_ds
 
+
+def generate_noah025_global_files(grace_dir):
+    """
+    Generate global NOAH 025 files.
+    """
     gldas_noah_ds = xr.open_dataset(
         os.path.join(grace_dir, "noah025.nc"), chunks="auto"
     )
-    print(type(gldas_noah_ds))
-    # GLDAS Grid Cell Area
     areas = calculate_surface_area(gldas_noah_ds)
 
     surface_area_da = (
@@ -394,23 +461,22 @@ def generate_noah025_global_files(grace_dir):
         .assign_coords(lon=gldas_noah_ds.lon)
         .transpose("lat", "lon")
     )
+
     gldas_noah_anomalies = calculate_gldas_anomalies(gldas_noah_ds, surface_area_da)
-    print("GLOBAL 025SW")
-    final_sw_ds = aggregate_noah025_anomalies(NOAH_SW_VARIABLES)
-    print(type(final_sw_ds))
-    final_sw_ds.load().to_netcdf(os.path.join(grace_dir, "GRC_025sw.nc"))
-    print("GLOBAL 025SM")
-    final_sm_ds = aggregate_noah025_anomalies(NOAH_SM_VARIABLES)
-    final_sm_ds.to_netcdf(os.path.join(grace_dir, "GRC_025sm.nc"))
-    print("GLOBAL 025SWE")
-    final_swe_ds = aggregate_noah025_anomalies(NOAH_SWE_VARIABLES)
-    final_swe_ds.to_netcdf(os.path.join(grace_dir, "GRC_025swe.nc"))
-    print("GLOBAL 025CANOPY")
-    final_canopy_ds = aggregate_noah025_anomalies(NOAH_CANOPY_VARIABLES)
-    final_canopy_ds.to_netcdf(os.path.join(grace_dir, "GRC_025canopy.nc"))
-    print("GLOBAL 025TWS")
-    final_tws_ds = aggregate_noah025_anomalies(NOAH_TWS_VARIABLES)
-    final_tws_ds.to_netcdf(os.path.join(grace_dir, "GRC_025tws.nc"))
+
+    for variable_type, variables in [
+        ("SW", NOAH_SW_VARIABLES),
+        ("SM", NOAH_SM_VARIABLES),
+        ("SWE", NOAH_SWE_VARIABLES),
+        ("CANOPY", NOAH_CANOPY_VARIABLES),
+        ("TWS", NOAH_TWS_VARIABLES)
+    ]:
+        print(f"GLOBAL 025{variable_type}")
+        final_ds = aggregate_noah025_anomalies(gldas_noah_anomalies, variables)
+        final_ds.load().to_netcdf(
+            os.path.join(grace_dir, f"GRC_025{variable_type.lower()}.nc")
+        )
+
     print("Done generating global NOAH 025 files")
     return None
 
@@ -577,10 +643,10 @@ def generate_global_gw_nc(grace_dir):
     sm_ds = xr.open_dataset(os.path.join(grace_dir, "GRC_sm.nc"))
     gw_uncertainty_da = np.sqrt(
         np.abs(
-            monthly_mean.uncertainty ** 2
-            - swe_ds.uncertainty ** 2
-            - canopy_ds.uncertainty ** 2
-            - sm_ds.uncertainty ** 2
+            monthly_mean.uncertainty**2
+            - swe_ds.uncertainty**2
+            - canopy_ds.uncertainty**2
+            - sm_ds.uncertainty**2
         )
     )
     gw_ds = xr.Dataset({"lwe_thickness": gw_da, "uncertainty": gw_uncertainty_da})
@@ -588,9 +654,59 @@ def generate_global_gw_nc(grace_dir):
     return True
 
 
+def generate_global_025gw_nc(grace_dir):
+    print("Global grace gw")
+    global_grace_file = os.path.join(grace_dir, "GRC_grace.nc")
+    grace_ds = xr.open_dataset(global_grace_file)
+    grace_ds.rio.set_spatial_dims(x_dim="lon", y_dim="lat", inplace=True)
+    grace_ds.rio.write_crs("epsg:4326", inplace=True)
+    grace_ds["lwe_thickness"] = grace_ds["lwe_thickness"].rio.write_crs("epsg:4326")
+    grace_ds["uncertainty"] = grace_ds["uncertainty"].rio.write_crs("epsg:4326")
+
+    new_width = int(grace_ds.rio.width / 0.5)
+    new_height = int(grace_ds.rio.height / 0.5)
+    ds_sampled = grace_ds.rio.reproject(
+        grace_ds.rio.crs,
+        shape=(new_height, new_width),
+        resampling=Resampling.average,
+    )
+    ds_sampled = ds_sampled.reindex(y=ds_sampled.y[::-1]).rename(
+        {"y": "lat", "x": "lon"}
+    )
+
+    resampled_ds = ds_sampled.sel(lat=slice(-59.5, 89.5))
+    monthly_mean = (
+        resampled_ds.resample(time="1M").mean().dropna("time", "all").drop(["WGS84"])
+    )
+    time_df = monthly_mean["time"].to_dataframe().reset_index(drop=True)
+    time_df["converted"] = time_df["time"].apply(
+        lambda x: x.to_pydatetime().replace(day=1, hour=0)
+    )
+    monthly_mean["time"] = time_df["converted"].values
+
+    tws_ds = xr.open_dataset(os.path.join(grace_dir, "GRC_025tws.nc"))
+    gw_da = monthly_mean.lwe_thickness - tws_ds.lwe_thickness
+
+    swe_ds = xr.open_dataset(os.path.join(grace_dir, "GRC_025swe.nc"))
+    canopy_ds = xr.open_dataset(os.path.join(grace_dir, "GRC_025canopy.nc"))
+    sm_ds = xr.open_dataset(os.path.join(grace_dir, "GRC_025sm.nc"))
+    gw_uncertainty_da = np.sqrt(
+        np.abs(
+            monthly_mean.uncertainty**2
+            - swe_ds.uncertainty**2
+            - canopy_ds.uncertainty**2
+            - sm_ds.uncertainty**2
+        )
+    )
+    gw_ds = xr.Dataset({"lwe_thickness": gw_da, "uncertainty": gw_uncertainty_da})
+    gw_ds.to_netcdf(os.path.join(grace_dir, "GRC_025gw.nc"))
+    return True
+
+
 def generate_grace_global_files(grace_dir):
     generate_global_grace_nc(grace_dir)
     generate_global_gw_nc(grace_dir)
+    # generate_global_025gw_nc(grace_dir)
     return True
 
 
@@ -629,12 +745,10 @@ def process_global_files(grace_dir, thredds_dir):
         "https://hydro1.gesdisc.eosdis.nasa.gov/opendap/GLDAS/catalog.xml", gldas_dir
     )
     download_grace_catalog(
-        "https://opendap.jpl.nasa.gov/opendap/hyrax/"
-        "allData/tellus/L3/mascon/RL06/JPL/v02/CRI/"
-        "netcdf/catalog.xml",
+        GRACE_CMR_URL,
         mascon_dir,
     )
-    #
+    # #
     concatenate_gldas_files(grace_dir)
     generate_gldas_global_files(grace_dir)
     # generate_noah025_global_files(grace_dir)

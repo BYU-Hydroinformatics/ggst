@@ -18,7 +18,8 @@ from tethys_sdk.testing import TethysTestCase
 To run any tests:
     1. Open a terminal
     2. Enter command ". /usr/lib/tethys/bin/activate" to activate the Tethys python environment
-    3. In portal_config.yml make sure that the default database user is set to tethys_super or is a super user of the database
+    3. In portal_config.yml make sure that the default database user is set to tethys_super or is a super user of the
+    database
         DATABASES:
             default:
                 ENGINE: django.db.backends.postgresql_psycopg2
@@ -29,7 +30,8 @@ To run any tests:
                 PORT: 5435
 
     4. Enter tethys test command.
-       The general form is: "tethys test -f tethys_apps.tethysapp.<app_name>.<folder_name>.<file_name>.<class_name>.<function_name>"
+       The general form is: "tethys test -f tethys_apps.tethysapp.<app_name>.<folder_name>.<file_name>.<class_name>.
+       <function_name>"
        See below for specific examples
 
         To run all tests across this app:
@@ -42,7 +44,8 @@ To run any tests:
             Test command: "tethys test -f tethys_apps.tethysapp.ggst.tests.tests.GgstTestCase"
 
         To run only the test_if_tethys_platform_is_great function in the GgstTestCase class:
-            Test command: "tethys test -f tethys_apps.tethysapp.ggst.tests.tests.GgstTestCase.test_if_tethys_platform_is_great"
+            Test command: "tethys test -f tethys_apps.tethysapp.ggst.tests.tests.GgstTestCase.
+            test_if_tethys_platform_is_great"
 
 To learn more about writing tests, see:
     https://docs.djangoproject.com/en/1.9/topics/testing/overview/#writing-tests

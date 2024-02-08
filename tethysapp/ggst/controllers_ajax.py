@@ -2,6 +2,7 @@ import json
 
 from django.contrib.auth.decorators import user_passes_test
 from django.http import JsonResponse, HttpResponseRedirect
+from tethys_sdk.routing import controller
 
 from .utils import (
     delete_region_dir,
@@ -18,6 +19,7 @@ from .utils import (
 
 
 @user_passes_test(user_permission_test)
+@controller(name='add-region-submit', url='ggst/add-region/submit')
 def region_add(request):
 
     if request.is_ajax() and request.method == "POST":
@@ -35,6 +37,7 @@ def region_add(request):
 
 
 @user_passes_test(user_permission_test)
+@controller(name='submit-delete-region', url='ggst/delete-region/delete')
 def region_delete(request):
 
     if request.is_ajax() and request.method == "POST":
@@ -53,13 +56,15 @@ def region_delete(request):
 
 
 @user_passes_test(user_permission_test)
+@controller(name='update-global-files-trigger', url='ggst/update-global-files/update')
 def global_files_update(request):
     if request.is_ajax() and request.method == "POST":
         trigger_global_process()
         return HttpResponseRedirect("../")
 
 
-def get_time_step_options(request):
+@controller(name='map_time_step', url='ggst/{map_type}/timestep')
+def get_time_step_options(request, map_type):
     if request.is_ajax() and request.method == "POST":
         try:
             return_obj = {}
@@ -73,6 +78,7 @@ def get_time_step_options(request):
             return JsonResponse({"error": str(e)})
 
 
+@controller(name='global-map-ts', url='ggst/global-map/get-plot-global')
 def get_global_plot(request):
 
     if request.is_ajax() and request.method == "POST":
@@ -95,6 +101,7 @@ def get_global_plot(request):
             return JsonResponse({"error": str(e)})
 
 
+@controller(name='region-map-plot', url='ggst/region-map/get-plot-region')
 def get_region_plot(request):
 
     if request.is_ajax() and request.method == "POST":
@@ -120,6 +127,7 @@ def get_region_plot(request):
             return JsonResponse({"error": f"Error processing request: {e}"})
 
 
+@controller(name='regional_time_series', url='ggst/region-map/get-region-summary')
 def get_region_chart(request):
     if request.is_ajax() and request.method == "POST":
         try:
@@ -140,6 +148,7 @@ def get_region_chart(request):
             return JsonResponse({"error": f"Error processing request: {e}"})
 
 
+@controller(name='region-map-center', url='ggst/region-map/map-center')
 def get_region_center(request):
     if request.is_ajax() and request.method == "POST":
         try:
@@ -158,6 +167,7 @@ def get_region_center(request):
             return JsonResponse({"error": str(e)})
 
 
+@controller(name='region-map-range', url='ggst/region-map/range')
 def get_legend_range(request):
     if request.is_ajax() and request.method == "POST":
         try:
@@ -174,6 +184,7 @@ def get_legend_range(request):
             return JsonResponse({"error": str(e)})
 
 
+@controller(name='region_geojson', url='ggst/region-map/geojson')
 def get_region_geojson(request):
     if request.is_ajax() and request.method == "POST":
         try:
