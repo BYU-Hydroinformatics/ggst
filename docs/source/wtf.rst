@@ -114,7 +114,7 @@ Furthermore, the code will automatically detect small gaps, but the large gap fr
 At this point, the file is ready to be used with the Colab notebook. The following file is an example of a file prepared in the manner described above:
 
 Here is a sample file you can use with the script: 
-:download:`base_file.csv </wtf_files/base_file.csv>`
+:download:`west-gwsa-raw-clean.csv </wtf_files/west-gwsa-raw-clean.csv>`
 
 **Multi-Linear Trend Analysis**
 --------------------------
