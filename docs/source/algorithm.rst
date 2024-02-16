@@ -19,7 +19,7 @@ This process uses four sets of data:
 * The GLDAS snow water equivalent (SWE) and
 * The GLDAS soil moisture (SM)
 
-To compute the groundwater storage anomaly (GWa), we use three components of the GLDAS models: CAN,SWE, and SM. We convert each GLDAS component to an anomaly format by subtracting the mean centered on values from 2004 to 2009 and then average across the three GLDAS models to produce a component anomaly dataset: CANa, SWEa and SMa. We use the standard deviation from the three GLDAS models to help estimate uncertainty. 
+To compute the groundwater storage anomaly (GWa), we use three components of the GLDAS models: CAN, SWE, and SM. We convert each GLDAS component to an anomaly format by subtracting the mean centered on values from 2004 to 2009 and then average across the three GLDAS models to produce a component anomaly dataset: CANa, SWEa and SMa. We use the standard deviation from the three GLDAS models to help estimate uncertainty. 
 
 We download GLDAS files, format them as netCDFs and store them locally. Normally the data is grids with a 1 degree latitude by 1 degree longitude resolution; which we then convert to a 0.5-degree resolution. This conversion is performed by an area-weighted average of the four GRACE grid cells coincident with each GLDAS grid cell.
 
@@ -79,7 +79,7 @@ It is also recommended that, whenever possible, these data be validated with loc
 
 **Software Availability**
 ------------------------
-The GGST web application was created using Tethys Platform, developed in our hydroinformatics laboratory. It can be accessed on a Tethys portal associated with the NOAA GeoGLOWS project by browsing to this `link <https://apps.geoglows.org/apps>`_ and selecting the Grace Groundwater Subsetting Tool application.
+The GGST web application was created using Tethys Platform, developed in the BYU Hydroinformatics Laboratory. It can be accessed on a Tethys portal associated with the NOAA GeoGLOWS project by browsing to this `link <https://apps.geoglows.org/apps>`_ and selecting the Grace Groundwater Subsetting Tool application.
 
 
  
