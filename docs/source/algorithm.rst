@@ -5,18 +5,14 @@
 =======================
 The GRACE Groundwater Subsetting Tool Web Application relies on the Earth Observation data collected by NASA through satellites which map the gravitational field of the Earth. Changes in gravity are driven by changes in water storage, offering a rare opportunity to monitor groundwater level through satellites coupled with estimated surface water.
 
-Collecting data using these satellites began in March 2012. They are launched into orbit, trailing each other; approximately 137 miles apart. When these satellites are over locations with higher mass concentrations, there is a larger gravitational pull on the lead satellite, pulling it lower than the second satellite, which will also receive a larger pull when it is directly over the same area. These movements- ups and downs- change the distance between the two spacecraft. 
-
-To accurately measure the distance between the two satellites, each is equipped with a k-band microwave whose accuracy is within 10 microns. This has an advantage of quantifying the gravitational anomalies at the locations where the satellites were pulled- this results in a gravitational anomaly map. 
-
-These anomalies are primarily caused by the change in water storage. This raw data is then recorded and processed to monitor changes in water resources with near complete spatial coverage. Hydrologists can also use this data to predict trends in underground water, albeit there are limitations due to resolution of data and uncertainty.
+The GRACE mission was launched in March 2002. It consists of a pair of satellites that are 400km above the Earth and are separated by 200km. As the satellites pass over different regions of the Earch, the front and rear satellites are pulled slightly forward and backward in response to subtle changes in the the Earth's graviatational field caused by changes in surficial mass. This causes the distance between the satellites to vary and the changes are recorded by a k-band microwave whose accuracy is within 10 microns. The satellites follow a varying path that covers the entire Earth about once per month. This data is then processed by NASA to produce a map of the Earth's gravitational field. Each month a new map is generated and the differences are calculated to produce a gravity anomolay map. The changes in mass are assumed to be primarily caused by the change in water storage. Each month NASA generates a gridded map of total water storage anomaly at 3-degree resolution. This map is then down-scaled using a mass conservation algorithm to 0.5-degree resolution and made available for download in netCDF grid format. 
 
 
 **Derivation of Groundwater Dataset**
 ---------------------------------
-The groundwater component of the GRACE raw data can be separated using a mass balance approach, with NASA’s Global Land Data Assimilation System (GLDAS) models to compute the surface water component of the data. To compute total surface water storage, researchers sum the components of the GLDAS models that represent surface water storage and then they subtract this total from the GRACE  dataset to estimate a groundwater storage anomaly dataset. The latter has a nominal resolution of 3 degrees latitude by 3 degrees longitude, which is rescaled down to 0.5 degree using scaling factors by redistributing mass changes from the 3 degrees to 0.5 degree.
+The groundwater component of the GRACE raw data can be separated using a mass balance approach, with NASA’s Global Land Data Assimilation System (GLDAS) models to compute the surface water component of the data. To compute total surface water storage, we sum the components of the GLDAS models that represent surface water storage and then they subtract this total from the GRACE  dataset to estimate a groundwater storage anomaly dataset. 
 
-This application uses four sets of data:
+This process uses four sets of data:
 
 * The GRACE TWSa dataset
 * The GLDAS canopy storage dataset (CAN)
