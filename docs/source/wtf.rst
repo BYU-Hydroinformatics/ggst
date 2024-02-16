@@ -53,9 +53,9 @@ The storage units are liquid water equivalent in cm, as expected, but the date u
 
 .. image:: images-wtf/fixing_the_date.png
 
-**Downloading the Water Level Time Series from the API Google Colab Notebook**
+**Downloading the Water Level Time Series from the API Google Colaboratory Notebook**
 ------------------------------------------------------------------------------
-You can also download the time series directly from the sample Colab API Python script. After uploading a region shapefile and then generating and plotting the storage anomaly time series, run the line of code to export the Python Pandas data frame containing the time series to a CSV file.
+You can also download the time series directly from the sample Colaboratory API Python script. After uploading a region shapefile and then generating and plotting the storage anomaly time series, run the line of code to export the Python Pandas data frame containing the time series to a CSV file.
 
 .. image:: images-wtf/reg_ts_code.png
 
