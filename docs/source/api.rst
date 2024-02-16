@@ -3,7 +3,7 @@
    
 **Application Programming Interface (API)**
 =================================
-The API for the GGST allows users to retrieve ground water information about a point or region without having administrative privileges to the GGST web application.
+The Python API for the GGST allows users to retrieve ground water information about a point or region without having administrative privileges to the GGST web application.
 The GGST API has four functions. Each of these functions requires different inputs and returns different results as desired by the user. The name of each function gives a glimpse of what each accomplishes. The four functions are:
 
 * getStorageOptions
@@ -14,7 +14,7 @@ The GGST API has four functions. Each of these functions requires different inpu
 To run some of the functions listed above, the user will need an authentication token. Please refer to the third section of this documentation on how to obtain the said token.
 The API can be implemented in many ways using a variety of coding languages and platforms. We have provided an example implementation using the Python code language in a Google Colab notebook. Our example notebook is hosted on GitHub and can be access through the link shown below. If you choose to use Python to call the API, we recommend the xarray and geopandas Python packages be used to process your data. The former helps in visualizing and interacting with the raw netCDF data returned while the latter helps in uploading the shapefile(s) for the subsetting.
 
-To launch the code, please click on this button. The notebook will open in a new tab.
+Before we use the API in the Google Colaboratory notebook, let us explore each of the four GGST API methods in the following section
 
 .. raw:: html
 
@@ -24,7 +24,7 @@ To launch the code, please click on this button. The notebook will open in a new
     
 **API Methods**
 -------
-All four functions follow the same pattern as shown by the URL examples below. Each of the terms in brackets along with the parameters and values would be replaced by string values.
+All four GGST functions follow the same pattern as shown by the URL examples below. Each of the terms in brackets along with the parameters and values would be replaced by string values.
 
 .. raw:: html
 https://tethys-staging.byu.edu/apps/[parent-app]/api/[MethodName]/?param1=value1&param2=value2&...paramN=valueN
@@ -33,18 +33,18 @@ To test the API, the user will need a zip file of the region of interest. We hav
 
 :download:`API_Fileset.zip </test_files/API_Fileset.zip>`
 
-Let's explore each one individually and offer an example:
+Let's explore each API method individually and offer an example:
 
 1. **The getStorageOptions**
 
 +------------------------+-----------------------------------------------------------+            
-| **Parent application** | GGST                                                      |
+| **Parent Application** | GGST                                                      |
 +------------------------+-----------------------------------------------------------+
 | **Supported Methods**  | GET                                                       |
 +------------------------+-----------------------------------------------------------+
 |**Returns**             | A JSON object with a list of storage options              |
 +------------------------+-----------------------------------------------------------+
-| **Parameters(Params)** | There are no parameters for the getStorageOptions function|
+| **Parameters**     | There are no parameters for the getStorageOptions function|
 +------------------------+-----------------------------------------------------------+
 
 Follow this link to inspect the JSON returned which lists the list of the storage options available. https://tethys-staging.byu.edu/apps/ggst/api/getStorageOptions/. For simplicity, the options are given a variable name. For instance, the "Total Water Storage (GRACE)" has a variable name of "grace", and similarly the "Soil Moisture Storage (GLDAS)" is shortened to "sm".
@@ -52,13 +52,13 @@ Follow this link to inspect the JSON returned which lists the list of the storag
 2. **The getPointValues**
 
 +------------------------+----------------------------------------------------------------------------------------------------------------------------------------+            
-| **Parent application** | GGST                                                                                                                                   |
+| **Parent Application** | GGST                                                                                                                                   |
 +------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 | **Supported Methods**  | GET                                                                                                                                    |
 +------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 |**Returns**             | A JSON object with a timeseries for a given point                                                                                      |
 +------------------------+-------------+--------------------------+--------------------------------------------------------------------------------+--------------+
-| **Parameters(Params)** | **Name**    | **Description**          | **Valid Value**                                                                | **Required** |
+| **Parameters**         | **Name**    | **Description**          | **Valid Value**                                                                | **Required** |
 +                        +-------------+--------------------------+--------------------------------------------------------------------------------+--------------+                        
 |                        | Longitude   | long in WGS 84 Proj      | Any value on land with the GRACE Explorer Doman (-60,180)                      | Yes          |
 +                        +-------------+--------------------------+--------------------------------------------------------------------------------+--------------+
@@ -75,13 +75,13 @@ For the last two functions, the user will need to have an authentication token a
 3. The getRegionTimeseries
 
 +------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+           
-| **Parent application** | GGST                                                                                                                                                                                          |
+| **Parent Application** | GGST                                                                                                                                                                                          |
 +------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | **Supported Methods**  | POST                                                                                                                                                                                          |
 +------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 |**Returns**             | A JSON object with area of the region, depletion time series, error range timeseries and storage time series                                                                                  |
 +------------------------+------------------------+---------------------------------------------------------------------+---------------------------------------------------------------------------------+--------------+
-| **Parameters(Params)** | **Name**               | **Description**                                                     | **Valid Value**                                                                 | **Required** |
+| **Parameters** | **Name**               | **Description**                                                     | **Valid Value**                                                                 | **Required** |
 +                        +------------------------+---------------------------------------------------------------------+---------------------------------------------------------------------------------+--------------+                        
 |                        | Region name            | Name for the subset region. All files will have this name as prefix | String                                                                          | Yes          |
 +                        +------------------------+--------------------------+------------------------------------------+---------------------------------------------------------------------------------+--------------+
@@ -119,7 +119,7 @@ Result will be a folder with nc files.
 
 **Obtaining an Authentication Token**
 ---------------------------------------
-The last two functions of the API require an authentication token. To obtain one, you will need to sign up for an account on `BYU Tethys Portal <https://tethys-staging.byu.edu/apps/>`_. Click on the Log In button to get to the sign up prompt.
+The last two functions of the API require an authentication token. To obtain one, you will need to sign up for an account on `BYU Tethys Portal <https://tethys-staging.byu.edu/apps/>`_. Click on the Log In button to get to the sign-up prompt.
 
 Once signed in, click on your username in the upper right corner, opening a panel. Click on the User Settings to reveal the API key.
 
@@ -135,15 +135,17 @@ For privacy reasons, we have hidden the remaining characters of this user's toke
 
 It is also possible to request an authentication token directly from an administrator. We recommend using the sign up method as it is faster.
 
-**GGST API Google Colab Notebook**
+**GGST API Google Colaboratory Notebook**
 ----------------------------------
-We have provided an example of calling the GGST API using the Python coding language in a Google Colab Notebook. Run each cell of the notebook by hitting the play button on the left side and provide the necessary inputs by following the prompts. The notebook runs through all four of the API functions we described above. In order to run some of the functions in this notebook, the user will have to sign up for a Tethys account and obtain an authentication token (API key) as explained in the previous sections.
+We have provided an example of calling the GGST API using the Python coding language in a Google Colab Notebook. You can open the notebook at this link: https://colab.research.google.com/github/BYU-Hydroinformatics/ggst-notebooks/blob/main/ggst_api.ipynb. Be sure to make a copy of it in your own Google Drive.
+
+Run each cell of the notebook by hitting the play button on the left side of each cell and provide the necessary inputs by following the prompts. The notebook runs through all four of the API functions we described above. To run some of the functions in this notebook, the user will have to sign up for a Tethys account and obtain an authentication token (API key) as explained in the previous sections.
 
 The code is divided into six sections designed to help the user understand how to call each of the four functions and how to plot and visualize them.
 
 + **Install Packages and Select your Tethys Portal**:
       In this section, dependencies and other python packages are installed and set up for the processing of the shapefile and rendering of the graph in latter cells.
-      The dropdown menu lists all the available portals. A portal is a web hosting platform that executes the commands and returns the results as requested by the user. For this API, three portals are available: the tethys staging, tethys main and the tethys West Africa. The first two are           maintained by the Brigham Young University Hydroinformatics Laboratory and the last by the SERVIR program in West Africa. The tethys staging portal       is the testing ground for web applications developed by the BYU Hydroinformatics Laboratory before committing them to the two main portals.
+      The dropdown menu lists all the available portals. A portal is a web hosting platform that executes the commands and returns the results as requested by the user. For this API, three portals are available: the Tethys staging, Tethys main and the tethys West Africa. The first two are maintained by the Brigham Young University Hydroinformatics Laboratory and the last by the SERVIR program in West Africa. The Tethys staging portal is the testing ground for web applications developed by the BYU Hydroinformatics Laboratory before committing them to the two main portals.
 
 + **Function 1: getStorageOptions**
        This cell lists all the available options and how to properly declare them in the appropriate cell.
