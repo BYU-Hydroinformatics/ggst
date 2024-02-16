@@ -3,7 +3,7 @@
 
 **Adding and Deleting Regions**
 ==============================
-This section describes how to upload new regions to the GGST app. When a new region uploaded, it is then automically processed and the storage components including subsetting netCDF files and storage time series are computed for the region and stored with the region for visualization in the app. The new region is added to the list of regions for the app and it can be selected and viewed. This section also describes how to delete regions and the association files. 
+This section describes how to upload new regions to the GGST app. When a new region is uploaded, it is automatically processed and the storage components including subsetting netCDF files and storage time series are computed for the region and stored with the region for visualization in the app. The new region is added to the list of regions for the app, and it can be selected and viewed. This section also describes how to delete regions and the associated files. 
 
 **Uploading a Region**
 -----------------------
@@ -15,7 +15,7 @@ The GRACE Groundwater Subsetting Tool web application is hosted on three differe
 
 To upload regions on the application, visit the portal of your choice and log in. Without logging in you can see the App Navigation pages: Home and Global Map. These allow you to view previously uploaded regions and create time series graphics for any singular point on the globe. Once you log in with administrative privileges, you will see the additional Configuration pages: Add a Region, Delete a Region, and Update Global Files. Update Global Files is used to download the latest GRACE and GLDAS files from the NASA server.
 
-To add a new region, first prepare a shapefile for the region consisting of four files: *.shp, *.dbf, *.prj, and *.sh. The projection for the shapefile should be EPSG:4326 - WGS 84. The four files should not be zipped together.
+To add a new region, first prepare a shapefile for the region consisting of four files: *.shp, *.dbf, *.prj, and *.shx. The projection for the shapefile should be EPSG:4326 - WGS 84. The four files should not be zipped together.
 
 Please refer to the following images as a visual guide:
 
