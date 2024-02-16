@@ -12,7 +12,7 @@ The GGST API has four functions. Each of these functions requires different inpu
 * subsetRegionZipfile
 
 To run some of the functions listed above, the user will need an authentication token. Please refer to the third section of this documentation on how to obtain the said token.
-The API can be implemented in many ways using a variety of coding languages and platforms. We have provided an example implementation using the Python code language in a Google Colab notebook. Our example notebook is hosted on GitHub and can be access through a link at the bottom of this page. If you choose to use Python to call the API, we recommend the xarray and geopandas Python packages be used to process your data. The former helps in visualizing and interacting with the raw netCDF data returned while the latter helps in uploading the shapefile(s) for the subsetting.
+The API can be implemented in many ways using a variety of coding languages and platforms. We have provided an example implementation using the Python code language in a Google Colab notebook. Our example notebook is hosted on GitHub and can be access through the link shown below. If you choose to use Python to call the API, we recommend the xarray and geopandas Python packages be used to process your data. The former helps in visualizing and interacting with the raw netCDF data returned while the latter helps in uploading the shapefile(s) for the subsetting.
 
 To launch the code, please click on this button. The notebook will open in a new tab.
 
