@@ -17,5 +17,6 @@ These tools were originally developed via funding from the National Aeronautics 
     overview
     algorithm
     uploading
+    points
     api
     wtf
