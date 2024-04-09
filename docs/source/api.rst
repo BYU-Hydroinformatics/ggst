@@ -168,7 +168,6 @@ Visual guide on netCDF files:
    :scale: 50%
  
  
-
 This table elaborates on each of these files and their naming conventions:
 
 
@@ -208,6 +207,7 @@ This table elaborates on each of these files and their naming conventions:
      - 1.0 degrees
 
 *To learn more about how this is calculated please visit our Computational Algorithm page.
+
 This section will also help you create a dataframe, plot your data, and visualize your data on an animated map.
 
 
