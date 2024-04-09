@@ -18,15 +18,15 @@ If the Time Series window is closed, it can be relaunched using the "View Time S
 To perform a time series analysis at a new point, close the Time Series window and click on a new point while the Select Point tool is active. 
 
 **Moving or Deleting a Point**
------------------------
+------------------------------
 To delete an existing point, click on the Delete tool and select the "Clear All" option.
 
 .. image:: images-point/delete_point.png
 
 **Exporting a Time Series**
------------------------
+---------------------------
 To export the data associated with a point time series, click on the menu icon in the upper right corner of the Time Series window and export to the selected format:
 
-.. image:: images-point/export_time_series.png
+.. image:: images-point/export_ts_options.png
 
 When exporting a time series, the data in the time series are saved to a tabular file with columns for the date, and each component of the time series is exported as a separate column. The date column is saved in a unique format representing the number of milliseconds since January 1, 1970. This can be converted to a more typical date format using a spreadsheet formula. This process is described in the Water Table Fluctuation Method section: :ref:`Downloading the Water Level Time Series from the GGST App`
