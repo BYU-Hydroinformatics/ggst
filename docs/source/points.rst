@@ -7,7 +7,11 @@ In addition to analyzing groundwater storage change averaged over a region, the 
 
 **Selecting a Point**
 -----------------------
-Before performing a point analysis, you should first zoom in to your area of interest. You can do this using either the global view, or by selecting a region that has previously been uploaded. You should then select the desired storage component using the "Select Storage Component" option. These options will include: Total Water Storage (GRACE), Surface Water Storage (GLDAS), Soil Moisture Storage (GLDAS), and Groundwater Storage (Calculated). After selecting a component, click on the Select Point tool and then click on the map where you wish to perform a point analysis. If you are viewing a region, the selected point must be within the bounds of the region. After clicking on a point, a time series plot for the selected storage component at the point location appears:
+Before performing a point analysis, you should first zoom in to your area of interest. You can do this using either the global view, or by selecting a region that has previously been uploaded. You should then select the desired storage component using the "Select Storage Component" option. These options will include: Total Water Storage (GRACE), Surface Water Storage (GLDAS), Soil Moisture Storage (GLDAS), and Groundwater Storage (Calculated). After selecting a component, click on the Select Point tool and then click on the map where you wish to perform a point analysis. If you are viewing a region, the selected point must be within the bounds of the region.
+
+.. image:: images-point/select_point_tool.png
+
+After clicking on a point, a time series plot for the selected storage component at the point location appears:
 
 .. image:: images-point/point_time_series.png
 
@@ -21,7 +25,7 @@ To perform a time series analysis at a new point, close the Time Series window a
 ------------------------------
 To delete an existing point, click on the Delete tool and select the "Clear All" option.
 
-.. image:: images-point/delete_point.png
+.. image:: images-point/delete_point_tool.png
 
 **Exporting a Time Series**
 ---------------------------
