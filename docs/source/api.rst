@@ -3,24 +3,14 @@
    
 **Application Programming Interface (API)**
 =================================
-The Python API for the GGST allows users to retrieve ground water information about a point or region without having administrative privileges to the GGST web application.
-The GGST API has four functions. Each of these functions requires different inputs and returns different results as desired by the user. The name of each function gives a glimpse of what each accomplishes. The four functions are:
+The Python API for the GGST allows users to retrieve ground water information about a point or region without having administrative privileges to the GGST web application. The GGST API has four functions. Each of these functions requires different inputs and returns different results as desired by the user. The name of each function gives a glimpse of what each accomplishes. The four functions are:
 
 * getStorageOptions
 * getPointValues
 * getRegionTimeseries
 * subsetRegionZipfile
 
-To run some of the functions listed above, the user will need an authentication token. Please refer to the third section of this documentation on how to obtain the said token.
-The API can be implemented in many ways using a variety of coding languages and platforms. We have provided an example implementation using the Python code language in a Google Colab notebook. Our example notebook is hosted on GitHub and can be access through the link shown below. If you choose to use Python to call the API, we recommend the xarray and geopandas Python packages be used to process your data. The former helps in visualizing and interacting with the raw netCDF data returned while the latter helps in uploading the shapefile(s) for the subsetting.
-
-Before we use the API in the Google Colaboratory notebook, let us explore each of the four GGST API methods in the following section
-
-.. raw:: html
-
-    <a href="https://colab.research.google.com/github/BYU-Hydroinformatics/ggst-notebooks/blob/main/ggst_api.ipynb" target="_blank">
-        <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab">
-    </a>
+To run some of the functions listed above, the user will need an authentication token. Please refer to section 4.2 of this documentation on how to obtain the said token. The API can be implemented in many ways using a variety of coding languages and platforms. An example implementation using the Python code language in a Google Colaboratory notebook has been provided below. Before using the API in the Google Colaboratory notebook, each of the four GGST API methods will be explored in the following section.
     
 **API Methods**
 -------
@@ -143,7 +133,15 @@ It is also possible to request an authentication token directly from an administ
 
 **GGST API Google Colaboratory Notebook**
 -----------------------------------------
-We have provided an example of calling the GGST API using the Python coding language in a Google Colab Notebook. You can open the notebook at this link: https://colab.research.google.com/github/BYU-Hydroinformatics/ggst-notebooks/blob/main/ggst_api.ipynb. Be sure to make a copy of it in your own Google Drive.
+We have provided an example of calling the GGST API using the Python coding language in a Google Colab Notebook. You can open the notebook with this link:
+
+.. raw:: html
+
+    <a href="https://colab.research.google.com/github/BYU-Hydroinformatics/ggst-notebooks/blob/main/ggst_api.ipynb" target="_blank">
+        <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab">
+    </a>
+
+You may wish to make a copy of the notebook in your own Google Drive.
 
 Run each cell of the notebook by hitting the play button on the left side of each cell and provide the necessary inputs by following the prompts. The notebook runs through all four of the API functions we described above. To run some of the functions in this notebook, the user will have to sign up for a Tethys account and obtain an authentication token (API key) as explained in the previous sections.
 
