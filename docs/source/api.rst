@@ -47,7 +47,11 @@ Let's explore each API method individually and offer an example:
 | **Parameters**     | There are no parameters for the getStorageOptions function|
 +------------------------+-----------------------------------------------------------+
 
-Follow this link to inspect the JSON returned which lists the list of the storage options available. https://tethys-staging.byu.edu/apps/ggst/api/getStorageOptions/. For simplicity, the options are given a variable name. For instance, the "Total Water Storage (GRACE)" has a variable name of "grace", and similarly the "Soil Moisture Storage (GLDAS)" is shortened to "sm".
+Follow this link to inspect the JSON returned which lists the list of the storage options available:
+
+https://tethys-staging.byu.edu/apps/ggst/api/getStorageOptions/
+
+For simplicity, the options are given a variable name. For instance, the "Total Water Storage (GRACE)" has a variable name of "grace", and similarly the "Soil Moisture Storage (GLDAS)" is shortened to "sm".
 
 2. **The getPointValues Method**
 
@@ -68,7 +72,9 @@ Follow this link to inspect the JSON returned which lists the list of the storag
 +------------------------+-------------+--------------------------+--------------------------------------------------------------------------------+--------------+
 
 
-Click on the following example link to call the API and inspect the JSON object returned (results will appear in a new window). This is a return for obtaining points values https://tethys-staging.byu.edu/apps/ggst/api/getPointValues/?latitude=20.7&longitude=80.2&storage_type=gw for an example.
+Click on the following example link to call the API and inspect the JSON object returned (results will appear in a new window):
+
+https://tethys-staging.byu.edu/apps/ggst/api/getPointValues/?latitude=20.7&longitude=80.2&storage_type=gw
 
 For the last two functions, the user will need to have an authentication token as it is required to run the code. It is best to call these two functions from Python. Please refer to the Google Colab Notebook for further instructions. See details below on how to obtain one.
 
