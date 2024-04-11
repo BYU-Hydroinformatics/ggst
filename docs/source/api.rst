@@ -148,22 +148,22 @@ Run each cell of the notebook by hitting the play button on the left side of eac
 The notebook is divided into multiple sections and each section contains a set of cells, each of which contains Python code. When you first launch the notebook, the sections are collapsed and you need to expand each section to view and run the code:
 
 .. image:: images-api/colab_sections.png
-   :scale: 100%
+   :scale: 75%
 
 The cells should be run sequentially. To run a cell, click on run arrow in the upper left corner of the cell:
 
 .. image:: images-api/colab_cells.png
-   :scale: 100%
+   :scale: 75%
 
 Some cells require inputs as shown on the right side. You should enter the inputs before running the associated cells:
 
 .. image:: images-api/colab_inputs.png
-   :scale: 100%
+   :scale: 75%
 
 Some cells produce outputs when you run the cell. The outputs are displayed just below the cells:
 
 .. image:: images-api/colab_outputs.png
-   :scale: 100%
+   :scale: 75%
 
 The code is divided into six sections designed to help the user understand how to call each of the four functions and how to plot and visualize them.
 
