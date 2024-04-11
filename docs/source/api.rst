@@ -35,7 +35,7 @@ To test the API, the user will need a zip file of the region of interest. We hav
 
 Let's explore each API method individually and offer an example:
 
-1. **The getStorageOptions**
+1. **The getStorageOptions Method**
 
 +------------------------+-----------------------------------------------------------+            
 | **Parent Application** | GGST                                                      |
@@ -49,7 +49,7 @@ Let's explore each API method individually and offer an example:
 
 Follow this link to inspect the JSON returned which lists the list of the storage options available. https://tethys-staging.byu.edu/apps/ggst/api/getStorageOptions/. For simplicity, the options are given a variable name. For instance, the "Total Water Storage (GRACE)" has a variable name of "grace", and similarly the "Soil Moisture Storage (GLDAS)" is shortened to "sm".
 
-2. **The getPointValues**
+2. **The getPointValues Method**
 
 +------------------------+----------------------------------------------------------------------------------------------------------------------------------------+            
 | **Parent Application** | GGST                                                                                                                                   |
@@ -72,7 +72,7 @@ Click on the following example link to call the API and inspect the JSON object 
 
 For the last two functions, the user will need to have an authentication token as it is required to run the code. It is best to call these two functions from Python. Please refer to the Google Colab Notebook for further instructions. See details below on how to obtain one.
 
-3. The getRegionTimeseries
+3. **The getRegionTimeseries Method**
 
 +------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+           
 | **Parent Application** | GGST                                                                                                                                                                                          |
@@ -94,7 +94,7 @@ For the last two functions, the user will need to have an authentication token a
 
 Example query: files = {'shapefile': ("response.zip", uploaded["".join(uploaded)],'application/zip')} region_timeseries_request = requests.post("https://tethys-staging.byu.edu/apps/ggst/api/getRegionTimeseries/", headers={"Authorization": f"Token {api_token}"}, data = {"name":"api_test", "storage_type": "tws"}, files=files) Response (trimmed for clarity): {'area': 437109427476.4769, 'depletion': [['2000-01-01', 0.0], ['2000-02-01', -273831.117], ['2000-03-01', -661208.652], …….. ['2021-09-01', 4792246.794]], 'error_range': [['2000-01-01', -6.045, -3.205], ['2000-02-01', -7.122, -3.798], ['2000-03-01', -8.648, -4.636], ['2021-09-01', 8.19, 11.796]], ……. 'success': 'success', 'values': [['2000-01-01', -4.625], ['2000-02-01', -5.46], …….. ['2021-09-01', 9.993]]}
 
-4. The subsetRegionZipfile
+4. **The subsetRegionZipfile  Method**
 
 +------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+           
 | **Parent application** | GGST                                                                                                                                                                                          |
@@ -136,7 +136,7 @@ For privacy reasons, we have hidden the remaining characters of this user's toke
 It is also possible to request an authentication token directly from an administrator. We recommend using the sign up method as it is faster.
 
 **GGST API Google Colaboratory Notebook**
-----------------------------------
+-----------------------------------------
 We have provided an example of calling the GGST API using the Python coding language in a Google Colab Notebook. You can open the notebook at this link: https://colab.research.google.com/github/BYU-Hydroinformatics/ggst-notebooks/blob/main/ggst_api.ipynb. Be sure to make a copy of it in your own Google Drive.
 
 Run each cell of the notebook by hitting the play button on the left side of each cell and provide the necessary inputs by following the prompts. The notebook runs through all four of the API functions we described above. To run some of the functions in this notebook, the user will have to sign up for a Tethys account and obtain an authentication token (API key) as explained in the previous sections.
