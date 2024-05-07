@@ -18,7 +18,7 @@ class Ggst(TethysAppBase):
     enable_feedback = False
     feedback_emails = []
 
-    controller_modules = ['controllers_ajax']
+    controller_modules = ['controllers_ajax', "api"]
 
     def custom_settings(self):
         custom_settings = (

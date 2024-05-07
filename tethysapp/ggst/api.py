@@ -11,6 +11,7 @@ from .utils import (
     storage_options,
     region_api_ts,
 )
+from tethys_sdk.routing import controller
 
 
 @api_view(["POST"])
@@ -20,6 +21,7 @@ from .utils import (
         SessionAuthentication,
     )
 )
+@controller(name="subset-region-zipfile", url="ggst/api/subsetRegionZipfile/")
 def subset_region_zip(request):
     if request.method == "POST":
         region_name = None
@@ -55,6 +57,7 @@ def subset_region_zip(request):
         SessionAuthentication,
     )
 )
+@controller(name="region-zip-timeseries", url="ggst/api/zipRegionTimeseries/")
 def region_zip_timeseries(request):
     if request.method == "POST":
         region_name = None
@@ -90,6 +93,7 @@ def region_zip_timeseries(request):
         SessionAuthentication,
     )
 )
+@controller(name="get-region-timeseries", url="ggst/api/getRegionTimeseries/")
 def subset_region_api(request):
     json_obj = {}
 
@@ -118,6 +122,8 @@ def subset_region_api(request):
             return JsonResponse(json_obj)
 
 
+@api_view(["GET"])
+@controller(name="get-storage-options", url="ggst/api/getStorageOptions/")
 def api_get_storage_options(request):
     return_obj = {}
 
@@ -127,6 +133,8 @@ def api_get_storage_options(request):
         return JsonResponse(return_obj)
 
 
+@api_view(["GET"])
+@controller(name="get-point-values", url="ggst/api/getPointValues/")
 def api_get_point_values(request):
     return_obj = {}
 

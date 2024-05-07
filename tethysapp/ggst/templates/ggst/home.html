@@ -142,56 +142,8 @@
                 </p>
                 <br>
                 <h3>API Methods</h3>
-                <p>All API methods must be called using the following pattern:</p>
-                <p><b>{{ host }}/apps/[parent-app]/api/[MethodName]/?param1=value1&#38;param2=value2&#38;...paramN=valueN</b></p>
-                <p>See documentation and specific examples for all available methods below.</p>
-                <br>
-                <br>
-                <h4>GetPointValues</h4>
-                <table>
-                    <tr>
-                        <td><b>Parent App</b></td>
-                        <td colspan="5">ggst</td>
-                    </tr>
-                    <tr>
-                        <th>Supported Methods</th>
-                        <td colspan="5">GET</td>
-                    </tr>
-                    <tr>
-                        <th>Returns</th>
-                        <td colspan="5">A JSON object with a timeseries for a given point.</td>
-                    </tr>
-                    <tr>
-                        <td rowspan="7"><b>Params</b></td>
-                        <td><b>Name</b></td>
-                        <td><b>Description</b></td>
-                        <td><b>Valid Values</b></td>
-                        <td><b>Required</b></td>
-                    </tr>
-                    <tr>
-                        <td>latitude</td>
-                        <td>Latitude in WGS 84 projection</td>
-                        <td>Any value on land within the GRACE Explorer Domain (-60,90)</td>
-                        <td>Yes</td>
-                    </tr>
-                    <tr>
-                        <td>longitude</td>
-                        <td>Longitude in the WGS 84 projection</td>
-                        <td>Any value within the GRACE Explorer Domain (-180,180)</td>
-                        <td>Yes</td>
-                    </tr>
-                    <tr>
-                        <td>storage_type</td>
-                        <td>Storage type you wish to access</td>
-                        <td>Use one of the following: (tws, sw, sm, gw)</td>
-                        <td>Yes</td>
-                    </tr>
-
-                </table>
-                <h5>Example:</h5>
-                <a href="{{ host }}/apps/ggst/api/GetPointValues/?latitude=20.7&longitude=80.2&storage_type=gw" target="_blank">
-                    <code>{{ host }}/apps/ggst/api/GetPointValues/?latitude=20.7&longitude=80.2&storage_type=gw</code>
-                </a>
+                <p>See the following page for documentation:<a href="https://ggst.readthedocs.io/en/latest/api.html" target="_blank"> API Documentation</a>
+                </p>
             </div>
             <div class="modal-footer">
                 <span><i>Developed at the BYU Hydroinformatics Lab</i></span>&nbsp;

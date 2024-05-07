@@ -158,6 +158,7 @@ def clip_nc(
     export: bool = True,
 ) -> Union[str, xarray.Dataset]:
     # logger.info(f'Subset {nc_file} for {region_name}')
+    # print(f'Subset {nc_file} for {region_name}')
     ds = xarray.open_dataset(nc_file)
     # ds = ds.assign({"lon": (((ds.lon + 180) % 360) - 180)}).sortby('lon')
     if "spatial_ref" in ds.variables:
@@ -171,7 +172,7 @@ def clip_nc(
     # if 'tot' in nc_file:
     #     ds = ds.drop_vars(['gw', 'lat_bnds', 'lon_bnds'])
     ds.rio.set_spatial_dims(x_dim="lon", y_dim="lat", inplace=True)
-    clipped = ds.rio.clip(gdf.geometry.apply(mapping), gdf.crs, drop=True)
+    clipped = ds.rio.clip(gdf.geometry.apply(mapping), gdf.crs, drop=True, all_touched=True)
     if "spatial_ref" in ds.variables:
         clipped = clipped.drop("spatial_ref")
     if "WGS84" in ds.variables:

@@ -21,6 +21,7 @@ import dask
 from packaging import version
 from rasterio.enums import Resampling
 from shapely.geometry import mapping
+from siphon.http_util import session_manager
 from siphon.catalog import TDSCatalog
 
 # pandarallel.initialize()
@@ -198,7 +199,7 @@ def get_version_number(string):
 def download_gldas_catalog(gldas_url, output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-
+    session_manager.set_session_options(auth=AUTH)
     catalog = TDSCatalog(gldas_url)
 
     valid_refs = [
@@ -328,9 +329,7 @@ def download_grace_catalog(grace_url, output_dir):
 def gldas_concat_helper(grace_dir, model_dir, model_type, gldas_variables):
     gldas_dir = os.path.join(grace_dir, "gldas")
     nc_files_glob = os.path.join(gldas_dir, model_dir, "*.nc4")
-
-    # Getting all files and sorting based on date in the filename
-    list_of_files = glob.glob(nc_files_glob)
+    list_of_files = glob.glob(os.path.join(gldas_dir, model_dir, "*"))
     sorted_files = sorted(
         [
             (
@@ -339,36 +338,30 @@ def gldas_concat_helper(grace_dir, model_dir, model_type, gldas_variables):
                 ),
                 _file,
             )
-            for _file in list_of_files if re.search(r"\d{6}", _file)
+            for _file in list_of_files
         ]
     )
-
-    # Exit if no files found
-    if not sorted_files:
-        print("No files found to process.")
-        return False
-
     timesteps, final_files = map(list, zip(*sorted_files))
     gldas_output_file = os.path.join(grace_dir, f"{model_type}.nc")
-
-    # Using Dask for lazy loading and parallel processing
-    dask.config.set(scheduler='threads')  # Adjust this based on your system's capabilities
-
-    if os.path.exists(gldas_output_file):
-        with xr.open_dataset(gldas_output_file, chunks={"time": "auto"}) as existing_ds:
-            new_files = [f for f, t in zip(final_files, timesteps) if t > existing_ds.time.max().values]
-            if new_files:
-                with xr.open_mfdataset(new_files, parallel=True, chunks={"time": "auto"}) as additional_ds:
-                    additional_ds = additional_ds.drop_vars("time_bnds")[gldas_variables]
-                    final_ds = xr.concat([existing_ds, additional_ds], dim='time')
-                    final_ds.to_netcdf(gldas_output_file)
+    if not os.path.exists(gldas_output_file):
+        gldas_ds = xr.open_mfdataset(nc_files_glob, parallel=False).drop_vars(
+            "time_bnds"
+        )[gldas_variables]
+        gldas_ds.to_netcdf(gldas_output_file)
     else:
-        with xr.open_mfdataset(final_files, parallel=True, chunks={"time": "auto"}) as gldas_ds:
-            gldas_ds = gldas_ds.drop_vars("time_bnds")[gldas_variables]
-            gldas_ds.to_netcdf(gldas_output_file)
+        gldas_ds = xr.open_dataset(gldas_output_file)
+        concat_list = list(
+            np.array(final_files)[timesteps > gldas_ds.time.max().values]
+        )
+        if len(concat_list) > 0:
+            gldas_vic_concat = xr.open_mfdataset(concat_list, parallel=True).drop_vars(
+                "time_bnds"
+            )[gldas_variables]
+            final_ds = xr.concat([gldas_ds, gldas_vic_concat], "time")
+            # os.remove(gldas_output_file)
+            final_ds.to_netcdf(gldas_output_file, mode="w")
 
     return True
-
 
 
 def concatenate_gldas_files(grace_dir):
@@ -469,7 +462,7 @@ def generate_noah025_global_files(grace_dir):
         ("SM", NOAH_SM_VARIABLES),
         ("SWE", NOAH_SWE_VARIABLES),
         ("CANOPY", NOAH_CANOPY_VARIABLES),
-        ("TWS", NOAH_TWS_VARIABLES)
+        ("TWS", NOAH_TWS_VARIABLES),
     ]:
         print(f"GLOBAL 025{variable_type}")
         final_ds = aggregate_noah025_anomalies(gldas_noah_anomalies, variables)
@@ -706,13 +699,14 @@ def generate_global_025gw_nc(grace_dir):
 def generate_grace_global_files(grace_dir):
     generate_global_grace_nc(grace_dir)
     generate_global_gw_nc(grace_dir)
-    # generate_global_025gw_nc(grace_dir)
+    #generate_global_025gw_nc(grace_dir)
     return True
 
 
 def clip_global_nc(
     nc_file: str, gdf: gpd.GeoDataFrame, region_name: str, grace_dir: str
 ) -> str:
+    # print(region_name)
     ds = xr.open_dataset(nc_file)
     if "spatial_ref" in ds.variables:
         ds = ds.drop_sel("spatial_ref")
@@ -721,7 +715,9 @@ def clip_global_nc(
     if "grid_mapping" in ds.uncertainty.attrs:
         del ds.uncertainty.attrs["grid_mapping"]
     ds.rio.set_spatial_dims(x_dim="lon", y_dim="lat", inplace=True)
-    clipped = ds.rio.clip(gdf.geometry.apply(mapping), gdf.crs, drop=True)
+    clipped = ds.rio.clip(
+        gdf.geometry.apply(mapping), gdf.crs, all_touched=True, drop=True
+    )
     if "spatial_ref" in ds.variables:
         clipped = clipped.drop("spatial_ref")
     if "WGS84" in ds.variables:
@@ -748,12 +744,12 @@ def process_global_files(grace_dir, thredds_dir):
         GRACE_CMR_URL,
         mascon_dir,
     )
-    # #
+    #
     concatenate_gldas_files(grace_dir)
     generate_gldas_global_files(grace_dir)
-    # generate_noah025_global_files(grace_dir)
+    #generate_noah025_global_files(grace_dir)
     generate_grace_global_files(grace_dir)
-    grc_files = glob.glob(f"{grace_dir}GRC_*.nc")
+    grc_files = glob.glob(os.path.join(grace_dir, "GRC_*.nc"))
     [shutil.copy(_file, thredds_dir) for _file in grc_files]
     [
         clip_global_nc(
