@@ -2,7 +2,7 @@
    :file: translate.html
    
 **Application Programming Interface (API)**
-=================================
+===========================================
 The Python API for the GGST allows users to retrieve ground water information about a point or region without having administrative privileges to the GGST web application. The GGST API has four functions. Each of these functions requires different inputs and returns different results as desired by the user. The name of each function gives a glimpse of what each accomplishes. The four functions are:
 
 * getStorageOptions
@@ -13,7 +13,7 @@ The Python API for the GGST allows users to retrieve ground water information ab
 To run some of the functions listed above, the user will need an authentication token. Please refer to section 4.2 of this documentation on how to obtain the said token. The API can be implemented in many ways using a variety of coding languages and platforms. An example implementation using the Python code language in a Google Colaboratory notebook has been provided below. Before using the API in the Google Colaboratory notebook, each of the four GGST API methods will be explored in the following section.
     
 **API Methods**
--------
+---------------
 All four GGST functions follow the same pattern as shown by the URL examples below. Each of the terms in brackets along with the parameters and values would be replaced by string values.
 
 .. raw:: html
@@ -114,7 +114,7 @@ Example Query: files = {'shapefile': ("response.zip", uploaded["".join(uploaded)
 Result will be a folder with nc files.
 
 **Obtaining an Authentication Token**
----------------------------------------
+-------------------------------------
 The last two functions of the API require an authentication token. To obtain one, you will need to sign up for an account on `BYU Tethys Portal <https://tethys-staging.byu.edu/apps/>`_. Click on the Log In button to get to the sign-up prompt.
 
 Once signed in, click on your username in the upper right corner, opening a panel. Click on the User Settings to reveal the API key.

@@ -6,7 +6,7 @@
 In addition to analyzing groundwater storage change averaged over a region, the GGST app can be used to perform an analysis at a single point location. This can be used to quickly generate a time series at a point of interest or in cases where a region of interest is too small to be processed using the Upload Region feature. For a point analysis, GGST finds the GRACE and GLDAS grid cells containing the selected point and returns the selected dataset time series for the cell. 
 
 **Selecting a Point**
------------------------
+---------------------
 Before performing a point analysis, you should first zoom in to your area of interest. You can do this using either the global view, or by selecting a region that has previously been uploaded. You should then select the desired storage component using the "Select Storage Component" option. These options will include: Total Water Storage (GRACE), Surface Water Storage (GLDAS), Soil Moisture Storage (GLDAS), and Groundwater Storage (Calculated). After selecting a component, click on the Select Point tool and then click on the map where you wish to perform a point analysis. If you are viewing a region, the selected point must be within the bounds of the region.
 
 .. image:: images-point/select_point_tool.png

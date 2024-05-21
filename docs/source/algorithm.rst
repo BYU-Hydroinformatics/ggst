@@ -2,14 +2,14 @@
    :file: translate.html
 
 **Computational Algorithm**
-=======================
+===========================
 The GRACE Groundwater Subsetting Tool (GSST) Web Application relies on the Earth Observation data collected by NASA through satellites which map the gravitational field of the Earth. Changes in gravity are driven by changes in water storage, offering a rare opportunity to monitor groundwater level through satellites coupled with estimated surface water.
 
 The GRACE mission was launched in March 2002. It consists of a pair of satellites that are 400km above the Earth and are separated by 200km. As the satellites pass over different regions of the Earth, the front and rear satellites are pulled slightly forward and backward in response to subtle changes in the Earth's graviatational field caused by changes in surficial mass. This causes the distance between the satellites to vary, and the changes are recorded by a k-band microwave whose accuracy is within 10 microns. The GRACE satellites follow a varying path that covers the entire Earth about once per month. This data is then processed by NASA to produce a map of the Earth's gravitational field. Each month a new map is generated and the differences are calculated to produce a gravity anomaly map. The changes in mass are assumed to be primarily caused by the change in water storage. Each month NASA generates a gridded map of total water storage anomaly at 3-degree resolution. This map is then down-scaled using a mass conservation algorithm to 0.5-degree resolution and made available for download in netCDF multidimensional raster format. 
 
 
 **Derivation of Groundwater Dataset**
----------------------------------
+-------------------------------------
 The groundwater component of the GRACE raw data can be separated using a mass balance approach, with NASA’s Global Land Data Assimilation System (GLDAS) models to compute the surface water component of the data. To compute total surface water storage, we sum the components of the GLDAS models that represent surface water storage and subtract this total from the GRACE  dataset to estimate a groundwater storage anomaly dataset. 
 
 This GSST application uses four sets of data:
@@ -33,7 +33,7 @@ The result of this computation is the ground water storage anomaly, a tested and
 
 
 **Grid Subsetting**
----------------
+-------------------
 For regional subsetting, the user provides a shapefile that defines the boundary of the region of interest. We then select the cells that have cell centers within the defined boundary and calculate the average storage anomaly for each of the components: TWSa, SWEa, CANa, and SMa resulting in a time series from 2002 to the present for each component on a monthly time step. The figure below shows the Chad Basin in Niger subsetted and displayed with the region shapefile. For water storage, the average of each component is multiplied by the area of the region, resulting in volume anomalies.
 
 .. image:: images-algorithm/examplesubsettedregion.png
@@ -41,7 +41,7 @@ For regional subsetting, the user provides a shapefile that defines the boundary
    :align: center
 
 **Uncertainty Estimates**
-----------------------
+-------------------------
 It is critical to understand that the results of these predictions have uncertainties and limitations. 
 
 To compute the uncertainty of the groundwater storage component, we combine the uncertainty estimates from both the GRACE and GLDAS by computing the square root of the sum of the squares of the uncertainty of the individual components as measured by their standard deviations.
@@ -78,7 +78,7 @@ It is also recommended that, whenever possible, these data be validated with loc
 
 
 **Software Availability**
-------------------------
+-------------------------
 The GGST web application was created using Tethys Platform, developed in the BYU Hydroinformatics Laboratory. It can be accessed on a Tethys portal associated with the NOAA GeoGLOWS project by browsing to this `link <https://apps.geoglows.org/apps>`_ and selecting the Grace Groundwater Subsetting Tool application.
 
 

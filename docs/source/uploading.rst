@@ -2,11 +2,11 @@
    :file: translate.html
 
 **Adding and Deleting Regions**
-==============================
+===============================
 This section describes how to upload new regions to the GGST app. When a new region is uploaded, it is automatically processed and the storage components including subsetting netCDF files and storage time series are computed for the region and stored with the region for visualization in the app. The new region is added to the list of regions for the app, and it can be selected and viewed. This section also describes how to delete regions and the associated files. 
 
 **Uploading a Region**
------------------------
+----------------------
 The GRACE Groundwater Subsetting Tool web application is hosted on three different Tethys portals:
 
 * **Servir West Africa Portal**: Official Tethys portal hosted by the SERVIR Science Coordination Office (SCO) for the West Africa Hub (https://tethyswa.servirglobal.net/apps/)
