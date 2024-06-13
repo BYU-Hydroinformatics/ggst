@@ -41,9 +41,9 @@ var LIBRARY_OBJECT = (function() {
 
     //Reset the alerts if everything is going well
     reset_alert = function(){
-        $("#message").addClass('hidden');
+        $("#message").addClass('d-none');
         $("#message").empty()
-            .addClass('hidden')
+            .addClass('d-none')
             .removeClass('alert-success')
             .removeClass('alert-info')
             .removeClass('alert-warning')
