@@ -115,9 +115,15 @@ Result will be a folder with nc files.
 
 **Obtaining an Authentication Token**
 -------------------------------------
-The last two functions of the API require an authentication token. To obtain one, you will need to sign up for an account on `BYU Tethys Portal <https://tethys-staging.byu.edu/apps/>`_. Click on the Log In button to get to the sign-up prompt.
+The last two functions of the API require an authentication token. To obtain one, use one of the following two methods:
 
-Once signed in, click on your username in the upper right corner, opening a panel. Click on the User Settings to reveal the API key.
+1. Request a token.
+
+You can request a token by contacting the administrator of one of the Tethys portals. For the apps.geoglows.org portal, please send a request to Norm Jones (njones@byu.edu).
+
+2. Use an existing account.
+
+If you have an account on one of the Tethys portals, you can obtain an authentication token by signing in and navigating to the User Settings. After signing in, click on your username in the upper right corner, opening a panel and then click on the User Settings to reveal the API key.
 
 .. image:: images-api/userpanel.png
    :scale: 50%
@@ -128,8 +134,6 @@ The authentication token or API key will be in the third section.
    :scale: 50%
    
 For privacy reasons, we have hidden the remaining characters of this user's token.
-
-It is also possible to request an authentication token directly from an administrator. We recommend using the sign up method as it is faster.
 
 **GGST API Google Colaboratory Notebook**
 -----------------------------------------
