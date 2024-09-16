@@ -2,14 +2,14 @@
 {% load tethys_gizmos %}
 
 {% block header_buttons %}
-  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
-    <a data-toggle="modal" data-target="#help-modal"><span class="glyphicon glyphicon-question-sign"></span></a>
+  <div class="header-button glyphicon-button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Help">
+    <a data-bs-toggle="modal" data-bs-target="#help-modal"><span class="bi bi-question-circle-fill"></span></a>
   </div>
-  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="API">
-    <a data-toggle="modal" data-target="#api-modal"><span class="glyphicon glyphicon-info-sign"></span></a>
+  <div class="header-button glyphicon-button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="API">
+    <a data-bs-toggle="modal" data-bs-target="#api-modal"><span class="bi bi-info-circle-fill"></span></a>
   </div>
-  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Home">
-    <a href="{% url 'ggst:home' %}"><span class="glyphicon glyphicon-home"></span></a>
+  <div class="header-button glyphicon-button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Home">
+    <a href="{% url 'ggst:home' %}"><span class="bi bi-house-door"></span></a>
   </div>
 {% endblock %}
 
@@ -23,7 +23,7 @@
     <div style="width:45%">{% gizmo region_select %}</div>
     <span class="btn-group ">
         <a name="submit-go-to-map" class="btn btn-success" role="button" onclick="document.forms[0].submit();" id="submit-go-to-map">
-            <span class="glyphicon glyphicon-play"></span>View Region
+            <span class="bi bi-play-fill"></span>View Region
         </a>
     </span>
 </form>
@@ -43,8 +43,8 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Guide</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p><b>Subsetting of the regions is made possible through <a href="https://github.com/c-h-david/shbaam" target="_blank">SHBAAM</a> (Satellite Hydrology Bits Analysis And Mapping)</b></p>
@@ -83,7 +83,7 @@
                     <li class="welcome-step">View Time Series
                         <p><b>The Grace application allows the user to generate a time series plot for a specific location.  To generate a time series:</b></p>
                         <ul>
-                            <li class="welcome-substep1">Click on the <b>Marker Icon</b> <span id= marker-icon class="glyphicon glyphicon-map-marker"></span> on the left side of the map, then place the marker within the data region.
+                            <li class="welcome-substep1">Click on the <b>Marker Icon</b> <span id= marker-icon class="bi bi-geo-alt-fill"></span> on the left side of the map, then place the marker within the data region.
                             <li class="welcome-substep1">The Time Series for that point will be generated below the map.
                         </ul>
                         <p>Note: You can also click anywhere on the time series graph to change the layer shown on the map to a specific time.  The time series can be exported in a number of formats by clicking the menu button on the chart(top-right).</p>
@@ -132,8 +132,8 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h2 class="modal-title" id="api-modal-label">Developers API</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p>
@@ -195,8 +195,8 @@
             </div>
             <div class="modal-footer">
                 <span><i>Developed at the BYU Hydroinformatics Lab</i></span>&nbsp;
-                <a href="https://github.com/BYU-Hydroinformatics/ggst" target="_blank" class="btn btn-default">View Code</a>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <a href="https://github.com/BYU-Hydroinformatics/ggst" target="_blank" class="btn btn-outline-secondary">View Code</a>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

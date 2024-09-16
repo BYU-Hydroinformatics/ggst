@@ -83,9 +83,9 @@ var LIBRARY_OBJECT = (function() {
     };
     //Reset the alerts if everything is going well
     reset_alert = function(){
-        $("#message").addClass('hidden');
+        $("#message").addClass('d-none');
         $("#message").empty()
-            .addClass('hidden')
+            .addClass('d-none')
             .removeClass('alert-success')
             .removeClass('alert-info')
             .removeClass('alert-warning')
@@ -301,8 +301,8 @@ var LIBRARY_OBJECT = (function() {
     add_wms = function(layer_val, storage_type, style, mode_type, range_min, range_max){
         // map.removeLayer(tdWmsLayer);
         // map.removeLayer(contourTimeLayer);
-        $('.lcontrol').removeClass('hidden');
-        $('.leaflet-bar-timecontrol').removeClass('hidden');
+        $('.lcontrol').removeClass('d-none');
+        $('.leaflet-bar-timecontrol').removeClass('d-none');
         graceGroup.clearLayers();
         contourGroup.clearLayers();
         let wmsUrl = wms_url + 'GRC_' + storage_type + '.nc';
@@ -315,7 +315,7 @@ var LIBRARY_OBJECT = (function() {
             layers: 'lwe_thickness',
             format: 'image/png',
             transparent: true,
-            styles: 'contour/'+style,
+            styles: 'contours',
             crs: L.CRS.EPSG4326,
             opacity: '1.0',
             colorscalerange: [range_min, range_max],
@@ -346,7 +346,7 @@ var LIBRARY_OBJECT = (function() {
             layers: 'lwe_thickness',
             format: 'image/png',
             transparent: true,
-            styles: 'boxfill/'+style,
+            styles: 'raster/'+style,
             crs: L.CRS.EPSG4326,
             opacity: opacity,
             colorscalerange: [range_min, range_max],
@@ -379,7 +379,7 @@ var LIBRARY_OBJECT = (function() {
 
 
         var src = wmsUrl + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=lwe_thickness"+
-            "&colorscalerange="+range_min+","+range_max+"&PALETTE="+style+"&transparent=TRUE";
+            "&colorscalerange="+range_min+","+range_max+"&STYLES=raster/"+style+"&transparent=FALSE&WIDTH=50&HEIGHT=300";
         // var src = wmsUrl + "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&LAYER=lwe_thickness&PALETTE=boxfill/"+style+"&transparent=TRUE";
         $("#legend-image").attr("src", src);
         map.timeDimension.setCurrentTime(layer_arr[1]);
@@ -523,8 +523,8 @@ var LIBRARY_OBJECT = (function() {
                     });
                 }));
 //                updateChart();
-//                 $loading.addClass('hidden');
-                $("#chart").removeClass('hidden');
+//                 $loading.addClass('d-none');
+                $("#chart").removeClass('d-none');
             }else{
                 // console.log(result);
                 console.log('error');
