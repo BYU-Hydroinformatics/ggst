@@ -22,17 +22,17 @@ on the Select Point tool and then click on the map where you wish to
 perform a point analysis. If you are viewing a region, the selected
 point must be within the bounds of the region.
 
-![image](../docs_rst/source/images-point/select_point_tool.png)
+![image](images-point/select_point_tool.png)
 
 After clicking on a point, a time series plot for the selected storage
 component at the point location appears:
 
-![image](../docs_rst/source/images-point/point_time_series.png)
+![image](images-point/point_time_series.png)
 
 If the Time Series window is closed, it can be relaunched using the
 \"View Time Series\" button on the left.
 
-![image](../docs_rst/source/images-point/view_time_series.png)
+![image](images-point/view_time_series.png)
 
 To perform a time series analysis at a new point, close the Time Series
 window and click on a new point while the Select Point tool is active.
@@ -42,7 +42,7 @@ window and click on a new point while the Select Point tool is active.
 To delete an existing point, click on the Delete tool and select the
 \"Clear All\" option.
 
-![image](../docs_rst/source/images-point/delete_point_tool.png)
+![image](images-point/delete_point_tool.png)
 
 ## **Exporting a Time Series**
 
@@ -50,7 +50,7 @@ To export the data associated with a point time series, click on the
 menu icon in the upper right corner of the Time Series window and export
 to the selected format:
 
-![image](../docs_rst/source/images-point/export_ts_options.png)
+![image](images-point/export_ts_options.png)
 
 When exporting a time series, the data in the time series are saved to a
 tabular file with columns for the date, and each component of the time

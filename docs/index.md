@@ -1,3 +1,4 @@
+htmltools::includeHTML('translate.html')
 
 # **Home**
 
@@ -22,6 +23,3 @@ Agency for International Development: Cooperative Agreement with SERVIR
 West Africa Hub. More details about this project can be found here:
 <https://hydroinf.groups.et.byu.net/servir-wa/>
 
-::: {.toctree maxdepth="2" caption="TABLE OF CONTENTS"}
-Home \<self\> overview algorithm uploading points api wtf
-:::

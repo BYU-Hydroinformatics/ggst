@@ -57,7 +57,7 @@ series plots as an image or as a table. The web app does not yet support
 downloading the NETCDF file raster that is displayed but this can be
 downloaded using the API.
 
-![image](../docs/source/images-overview/GGST_Tethys_MapViewer.png)
+![image](images-overview/GGST_Tethys_MapViewer.png)
 
 To upload and delete regions from the Tethys web application you must
 login with an administrator (admin) account. If you have admin access,
@@ -93,4 +93,4 @@ using our Google Colab Notebook. Google Colaboratory is a web based
 Python programming environment hosted in the Google Cloud that is a
 component of the Google Drive environment.
 
-![image](../docs/source/images-overview/Chad_animation.gif)
+![image](images-overview/Chad_animation.gif)

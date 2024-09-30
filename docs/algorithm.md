@@ -79,7 +79,7 @@ subsetted and displayed with the region shapefile. For water storage,
 the average of each component is multiplied by the area of the region,
 resulting in volume anomalies.
 
-![image](../docs_rst/source/images-algorithm/examplesubsettedregion.png){.align-center}
+![image](images-algorithm/examplesubsettedregion.png){.align-center}
 
 ## **Uncertainty Estimates**
 
@@ -120,7 +120,7 @@ Here is an illustration of Northern Africa and the Arabian Peninsula
 from 2002 - 2021. It shows that the groundwater in that region has been
 depleting since early 2009 and onward.
 
-![image](../docs_rst/source/images-algorithm/depletioncurve.png){.align-center}
+![image](images-algorithm/depletioncurve.png){.align-center}
 
 ## **Limitations**
 

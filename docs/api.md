@@ -772,11 +772,11 @@ After signing in, click on your username in the upper right corner,
 opening a panel and then click on the User Settings to reveal the API
 key.
 
-![image](../docs_rst/source/images-api/userpanel.png)
+![image](images-api/userpanel.png)
 
 The authentication token or API key will be in the third section.
 
-![image](../docs_rst/source/images-api/APIToken.png)
+![image](images-api/APIToken.png)
 
 For privacy reasons, we have hidden the remaining characters of this
 user\'s token.
@@ -805,22 +805,22 @@ a set of cells, each of which contains Python code. When you first
 launch the notebook, the sections are collapsed and you need to expand
 each section to view and run the code:
 
-![image](../docs_rst/source/images-api/colab_sections.png)
+![image](images-api/colab_sections.png)
 
 The cells should be run sequentially. To run a cell, click on run arrow
 in the upper left corner of the cell:
 
-![image](../docs_rst/source/images-api/colab_cells.png)
+![image](images-api/colab_cells.png)
 
 Some cells require inputs as shown on the right side. You should enter
 the inputs before running the associated cells:
 
-![image](../docs_rst/source/images-api/colab_inputs.png)
+![image](images-api/colab_inputs.png)
 
 Some cells produce outputs when you run the cell. The outputs are
 displayed just below the cells:
 
-![image](../docs_rst/source/images-api/colab_outputs.png)
+![image](images-api/colab_outputs.png)
 
 The code is divided into six sections designed to help the user
 understand how to call each of the four functions and how to plot and
@@ -891,7 +891,7 @@ visualize them.
 
 Visual guide on netCDF files:
 
-![image](../docs_rst/source/images-api/visualnetCDF.png)
+![image](images-api/visualnetCDF.png)
 
 This table elaborates on each of these files and their naming
 conventions:

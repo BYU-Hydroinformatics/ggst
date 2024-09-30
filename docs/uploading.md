@@ -27,7 +27,7 @@ To upload regions on the application, visit the portal of your choice
 and log in using the "Log In" link in the upper right corner of the
 portal window.
 
-![image](../docs_rst/source/images-upload/login.png)
+![image](images-upload/login.png)
 
 Without logging in you can see the App Navigation pages: Home and Global
 Map. These allow you to view previously uploaded regions and create time
@@ -44,15 +44,15 @@ zipped together.
 
 Please refer to the following images as a visual guide:
 
-![image](../docs_rst/source/images-upload/uploadregion1.png)
+![image](images-upload/uploadregion1.png)
 
-![image](../docs_rst/source/images-upload/uploadregion2.png)
+![image](images-upload/uploadregion2.png)
 
-![image](../docs_rst/source/images-upload/uploadregion3.png)
+![image](images-upload/uploadregion3.png)
 
-![image](../docs_rst/source/images-upload/uploadregion4.png)
+![image](images-upload/uploadregion4.png)
 
-![image](../docs_rst/source/images-upload/uploadregion5.png)
+![image](images-upload/uploadregion5.png)
 
 When uploading a region, it is recommended that the region be at least
 3x3 degrees in size. Smaller regions can be processed, but the
@@ -65,7 +65,7 @@ GLDAS grid cells to find cells where the centroid of the cells falls
 within the region shapefile. If the region is so small that no grid
 cells are found, the following error message is displayed:
 
-![image](../docs_rst/source/images-upload/add_region_error.png)
+![image](images-upload/add_region_error.png)
 
 ## **Deleting a Region**
 
@@ -73,4 +73,4 @@ Deleting a region is very simple. Proceed to the Delete a Region page.
 Select the region from the drop-down menu and hit the delete button. A
 message will display when the deletion has been completed.
 
-![image](../docs_rst/source/images-upload/deleteregion.png)
+![image](images-upload/deleteregion.png)

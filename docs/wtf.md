@@ -12,7 +12,7 @@ declining period during the dry part of the year results from pumping
 and groundwater discharge, and the rise during the wet part of the year
 is the result of recharge.
 
-![image](../docs_rst/source/images-wtf/seasonal_fluctuation.png)
+![image](images-wtf/seasonal_fluctuation.png)
 
 Using water levels derived from a monitoring well, we can estimate the
 recharge as follows:
@@ -42,7 +42,7 @@ groundwater storage anomaly curve.
 There are two general approaches for determining the height of the rise
 associated with recharge:
 
-![image](../docs_rst/source/images-wtf/rs_rd_fig.png)
+![image](images-wtf/rs_rd_fig.png)
 
 With the more conservative method, the rise is measured from the trough
 to the next peak as follows:
@@ -74,13 +74,13 @@ in the upper right corner of the storage anomaly time series displayed
 and then download the time series as either a comma separated values
 (CSV) file or an Excel (XLS) file.
 
-![image](../docs_rst/source/images-wtf/ggst_download.png)
+![image](images-wtf/ggst_download.png)
 
 The storage anomaly chart is created, displayed, and downloaded using
 the HighCharts plugin. The format of the resulting downloaded file is as
 follows:
 
-![image](../docs_rst/source/images-wtf/file_units.png)
+![image](images-wtf/file_units.png)
 
 The storage units are liquid water equivalent in cm, as expected, but
 the date units are reported in milliseconds since Jan 1, 1970. In order
@@ -93,7 +93,7 @@ number format to the one of the standard date options. Whether it
 appears as month/day/year or day/month/year will depend on your regional
 settings.
 
-![image](../docs_rst/source/images-wtf/fixing_the_date.png)
+![image](images-wtf/fixing_the_date.png)
 
 ## **Downloading the Water Level Time Series from the API Google Colaboratory Notebook**
 
@@ -103,18 +103,18 @@ then generating and plotting the storage anomaly time series, run the
 line of code to export the Python Pandas data frame containing the time
 series to a CSV file.
 
-![image](../docs_rst/source/images-wtf/reg_ts_code.png)
+![image](images-wtf/reg_ts_code.png)
 
 This file will then appear in the files section of the Colab interface
 on the left. Click the three vertical dots to the right of the file and
 select the Download option.
 
-![image](../docs_rst/source/images-wtf/save_reg_ts.png)
+![image](images-wtf/save_reg_ts.png)
 
 In this case, the resulting CSV file has the dates in the correct format
 and no changes are necessary.
 
-![image](../docs_rst/source/images-wtf/reg_ts_csv.png)
+![image](images-wtf/reg_ts_csv.png)
 
 ## **Gaps in the GRACE Data**
 
@@ -122,7 +122,7 @@ If you carefully inspect the groundwater storage time series CSV file,
 you will see that there are several missing months or gaps in the data.
 For example, the month of June is missing in 2003:
 
-![image](../docs_rst/source/images-wtf/missing_month.png)
+![image](images-wtf/missing_month.png)
 
 This is because there were periods when the GRACE satellites did not
 produce usable data. The largest gap is a 12-month period in 2017-2018
@@ -131,7 +131,7 @@ subsequent GRACE-FO satellites were launched and became operational in
 2018. Here is a sample plot for an aquifer in Southern Niger with the
 gaps shown:
 
-![image](../docs_rst/source/images-wtf/niger_gaps.png)
+![image](images-wtf/niger_gaps.png)
 
 For the years with large gaps, it can be difficult to identify seasonal
 trends and apply the WTF method. One way to resolve this problem is to
@@ -154,7 +154,7 @@ seasonal GWSa component, and e\[t\] is the residual GWSa component. The
 decomposition components for the data shown above are as illustrated
 here:
 
-![image](../docs_rst/source/images-wtf/decomposed.png)
+![image](images-wtf/decomposed.png)
 
 To impute the missing data, we use the trend from the data
 decomposition, then add the average of the monthly and residual values
@@ -166,7 +166,7 @@ $$Y[t] = y (T[t]) + \overline{S [t] + e[t]}$$
 The following figure shows the original time series in black, with
 imputed values in red:
 
-![image](../docs_rst/source/images-wtf/imputed.png)
+![image](images-wtf/imputed.png)
 
 ## **Data Imputation Tools**
 
@@ -184,7 +184,7 @@ with the original data with the gaps. This file will need to contain
 only two columns, which you can copy and paste from the full CSV and
 then save as a separate CSV file (\"base_file.csv\" for example).
 
-![image](../docs_rst/source/images-wtf/two_col_csv.png)
+![image](images-wtf/two_col_csv.png)
 
 At this point, the file is ready to be used with the Colab notebook. The
 following file is an example of a file prepared in the manner described
@@ -200,7 +200,7 @@ In the seasonal decomposition method described above for gap imputation,
 a single linear trend was described. Here is the trend resulting from
 the sample file linked above with a single trend line:
 
-![image](../docs_rst/source/images-wtf/trend_1.png)
+![image](images-wtf/trend_1.png)
 
 However, many data sets exhibit multiple linear trends. For this
 dataset, there are four distinct trends. The Python script has an option
@@ -208,17 +208,17 @@ to perform a multi-linear regression analysis. For this dataset, we set
 the number_breakpoints variable to 3, and run a multi-linear regression
 algorithm that fits the data as follows:
 
-![image](../docs_rst/source/images-wtf/trend_4_scatter.png)
+![image](images-wtf/trend_4_scatter.png)
 
 Note that 3 interior breakpoints result in four linear trends. This
 option results in the following trends:
 
-![image](../docs_rst/source/images-wtf/trend_4.png)
+![image](images-wtf/trend_4.png)
 
 And finally, the gap imputation with 4 trend lines results in the
 following:
 
-![image](../docs_rst/source/images-wtf/trend_4_results.png)
+![image](images-wtf/trend_4_results.png)
 
 ## **Data Processing Examples**
 
@@ -226,7 +226,7 @@ Once the gaps have been filled, the last step is to plot and analyze the
 curves one season at a time, extract the GWSa values from the curve, and
 calculate the recharge estimate using either method 1 and/or method 2.
 
-![image](../docs_rst/source/images-wtf/excel_wtf_example1.png)
+![image](images-wtf/excel_wtf_example1.png)
 
 The following Excel file illustrates how to examine and process each
 season of data from a GRACE-derived and imputed groundwater storage
@@ -240,7 +240,7 @@ more digits than the original values. The formulas in columns C & D
 separate the imputed data in column B to allow a multi-colored plot
 where the original imputed sections can be clearly visualized.
 
-![image](../docs_rst/source/images-wtf/excel_paste_instructions2.png)
+![image](images-wtf/excel_paste_instructions2.png)
 
 At this point you can browse through each of the tabs for the years
 starting in 2002. On each page, the seasonal values are automatically
@@ -251,9 +251,9 @@ the vertical axis and enter into the three cells indicated in the
 diagram. The RS, RD, R1, and R2 values will then be automatically
 calculated.
 
-![image](../docs_rst/source/images-wtf/excel_wtf_fitting.png)
+![image](images-wtf/excel_wtf_fitting.png)
 
-![image](../docs_rst/source/images-wtf/rs_rd_fig.png)
+![image](images-wtf/rs_rd_fig.png)
 
 As you examine the plot for each year, you may need to adjust the range
 of the vertical axis before you can properly fit the lines. To do this,
@@ -261,11 +261,11 @@ double-click on the vertical axis, click on the axis options tab, and
 manually adjust the minimum and maximum bounds to properly frame the
 plot.
 
-![image](../docs_rst/source/images-wtf/excel_vertical_axis.png)
+![image](images-wtf/excel_vertical_axis.png)
 
 If you need to add additional years, copy one of the yearly sheets,
 rename it, and change the year at the top of the sheet. After processing
 all of the years and calculating all of the R1, R2 values, you can see a
 summary in the Summary sheet.
 
-![image](../docs_rst/source/images-wtf/excel_final_results.png)
+![image](images-wtf/excel_final_results.png)

@@ -1,0 +1,21 @@
+site_name: GRACE Groundwater Subsetting Tool
+site_url: https://ggst.readthedocs.io/en/latest/
+site_description: This is the documentation for the GRACE Groundwater Subsetting Tool.
+site_author: BYU Hydroinformatics Laboratory
+repo_url: https://github.com/BYU-Hydroinformatics/GGST
+extra_javascript:
+    - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+markdown_extensions:
+    - mdx_math
+    - attr_list
+theme:
+  name: readthedocs
+
+nav:
+  - Home: index.md
+  - Overview: overview.md
+  - Computational Algorithm: algorithm.md
+  - Adding and Deleting Regions: uploading.md
+  - Analysis at a Single Point: points.md
+  - Application Programming Interface (API): api.md
+  - The Water Table Fluctuation Method: wtf.md
