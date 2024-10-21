@@ -1,4 +1,3 @@
-
 # **Computational Algorithm**
 
 The GRACE Groundwater Subsetting Tool (GSST) Web Application relies on
@@ -150,3 +149,4 @@ the BYU Hydroinformatics Laboratory. It can be accessed on a Tethys
 portal associated with the NOAA GeoGLOWS project by browsing to this
 [link](https://apps.geoglows.org/apps) and selecting the Grace
 Groundwater Subsetting Tool application.
+
