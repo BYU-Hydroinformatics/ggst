@@ -8,6 +8,7 @@ extra_javascript:
 markdown_extensions:
     - mdx_math
     - attr_list
+    - pymdownx.snippets
 theme:
   name: readthedocs
 
@@ -19,3 +20,6 @@ nav:
   - Analysis at a Single Point: points.md
   - Application Programming Interface (API): api.md
   - The Water Table Fluctuation Method: wtf.md
+
+extra_css:
+  - css/custom.css
