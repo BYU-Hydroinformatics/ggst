@@ -1,4 +1,6 @@
-htmltools::includeHTML('translate.html')
+--8<--
+translate.html
+--8<--
 
 # **Home**
 
