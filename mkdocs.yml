@@ -8,7 +8,7 @@ extra_javascript:
 markdown_extensions:
     - mdx_math
     - attr_list
-    - pymdownx.snippets
+
 theme:
   name: readthedocs
 

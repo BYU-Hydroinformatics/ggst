@@ -1,3 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Position the Google Translate element in the top-right corner */
+        .google-translate {
+            position: fixed;
+            top: 90px;
+            right: 40px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Google Translate Element Container -->
+<div class="google-translate">
+    <div id="google_translate_element"></div>
+</div>
+
+<!-- Google Translate Script -->
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+}
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+</body>
+</html>
 
 # **The Water Table Fluctuation Method**
 
