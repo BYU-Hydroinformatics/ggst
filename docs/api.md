@@ -28,14 +28,13 @@ All four GGST functions follow the same pattern as shown by the URL
 examples below. Each of the terms in brackets along with the parameters
 and values would be replaced by string values.
 
-<https://tethys-staging.byu.edu/apps/%5Bparent-app%5D/api/%5BMethodName%5D/?param1=value1&param2=value2&>\...paramN=valueN
+<https://tethys-staging.byu.edu/apps/%5Bparent-app%5D/api/%5BMethodName%5D/?param1=value1&param2=value2&...paramN=valueN>
 
 To test the API, the user will need a zip file of the region of
 interest. We have provided a set of sample files in the appropriate
 format. You may use your own files if you choose so.
 
-`API_Fileset.zip </test_files/API_Fileset.zip>`{.interpreted-text
-role="download"}
+[API_Fileset.zip](test_files/API_Fileset.zip)
 
 Let\'s explore each API method individually and offer an example:
 

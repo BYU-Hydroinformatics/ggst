@@ -1,3 +1,6 @@
+--8<-- "translate.html"
+
+
 # **Computational Algorithm**
 
 The GRACE Groundwater Subsetting Tool (GSST) Web Application relies on
