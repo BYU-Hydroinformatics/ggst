@@ -37,7 +37,7 @@ format. You may use your own files if you choose so.
 
 [API_Fileset.zip](test_files/API_Fileset.zip)
 
-Let\'s explore each API method individually and offer an example:
+Let's explore each API method individually and offer an example:
 
 1\. **The getStorageOptions Method**
 
@@ -47,8 +47,8 @@ the storage options available:
 <https://tethys-staging.byu.edu/apps/ggst/api/getStorageOptions/>
 
 For simplicity, the options are given a variable name. For instance, the
-\"Total Water Storage (GRACE)\" has a variable name of \"grace\", and
-similarly the \"Soil Moisture Storage (GLDAS)\" is shortened to \"sm\".
+"Total Water Storage (GRACE)" has a variable name of "grace", and
+similarly the "Soil Moisture Storage (GLDAS)" is shortened to "sm".
 
 2\. **The getPointValues Method**
 
@@ -189,7 +189,7 @@ The authentication token or API key will be in the third section.
 ![image](images-api/APIToken.png)
 
 For privacy reasons, we have hidden the remaining characters of this
-user\'s token.
+user's token.
 
 ## **GGST API Google Colaboratory Notebook**
 

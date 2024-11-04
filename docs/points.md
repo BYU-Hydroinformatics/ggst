@@ -15,8 +15,8 @@ returns the selected dataset time series for the cell.
 Before performing a point analysis, you should first zoom in to your
 area of interest. You can do this using either the global view, or by
 selecting a region that has previously been uploaded. You should then
-select the desired storage component using the \"Select Storage
-Component\" option. These options will include: Total Water Storage
+select the desired storage component using the "Select Storage
+Component" option. These options will include: Total Water Storage
 (GRACE), Surface Water Storage (GLDAS), Soil Moisture Storage (GLDAS),
 and Groundwater Storage (Calculated). After selecting a component, click
 on the Select Point tool and then click on the map where you wish to
@@ -31,7 +31,7 @@ component at the point location appears:
 ![image](images-point/point_time_series.png)
 
 If the Time Series window is closed, it can be relaunched using the
-\"View Time Series\" button on the left.
+"View Time Series" button on the left.
 
 ![image](images-point/view_time_series.png)
 
@@ -41,7 +41,7 @@ window and click on a new point while the Select Point tool is active.
 ## **Moving or Deleting a Point**
 
 To delete an existing point, click on the Delete tool and select the
-\"Clear All\" option.
+"Clear All" option.
 
 ![image](images-point/delete_point_tool.png)
 
