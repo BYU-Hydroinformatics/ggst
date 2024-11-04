@@ -15,6 +15,9 @@
 
 # We added this to requirements.txt
 
+# To include a file, use the following syntax:
+# {{ include_file('docs/translate.html') }}
+
 from pathlib import Path
 
 def define_env(env):
