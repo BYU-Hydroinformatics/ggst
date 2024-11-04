@@ -183,7 +183,7 @@ After launching the notebook, follow the instructions in the code.
 Before running the code, you will need to prepare and upload a CSV file
 with the original data with the gaps. This file will need to contain
 only two columns, which you can copy and paste from the full CSV and
-then save as a separate CSV file (\"base_file.csv\" for example).
+then save as a separate CSV file ("base_file.csv" for example).
 
 ![image](images-wtf/two_col_csv.png)
 
