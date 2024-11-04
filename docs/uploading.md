@@ -68,7 +68,7 @@ Files. Update Global Files is used to download the latest GRACE and
 GLDAS files from the NASA server.
 
 To add a new region, first prepare a shapefile for the region consisting
-of four files: *.shp,*.dbf, *.prj, and*.shx. The projection for the
+of four files: \*.shp, \*.dbf, \*.prj, and \*.shx. The projection for the
 shapefile should be EPSG:4326 - WGS 84. The four files should not be
 zipped together.
 
