@@ -6,7 +6,7 @@
         .google-translate {
             position: fixed;
             top: 90px;
-            right: 70px;
+            right: 40px;
             z-index: 1000;
         }
     </style>
