@@ -45,15 +45,15 @@ zipped together.
 
 Please refer to the following images as a visual guide:
 
-![image](images-upload/uploadregion1.png)
+![image](images-upload/uploadregion1.png){width=800}
 
-![image](images-upload/uploadregion2.png)
+![image](images-upload/uploadregion2.png){width=1000}
 
-![image](images-upload/uploadregion3.png)
+![image](images-upload/uploadregion3.png){width=1000}
 
-![image](images-upload/uploadregion4.png)
+![image](images-upload/uploadregion4.png){width=1000}
 
-![image](images-upload/uploadregion5.png)
+![image](images-upload/uploadregion5.png){width=1000}
 
 When uploading a region, it is recommended that the region be at least
 3x3 degrees in size. Smaller regions can be processed, but the
@@ -74,4 +74,4 @@ Deleting a region is very simple. Proceed to the Delete a Region page.
 Select the region from the drop-down menu and hit the delete button. A
 message will display when the deletion has been completed.
 
-![image](images-upload/deleteregion.png)
+![image](images-upload/deleteregion.png){width=1000}
