@@ -306,16 +306,15 @@ Visual guide on netCDF files:
 This table elaborates on each of these files and their naming
 conventions:
 
-  --------------------------- ------------------ -------------- -----------------------
-  **Name**                    **Abbreviation**   **Source**     **Source Resolution**
-  Total Water Storage         grace              GRACE          0.5 degrees
-  Surface Water Storage       sw                 GLADAS         1.0 degrees
-  Soil Moisture Storage       sm                 GLADAS         1.0 degrees
-  Groundwater Storage         gw                 Calculated\*   1.0 degrees
-  Snow Water Equivalent       swe                GLADAS         1.0 degrees
-  Terrestrial Water Storage   tws                GLADAS         1.0 degrees
-  Canopy Storage              canopy             GLADAS         1.0 degrees
-  --------------------------- ------------------ -------------- -----------------------
+| **Name** | **Abbreviation** | **Source** | **Source Resolution** |
+|----------|-------------------|------------|------------------------|
+| Total Water Storage | grace | GRACE | 0.5 degrees |
+| Surface Water Storage | sw | GLADAS | 1.0 degrees |
+| Soil Moisture Storage | sm | GLADAS | 1.0 degrees |
+| Groundwater Storage | gw | Calculated* | 1.0 degrees |
+| Snow Water Equivalent | swe | GLADAS | 1.0 degrees |
+| Terrestrial Water Storage | tws | GLADAS | 1.0 degrees |
+| Canopy Storage | canopy | GLADAS | 1.0 degrees |
 
 \*To learn more about how this is calculated please visit our
 Computational Algorithm page.
