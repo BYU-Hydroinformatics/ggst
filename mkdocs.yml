@@ -8,6 +8,8 @@ extra_javascript:
 markdown_extensions:
     - mdx_math
     - attr_list
+    - sane_lists
+    - admonition
 
 plugins:
     - search
