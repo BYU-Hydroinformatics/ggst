@@ -1,3 +1,4 @@
 python-markdown-math
+pymdown-extensions
 mkdocs-snippets
 mkdocs-macros-plugin

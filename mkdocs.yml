@@ -4,12 +4,15 @@ site_description: This is the documentation for the GRACE Groundwater Subsetting
 site_author: BYU Hydroinformatics Laboratory
 repo_url: https://github.com/BYU-Hydroinformatics/GGST
 extra_javascript:
-    - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js
+  - js/mathjax-config.js
 markdown_extensions:
     - mdx_math
     - attr_list
     - sane_lists
     - admonition
+    - pymdownx.arithmatex:
+        generic: true
 
 plugins:
     - search
