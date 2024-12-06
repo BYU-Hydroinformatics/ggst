@@ -321,3 +321,8 @@ Computational Algorithm page.
 
 This section will also help you create a dataframe, plot your data, and
 visualize your data on an animated map.
+
+## Using an Independent SWSa Dataset
+
+<INSERT SECTION HERE>
+
