@@ -29,7 +29,7 @@ All four GGST functions follow the same pattern as shown by the URL
 examples below. Each of the terms in brackets along with the parameters
 and values would be replaced by string values.
 
-<https://tethys-staging.byu.edu/apps/%5Bparent-app%5D/api/%5BMethodName%5D/?param1=value1&param2=value2&...paramN=valueN>
+<https://apps.geoglows.org/apps/%5Bparent-app%5D/api/%5BMethodName%5D/?param1=value1&param2=value2&...paramN=valueN>
 
 To test the API, the user will need a zip file of the region of
 interest. We have provided a set of sample files in the appropriate
@@ -44,7 +44,7 @@ Let's explore each API method individually and offer an example:
 Follow this link to inspect the JSON returned which lists the list of
 the storage options available:
 
-<https://tethys-staging.byu.edu/apps/ggst/api/getStorageOptions/>
+[https://apps.geoglows.org/apps/ggst/api/getStorageOptions/](https://apps.geoglows.org/apps/ggst/api/getStorageOptions/){:target="blank"}
 
 For simplicity, the options are given a variable name. For instance, the
 "Total Water Storage (GRACE)" has a variable name of "grace", and
@@ -91,7 +91,7 @@ similarly the "Soil Moisture Storage (GLDAS)" is shortened to "sm".
 Click on the following example link to call the API and inspect the JSON
 object returned (results will appear in a new window):
 
-<https://tethys-staging.byu.edu/apps/ggst/api/getPointValues/?latitude=20.7&longitude=80.2&storage_type=gw>
+[https://apps.geoglows.org/apps/ggst/api/getPointValues/?latitude=20.7&longitude=80.2&storage_type=gw](https://apps.geoglows.org/apps/ggst/api/getPointValues/?latitude=20.7&longitude=80.2&storage_type=gw){:target="blank"}
 
 For the last two functions, the user will need to have an authentication
 token as it is required to run the code. It is best to call these two
@@ -104,7 +104,7 @@ Example query:
 
 ```python
 files = {‘shapefile’: (“response.zip”, uploaded[“”.join(uploaded)],’application/zip’)} 
-    region_timeseries_request = requests.post (”https://tethys-staging.byu.edu/apps/ggst/api/getRegionTimeseries/”,
+    region_timeseries_request = requests.post (”https://apps.geoglows.org/apps/ggst/api/getRegionTimeseries/”,
     headers={“Authorization”: f”Token {api_token}”}, data =   {“name”:”api_test”, “storage_type”: “tws”}, 
     files=files) Response (trimmed for clarity): {‘area’: 437109427476.4769, ‘depletion’: 
     [[‘2000-01-01’, 0.0], [‘2000-02-01’, -273831.117], [‘2000-03-01’, -661208.652], 
@@ -156,7 +156,7 @@ Here is an example query using the subsetRegionZipfile method.
 Example Query: 
 ```python
 files = {‘shapefile’: (“response.zip”, uploaded[“”.join(uploaded)],’application/zip’)} 
-    subset_region_request = requests.post(”https://tethys-staging.byu.edu/apps/ggst/api/subsetRegionZipfile/”,
+    subset_region_request = requests.post(”https://apps.geoglows.org/apps/ggst/api/subsetRegionZipfile/”,
     headers={“Authorization”: f”Token {api_token}”}, data = {“name”:”api_test”}, files=files)
     z = ZipFile(BytesIO(subset_region_request.content)) z.extractall()
 ```
@@ -182,11 +182,11 @@ After signing in, click on your username in the upper right corner,
 opening a panel and then click on the User Settings to reveal the API
 key.
 
-![image](images-api/userpanel.png)
+![image](images-api/userpanel.png){width=1000}
 
 The authentication token or API key will be in the third section.
 
-![image](images-api/APIToken.png)
+![image](images-api/APIToken.png){width=1000}
 
 For privacy reasons, we have hidden the remaining characters of this
 user's token.
@@ -301,7 +301,7 @@ visualize them.
 
 Visual guide on netCDF files:
 
-![image](images-api/visualnetCDF.png)
+![image](images-api/visualnetCDF.png){width=600}
 
 This table elaborates on each of these files and their naming
 conventions:
@@ -324,5 +324,5 @@ visualize your data on an animated map.
 
 ## Using an Independent SWSa Dataset
 
-<INSERT SECTION HERE>
+[INSERT SECTION HERE]
 

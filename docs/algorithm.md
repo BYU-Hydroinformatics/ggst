@@ -149,6 +149,6 @@ and different time periods.
 The GGST web application was created using Tethys Platform, developed in
 the BYU Hydroinformatics Laboratory. It can be accessed on a Tethys
 portal associated with the NOAA GeoGLOWS project by browsing to this
-[link](https://apps.geoglows.org/apps) and selecting the Grace
+[link](https://apps.geoglows.org/apps){:target="blank"} and selecting the Grace
 Groundwater Subsetting Tool application.
 

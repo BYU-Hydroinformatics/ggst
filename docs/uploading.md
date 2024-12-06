@@ -12,17 +12,16 @@ regions and the associated files.
 
 ## **Uploading a Region**
 
-The GRACE Groundwater Subsetting Tool web application is hosted on three
-different Tethys portals:
+The GRACE Groundwater Subsetting Tool web application is hosted on several Tethys portals, including the following:
 
+-   **GEOGLOWS Portal**: Official Tethys portal hosted by the
+    GEOGLOWS project. This portal is the primary portal for the GGST.
+    (<https://apps.geoglows.org/apps/>)
 -   **Servir West Africa Portal**: Official Tethys portal hosted by the
     SERVIR Science Coordination Office (SCO) for the West Africa Hub
     (<https://tethyswa.servirglobal.net/apps/>)
 -   **BYU Main Portal**: A Tethys portal hosted by Brigham Young
-    University for all completed apps (<https://tethys.byu.edu>).
--   **BYU Staging Portal**: A Tethys portal hosted by Brigham Young
-    University for testing new applications or features
-    (<https://tethys-staging.byu.edu/apps/>).
+    University for all completed apps (<https://tethys.byu.edu>). This portal will be retired soon. Use with caution.
 
 To upload regions on the application, visit the portal of your choice
 and log in using the "Log In" link in the upper right corner of the

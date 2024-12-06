@@ -63,7 +63,7 @@ considered a low and a high estimate, although in our experience method
 to estimate recharge in Southern Niger can be found : [Evaluating
 Groundwater Storage Change and Recharge Using GRACE Data: A Case Study
 of Aquifers in Niger, West
-Africa](https://www.mdpi.com/2072-4292/14/7/1532).
+Africa](https://www.mdpi.com/2072-4292/14/7/1532){:target="blank"}.
 
 ## **Downloading the Water Level Time Series from the GGST App**
 
