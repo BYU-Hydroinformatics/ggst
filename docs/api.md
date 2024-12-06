@@ -240,7 +240,7 @@ visualize them.
 
     **Install Packages and Select your Tethys Portal**:
 
-    :   In this section, dependencies and other python packages are
+    >   In this section, dependencies and other python packages are
         installed and set up for the processing of the shapefile and
         rendering of the graph in latter cells. The dropdown menu lists
         all the available portals. A portal is a web hosting platform
@@ -249,7 +249,7 @@ visualize them.
         Tethys staging, Tethys main and the tethys West Africa. The
         first two are maintained by the Brigham Young University
         Hydroinformatics Laboratory and the last by the SERVIR program
-        in West Africa. The Tethys staging portal is the testing ground
+        in West Africa. The Tethys staging portal is the testing ground 
         for web applications developed by the BYU Hydroinformatics
         Laboratory before committing them to the two main portals.
 
@@ -257,14 +257,14 @@ visualize them.
 
     **Function 1: getStorageOptions**
 
-    :   This cell lists all the available options and how to properly
+    >   This cell lists all the available options and how to properly
         declare them in the appropriate cell.
 
 -   
 
     **Function 2: getPointValues**
 
-    :   The user types in latitude and longitude coordinates and selects
+    >   The user types in latitude and longitude coordinates and selects
         the desired storage option from a drop-down menu. The next
         several cells will create a dataframe, chart the timeseries, and
         plot a graph with estimated error bars.
@@ -273,7 +273,7 @@ visualize them.
 
     **Requesting Info for Regional Functions 3 and 4**
 
-    :   The last two functions are regional functions and require more
+    >   The last two functions are regional functions and require more
         inputs to run. This section of the notebook walks you through
         inputting that additional information. First, you will be asked
         for your API token which must match your declared portal to
@@ -287,7 +287,7 @@ visualize them.
 
     **Function 3: getRegionTimeseries**
 
-    :   Asks for your desired storage option using a drop-down menu,
+    >   Asks for your desired storage option using a drop-down menu,
         calls the API, then displays an interactive table and graph of
         the data returned.
 
@@ -295,7 +295,7 @@ visualize them.
 
     **Function 4: getRegionZipfile**
 
-    :   Calls the API and returns a set of netCDF files which can be
+    >   Calls the API and returns a set of netCDF files which can be
         accessed from a tool bar on the left side of the screen as
         pictured below.
 
