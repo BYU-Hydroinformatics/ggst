@@ -13,12 +13,12 @@ The GRACE mission was launched in March 2002. It consists of a pair of
 satellites that are 400km above the Earth and are separated by 200km. As
 the satellites pass over different regions of the Earth, the front and
 rear satellites are pulled slightly forward and backward in response to
-subtle changes in the Earth\'s graviatational field caused by changes in
+subtle changes in the Earth's graviatational field caused by changes in
 surficial mass. This causes the distance between the satellites to vary,
 and the changes are recorded by a k-band microwave whose accuracy is
 within 10 microns. The GRACE satellites follow a varying path that
 covers the entire Earth about once per month. This data is then
-processed by NASA to produce a map of the Earth\'s gravitational field.
+processed by NASA to produce a map of the Earth's gravitational field.
 Each month a new map is generated and the differences are calculated to
 produce a gravity anomaly map. The changes in mass are assumed to be
 primarily caused by the change in water storage. Each month NASA
