@@ -1,6 +1,6 @@
 {{ include_file('docs/translate.html') }}
 
-# **Home**
+# The GRACE Groundwater Subsetting Tool (GGST)
 
 The GRACE Groundwater Subsetting Tool (GGST) uses data from the NASA
 Gravity Recovery And Climate Experiment (GRACE) mission to analyze
@@ -23,3 +23,4 @@ Agency for International Development: Cooperative Agreement with SERVIR
 West Africa Hub. More details about this project can be found here:
 <https://hydroinf.groups.et.byu.net/servir-wa/>
 
+![grace_sats.png](images-index/grace_sats.png)
