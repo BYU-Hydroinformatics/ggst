@@ -11,8 +11,11 @@ from .utils import (
     storage_options,
     region_api_ts,
 )
+from tethys_sdk.routing import controller
 
 
+
+@controller(name="subset-region-zipfile", url="ggst/api/subsetRegionZipfile/")
 @api_view(["POST"])
 @authentication_classes(
     (
@@ -48,6 +51,8 @@ def subset_region_zip(request):
             return JsonResponse({"error": f"Error processing request: {e}"})
 
 
+
+@controller(name="region-zip-timeseries", url="ggst/api/zipRegionTimeseries/")
 @api_view(["POST"])
 @authentication_classes(
     (
@@ -84,6 +89,7 @@ def region_zip_timeseries(request):
 
 
 @api_view(["GET"])
+@controller(name="get-region-timeseries", url="ggst/api/getRegionTimeseries/")
 @authentication_classes(
     (
         TokenAuthentication,
@@ -117,7 +123,8 @@ def subset_region_api(request):
 
             return JsonResponse(json_obj)
 
-
+@api_view(["GET"])
+@controller(name="get-storage-options", url="ggst/api/getStorageOptions/")
 def api_get_storage_options(request):
     return_obj = {}
 
@@ -126,7 +133,8 @@ def api_get_storage_options(request):
         return_obj["storage_options"] = options
         return JsonResponse(return_obj)
 
-
+@api_view(["GET"])
+@controller(name="get-point-values", url="ggst/api/getPointValues/")
 def api_get_point_values(request):
     return_obj = {}
 

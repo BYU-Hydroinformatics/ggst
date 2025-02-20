@@ -1,16 +1,16 @@
 {% extends "ggst/base.html" %}
 {% load tethys_gizmos %}
-{% load staticfiles %}
+{% load static %}
 
 {% block header_buttons %}
-  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
-    <a data-toggle="modal" data-target="#help-modal"><span class="glyphicon glyphicon-question-sign"></span></a>
+  <div class="header-button glyphicon-button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Help">
+    <a data-bs-toggle="modal" data-bs-target="#help-modal"><span class="bi bi-question-circle-fill"></span></a>
   </div>
 {% endblock %}
 
 {% block app_content %}
 <h3>Update Global Files</h3>
-<div id="message" class="alert alert-danger hidden" role="alert">
+<div id="message" class="alert alert-danger d-none" role="alert">
 
 </div>
 {% gizmo button update_button %}
