@@ -28,6 +28,7 @@ nav:
   - Adding and Deleting Regions: uploading.md
   - Analysis at a Single Point: points.md
   - Application Programming Interface (API): api.md
+  - Data Processing Utilities: utilities.md
   - The Water Table Fluctuation Method: wtf.md
 
 extra_css:

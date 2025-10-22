@@ -65,160 +65,16 @@ Groundwater Storage Change and Recharge Using GRACE Data: A Case Study
 of Aquifers in Niger, West
 Africa](https://www.mdpi.com/2072-4292/14/7/1532){:target="blank"}.
 
-## **Downloading the Water Level Time Series from the GGST App**
+## Preparing the Water Level Time Series 
 
 To apply the WTF method to estimate recharge on GRACE data, one must
 first download the groundwater storage anomaly time series from the GGST
-app. To do so, first load the region and select the Groundwater Storage
-(Calculated) storage component and then click on the three stacked lines
-in the upper right corner of the storage anomaly time series displayed
-and then download the time series as either a comma separated values
-(CSV) file or an Excel (XLS) file.
+app and then impute the gaps using the Python utilities described on the [Data Processing Utilities](utilities.md) 
+page. The last code block in the imputation notebook generates a CSV file
+with the imputed time series. The CSV file contains two columns, the date and the GWSa data with both the original 
+and imputed values in a single column. The imputed values have more digits than the original values.
 
-![image](images-wtf/ggst_download.png)
-
-The storage anomaly chart is created, displayed, and downloaded using
-the HighCharts plugin. The format of the resulting downloaded file is as
-follows:
-
-![image](images-wtf/file_units.png)
-
-The storage units are liquid water equivalent in cm, as expected, but
-the date units are reported in milliseconds since Jan 1, 1970. In order
-to convert to a more typical date unit, we must first create a new
-column and then enter the formula shown below for the first date in the
-list. This formula converts the number from milliseconds to days and
-then adds that number to the date value corresponding to January 1,
-1970, thus creating a proper date value. To see this value, change the
-number format to the one of the standard date options. Whether it
-appears as month/day/year or day/month/year will depend on your regional
-settings.
-
-![image](images-wtf/fixing_the_date.png)
-
-## **Downloading the Water Level Time Series from the API Google Colaboratory Notebook**
-
-You can also download the time series directly from the sample
-Colaboratory API Python script. After uploading a region shapefile and
-then generating and plotting the storage anomaly time series, run the
-line of code to export the Python Pandas data frame containing the time
-series to a CSV file.
-
-![image](images-wtf/reg_ts_code.png)
-
-This file will then appear in the files section of the Colab interface
-on the left. Click the three vertical dots to the right of the file and
-select the Download option.
-
-![image](images-wtf/save_reg_ts.png)
-
-In this case, the resulting CSV file has the dates in the correct format
-and no changes are necessary.
-
-![image](images-wtf/reg_ts_csv.png)
-
-## **Gaps in the GRACE Data**
-
-If you carefully inspect the groundwater storage time series CSV file,
-you will see that there are several missing months or gaps in the data.
-For example, the month of June is missing in 2003:
-
-![image](images-wtf/missing_month.png)
-
-This is because there were periods when the GRACE satellites did not
-produce usable data. The largest gap is a 12-month period in 2017-2018
-between the end of the original GRACE mission in 2017 and when the
-subsequent GRACE-FO satellites were launched and became operational in
-2018. Here is a sample plot for an aquifer in Southern Niger with the
-gaps shown:
-
-![image](images-wtf/niger_gaps.png)
-
-For the years with large gaps, it can be difficult to identify seasonal
-trends and apply the WTF method. One way to resolve this problem is to
-use a statistical algorithm to detect seasonal patterns in the data and
-impute synthetic data in the gaps. This can be accomplished using a
-simple seasonal decomposition model
-(statsmodels.tsa.seasonal.seasonal_decompose) implemented in the
-statsmodels Python package to impute the missing data. This model first
-removes the trend using a convolution filter (the trend component), then
-computes the average value for each period (the seasonal component), in
-our case months, with the residual component being the difference
-between the monthly average (seasonal component) and the actual monthly
-measurements. With this approach, we decompose the GWSa time series into
-three components: the trend, the seasonal, and the random components:
-
-$$Y [t] = T [t] + S [t] + e [t]$$
-
-Where Y[t] is the GWSa, T[t] is the GWSa trend, S[t] is the
-seasonal GWSa component, and e[t] is the residual GWSa component. The
-decomposition components for the data shown above are as illustrated
-here:
-
-![image](images-wtf/decomposed.png)
-
-To impute the missing data, we use the trend from the data
-decomposition, then add the average of the monthly and residual values
-for that month to estimate the missing value. This model can be written
-as:
-
-$$Y[t] = y (T[t]) + \overline{S [t] + e[t]}$$
-
-The following figure shows the original time series in black, with
-imputed values in red:
-
-![image](images-wtf/imputed.png)
-
-## **Data Imputation Tools**
-
-To assist users in applying the statsmodel method described above to
-impute gaps in the GRACE data, we have implemented the Python code to
-perform the imputation in a Google Colab notebook whose link is below.
-After launching the notebook, follow the instructions in the code.
-
-<a href="https://colab.research.google.com/github/BYU-Hydroinformatics/ggst-notebooks/blob/main/impute_gaps_GRACE.ipynb"   target="_blank">
-    <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab">
-</a>
-
-Before running the code, you will need to prepare and upload a CSV file
-with the original data with the gaps. This file will need to contain
-only two columns, which you can copy and paste from the full CSV and
-then save as a separate CSV file ("base_file.csv" for example).
-
-![image](images-wtf/two_col_csv.png)
-
-At this point, the file is ready to be used with the Colab notebook. The
-following file is an example of a file prepared in the manner described
-above:
-
-Here is a sample file you can use with the script: [west-gwsa-raw-clean.csv](wtf_files/west-gwsa-raw-clean.csv)
-
-
-## **Multi-Linear Trend Analysis**
-
-In the seasonal decomposition method described above for gap imputation,
-a single linear trend was described. Here is the trend resulting from
-the sample file linked above with a single trend line:
-
-![image](images-wtf/trend_1.png)
-
-However, many data sets exhibit multiple linear trends. For this
-dataset, there are four distinct trends. The Python script has an option
-to perform a multi-linear regression analysis. For this dataset, we set
-the number_breakpoints variable to 3, and run a multi-linear regression
-algorithm that fits the data as follows:
-
-![image](images-wtf/trend_4_scatter.png)
-
-Note that 3 interior breakpoints result in four linear trends. This
-option results in the following trends:
-
-![image](images-wtf/trend_4.png)
-
-And finally, the gap imputation with 4 trend lines results in the
-following:
-
-![image](images-wtf/trend_4_results.png)
+![imputed_file_format.png](images-wtf/imputed_file_format.png)
 
 ## **Data Processing Examples**
 
@@ -232,7 +88,7 @@ The following Excel file illustrates how to examine and process each
 season of data from a GRACE-derived and imputed groundwater storage
 anomaly time series: [west-gwsa-wtf.xlsx](wtf_files/west-gwsa-wtf.xlsx)
 
-After opening the file, copy-paste the GWSa values generated by the
+After opening the file, copy-paste the GWSa values from the CSV file generated by the
 imputation algorithm as shown here. Note that the imputed values have
 more digits than the original values. The formulas in columns C & D
 separate the imputed data in column B to allow a multi-colored plot
