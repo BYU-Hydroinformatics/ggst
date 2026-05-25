@@ -6,8 +6,6 @@ build-backend = "setuptools.build_meta"
 name = "tethysapp-ggst"
 version = "0.0.1"
 description = "Visualize and subset Grace data"
-long_description = ""
-keywords = ""
 authors = [
     {name = "Sarva Pulla", email = "pulla@byu.edu"},
 ]
